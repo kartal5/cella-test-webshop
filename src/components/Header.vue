@@ -1,0 +1,178 @@
+<template>
+  <header
+    class="bg-header-beige py-2 px-4 sm:px-20 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0"
+  >
+    <div class="flex-shrink-0">
+      <router-link to="/">
+        <img src="/img/logo.png" alt="Logo" class="h-24 w-auto" />
+      </router-link>
+    </div>
+    <div class="w-full max-w-2xl mx-auto relative">
+      <input
+        type="text"
+        placeholder="Søg efter produkter"
+        class="w-full h-12 pl-4 pr-12 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+        v-model="searchQuery"
+        @input="onInput"
+      />
+      <button
+        class="absolute inset-y-0 right-0 flex items-center pr-4"
+        @click="onSearch"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 text-navbar-green"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </button>
+
+      <!-- Dropdown for search results -->
+      <transition name="dropdown">
+        <ul
+          v-if="showDropdown && filteredProducts.length > 0"
+          class="absolute z-10 w-full bg-white border border-gray-200 rounded-lg mt-1 max-h-52 overflow-y-auto p-2 shadow-lg"
+        >
+          <li
+            v-for="product in filteredProducts"
+            :key="product.id"
+            class="py-2 px-4 rounded-md transition-colors duration-200 ease-in-out hover:bg-gray-100 cursor-pointer"
+            @click="goToProduct(product.id)"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-6">
+                <img
+                  :src="product.image"
+                  alt="Product image"
+                  class="w-16 h-16 rounded object-cover border border-gray-200 shadow-sm"
+                />
+                <span v-html="highlightMatch(product.name, searchQuery)"></span>
+              </div>
+              <span class="text-gray-500 text-sm italic">{{ product.category }}</span>
+            </div>
+          </li>
+
+        </ul>
+      </transition>
+
+    </div>
+    <div class="flex space-x-6">
+      <div class="relative p-1 rounded-md">
+        <router-link to="/cart" class="block text-navbar-green">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-10 w-10"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8h13.2L17 13H7z"
+            />
+          </svg>
+        </router-link>
+        <span
+          class="absolute -top-2 -right-2 bg-navbar-green text-white rounded-full text-xs px-2 py-1"
+          >{{ cartItems.length }}</span
+        >
+      </div>
+    </div>
+  </header>
+</template>
+
+<script>
+import { ref, computed } from 'vue';
+import { useCartStore } from '../stores/cartStore';
+import { useProductStore } from '../stores/productStore';
+import { useRouter } from 'vue-router';
+
+export default {
+  name: 'Header',
+  setup() {
+    const cartStore = useCartStore();
+    const cartItems = cartStore.cartItems;
+
+    const searchQuery = ref('');
+    const showDropdown = ref(false);
+    const { allProducts } = useProductStore();
+
+    const router = useRouter();
+
+    // Computed property to filter products based on search query
+    const filteredProducts = computed(() => {
+      if (!searchQuery.value) {
+        return [];
+      }
+      return allProducts.value.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+      );
+    });
+
+    // Show or hide the dropdown based on input
+    const onInput = () => {
+      showDropdown.value = searchQuery.value.length > 0;
+    };
+
+    // Redirect to product page
+    const goToProduct = (productId) => {
+      showDropdown.value = false;
+      searchQuery.value = '';
+      router.push(`/product/${productId}`);
+    };
+
+    // Optional: Handle search button click
+    const onSearch = () => {
+      // You can implement a full search page if needed
+    };
+
+    // Function to highlight matching text
+    const highlightMatch = (text, query) => {
+      if (!query) return text;
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`(${escapedQuery})`, 'gi');
+      return text.replace(regex, '<span class="text-navbar-green font-bold">$1</span>');
+    };
+
+    // Return all the variables and functions you want to use in your template
+    return {
+      cartItems,
+      searchQuery,
+      showDropdown,
+      filteredProducts,
+      onInput,
+      goToProduct,
+      onSearch,
+      highlightMatch, // Make sure to include this
+    };
+  },
+};
+</script>
+
+
+<style scoped>
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.2s ease, transform 0.4s ease;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.dropdown-enter-to,
+.dropdown-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
