@@ -15,11 +15,11 @@ const routes = [
   { path: '/admin', component: AdminPanel },
   { path: '/', component: HomePage }, // HomePage.vue as the homepage
   { path: '/cart', component: CartPage },
-  { path: '/category/:name', component: CategoryPage }, // Dynamic category page
   { path: '/category/mennesker', component: MenneskerPage },
   { path: '/category/heste', component: HestePage }, 
   { path: '/category/hunde', component: HundePage }, 
   { path: '/category/katte', component: KattePage }, 
+  { path: '/category/:name', component: CategoryPage }, // Dynamic category page
   { path: '/product/:id', component: ProductPage },
   { path: '/blog', component: BlogPage },
   { path: '/blog/:id', component: BlogPostPage }, // Dynamic route for individual posts
@@ -29,6 +29,8 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  linkActiveClass: 'active-link', // Customize the active link class globally
+  linkExactActiveClass: 'exact-active-link', // For exact matches only
 });
 
 export default router;

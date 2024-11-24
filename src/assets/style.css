@@ -4,6 +4,11 @@ body {
     font-family: 'Lato', sans-serif;
   }
 
+.active-link {
+color: #758767;
+border-bottom: 2px solid #758767;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
