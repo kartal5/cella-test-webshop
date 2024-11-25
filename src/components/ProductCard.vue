@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow flex flex-col w-full h-full">
+  <div class="bg-white p-4 rounded-3xl shadow-lg hover:shadow-2xl transition-shadow flex flex-col w-full h-full">
     <div class="flex-grow flex flex-col items-center">
       <img :src="product.image" :alt="product.name" class="w-full h-48 object-contain mb-4 rounded" />
       <h3 class="text-lg font-semibold text-center text-gray-900">{{ product.name }}</h3>
