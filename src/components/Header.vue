@@ -7,7 +7,7 @@
         <img src="/img/logo.png" alt="Logo" class="h-24 w-auto" />
       </router-link>
     </div>
-    <div class="w-full max-w-2xl mx-auto relative">
+    <div class="w-full max-w-2xl mx-auto relative" v-click-outside="closeDropdown">
       <input
         type="text"
         placeholder="Søg efter produkter"
@@ -124,6 +124,10 @@ export default {
       showDropdown.value = searchQuery.value.length > 0;
     };
 
+    const closeDropdown = () => {
+      showDropdown.value = false;
+    };
+
     // Redirect to product page
     const goToProduct = (productId) => {
       showDropdown.value = false;
@@ -152,8 +156,9 @@ export default {
       filteredProducts,
       onInput,
       goToProduct,
+      closeDropdown,
       onSearch,
-      highlightMatch, // Make sure to include this
+      highlightMatch, 
     };
   },
 };
