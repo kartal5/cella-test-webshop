@@ -25,13 +25,24 @@
 
       <!-- Buttons -->
       <div class="flex items-center gap-2 mt-4 mb-4">
+        <!-- Tilbage Button -->
         <button
           @click="goBack"
           class="bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition"
         >
           Tilbage
         </button>
+
+        <!-- Conditional "Kontakt for Pris" or "Læg i kurv" Button -->
         <button
+          v-if="product.price === 'Kontakt for pris'"
+          @click="redirectToContact"
+          class="bg-navbar-green text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition"
+        >
+          Kontakt for Pris
+        </button>
+        <button
+          v-else
           @click="addToCart(product)"
           :disabled="requiresSelection(product) && !selectedOption"
           class="bg-navbar-green text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition"
@@ -83,10 +94,17 @@ export default {
       ? product.fullDescription.split('\n')
       : product.description.split('\n');
 
-    const requiresSelection = (product) => {
-      const productsRequiringSelection = [31, 36, 37, 38];
-      return productsRequiringSelection.includes(product.id);
-    };
+      const requiresSelection = (product) => {
+        // Products with "Kontakt for pris" should not show a dropdown, just disable the button
+        if (product.price === 'Kontakt for pris') {
+          return false;
+        }
+
+        // Dropdown logic applies only to products requiring selection
+        const productsRequiringSelection = [31, 36, 37, 38];
+        return productsRequiringSelection.includes(product.id);
+      };
+
 
     const productOptions = computed(() => {
       if (!product || !requiresSelection(product)) return [];
@@ -117,6 +135,10 @@ export default {
       return options;
     });
 
+    const redirectToContact = () => {
+      window.location.href = "https://www.cellatest.com/kontakt";
+    };
+
     return {
       product,
       addToCart,
@@ -125,6 +147,7 @@ export default {
       requiresSelection,
       productOptions,
       selectedOption,
+      redirectToContact,
     };
   },
 };

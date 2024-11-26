@@ -41,7 +41,12 @@ export default {
 
     // Function to determine if selection is required
     const requiresSelection = (product) => {
-      // List of products that require additional selection
+      // Disable "Læg i kurv" for products with "Kontakt for pris" as price
+      if (product.price === 'Kontakt for pris') {
+        return true;
+      }
+
+      // Disable and show dropdown for specific products requiring selection
       const productsRequiringSelection = [31, 36, 37, 38];
       return productsRequiringSelection.includes(product.id);
     };
