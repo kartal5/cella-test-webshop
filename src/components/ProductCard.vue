@@ -6,10 +6,18 @@
       <p class="text-center text-gray-600 mb-4 line-clamp-3">{{ product.description }}</p>
     </div>
     <p class="text-lg font-bold text-navbar-green text-center mb-4">{{ product.price }}</p>
+
     <!-- Updated "Læg i kurv" button -->
-    <button @click="addToCart(product)" class="bg-add-to-cart-btn text-white font-semibold py-2 px-4 rounded w-full hover:bg-green-700 transition">
+    <button 
+      @click="addToCart(product)"
+      :disabled="requiresSelection(product)"
+      :class="{
+        'bg-add-to-cart-btn text-white font-semibold py-2 px-4 rounded w-full transition': true,
+        'opacity-50 cursor-not-allowed': requiresSelection(product),
+      }">
       Læg i kurv
     </button>
+    
     <!-- "Læs Mere" button -->
     <router-link :to="`/product/${product.id}`" class="bg-blue-400 text-white font-semibold py-2 px-4 rounded w-full hover:bg-blue-600 transition mt-2 text-center block">
       Læs Mere
@@ -31,7 +39,14 @@ export default {
       cartStore.addToCart(product);
     };
 
-    return { addToCart };
+    // Function to determine if selection is required
+    const requiresSelection = (product) => {
+      // List of products that require additional selection
+      const productsRequiringSelection = [31, 36, 37, 38];
+      return productsRequiringSelection.includes(product.id);
+    };
+
+    return { addToCart, requiresSelection };
   },
 };
 </script>

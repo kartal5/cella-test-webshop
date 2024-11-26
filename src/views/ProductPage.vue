@@ -11,7 +11,18 @@
           <br v-if="index < formattedDescription.length - 1" />
         </span>
       </p>
-      
+
+      <!-- Dropdown for price selection, visible only for products with multiple options -->
+      <div v-if="requiresSelection(product)" class="mb-4">
+        <label for="option" class="block font-semibold mb-2">Vælg en mulighed:</label>
+        <select v-model="selectedOption" class="border rounded-lg p-2 w-full" id="option">
+          <option disabled value="">-- Vælg en mulighed --</option>
+          <option v-for="(option, index) in productOptions" :key="index" :value="option">
+            {{ option.label }} - {{ option.price }}
+          </option>
+        </select>
+      </div>
+
       <!-- Buttons -->
       <div class="flex items-center gap-2 mt-4 mb-4">
         <button
@@ -22,6 +33,7 @@
         </button>
         <button
           @click="addToCart(product)"
+          :disabled="requiresSelection(product) && !selectedOption"
           class="bg-navbar-green text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition"
         >
           Læg i kurv
@@ -36,20 +48,31 @@
 import { useProductStore } from '../stores/productStore';
 import { useCartStore } from '../stores/cartStore';
 import { useRoute, useRouter } from 'vue-router';
+import { ref, computed } from 'vue';
 
 export default {
   name: 'ProductPage',
   setup() {
     const route = useRoute();
-
     const router = useRouter();
 
     const { allProducts } = useProductStore();
     const product = allProducts.value.find((p) => p.id === Number(route.params.id));
 
     const cartStore = useCartStore();
+    const selectedOption = ref(null);
+
     const addToCart = (product) => {
-      cartStore.addToCart(product);
+      if (requiresSelection(product) && selectedOption.value) {
+        const selectedProduct = {
+          ...product,
+          price: selectedOption.value.price,
+          name: `${product.name} - ${selectedOption.value.label}`,
+        };
+        cartStore.addToCart(selectedProduct);
+      } else if (!requiresSelection(product)) {
+        cartStore.addToCart(product);
+      }
     };
 
     const goBack = () => {
@@ -60,18 +83,60 @@ export default {
       ? product.fullDescription.split('\n')
       : product.description.split('\n');
 
-    return { product, addToCart, goBack, formattedDescription };
+    const requiresSelection = (product) => {
+      const productsRequiringSelection = [31, 36, 37, 38];
+      return productsRequiringSelection.includes(product.id);
+    };
+
+    const productOptions = computed(() => {
+      if (!product || !requiresSelection(product)) return [];
+      const options = [];
+      if (product.id === 31) {
+        options.push(
+          { label: 'Leje pr. uge', price: 'DKK 1,500.00' },
+          { label: 'Køb af sæt', price: 'DKK 32,550.00' },
+          { label: 'Køb af dækken', price: 'DKK 18,585.00' },
+          { label: 'Køb af gamacher', price: 'DKK 20,265.00' }
+        );
+      } else if (product.id === 36) {
+        options.push(
+          { label: '1L', price: 'DKK 299.00' },
+          { label: '3L', price: 'DKK 699.00' }
+        );
+      } else if (product.id === 37) {
+        options.push(
+          { label: '1L', price: 'DKK 119.00' },
+          { label: '3L', price: 'DKK 299.00' }
+        );
+      } else if (product.id === 38) {
+        options.push(
+          { label: '1L', price: 'DKK 99.00' },
+          { label: '3L', price: 'DKK 249.00' }
+        );
+      }
+      return options;
+    });
+
+    return {
+      product,
+      addToCart,
+      goBack,
+      formattedDescription,
+      requiresSelection,
+      productOptions,
+      selectedOption,
+    };
   },
 };
 </script>
 
 <style scoped>
 .product-image {
-  max-width: 100%; /* Ensures responsiveness */
-  width: 320px; /* Fixed size for desktop */
-  height: auto; /* Maintains aspect ratio */
+  max-width: 100%;
+  width: 320px;
+  height: auto;
   display: block;
-  margin: 0 auto; /* Centers the image */
+  margin: 0 auto;
 }
 
 .product-detail {
