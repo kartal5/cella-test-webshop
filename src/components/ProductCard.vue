@@ -12,7 +12,7 @@
       @click="addToCart(product)"
       :disabled="requiresSelection(product)"
       :class="{
-        'bg-add-to-cart-btn text-white font-semibold py-2 px-4 rounded w-full transition': true,
+        'bg-add-to-cart-btn text-white font-semibold py-2 px-4 rounded w-full hover:bg-green-700 transition': true,
         'opacity-50 cursor-not-allowed': requiresSelection(product),
       }">
       Læg i kurv
