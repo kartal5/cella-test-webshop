@@ -12,11 +12,17 @@ export const useCartStore = defineStore('cart', () => {
   const cartItems = ref(loadCartFromStorage());
 
   const addToCart = (product) => {
-    const existingItem = cartItems.value.find((item) => item.id === product.id);
+    // Create a unique key combining id and selected variation
+    const uniqueKey = `${product.id}-${product.name}`;
+    
+    const existingItem = cartItems.value.find(
+      (item) => item.uniqueKey === uniqueKey
+    );
+  
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
-      cartItems.value.push({ ...product, quantity: 1 });
+      cartItems.value.push({ ...product, quantity: 1, uniqueKey });
     }
     console.log("Cart Items:", cartItems.value); // Log to verify cart contents
   };
