@@ -73,15 +73,20 @@ export default {
     const cartStore = useCartStore();
     const selectedOption = ref(null);
 
+        
+     //Add the product (or its variation) to the cart
+     //If the product requires a dropdown selection, ensure the selected option is included
     const addToCart = (product) => {
       if (requiresSelection(product) && selectedOption.value) {
+         // Create a modified product object that includes the selected variation
         const selectedProduct = {
           ...product,
-          price: selectedOption.value.price,
-          name: `${product.name} - ${selectedOption.value.label}`,
+          price: selectedOption.value.price, // Use the selected variation's price
+          name: `${product.name} - ${selectedOption.value.label}`, // Append variation label to the product name
         };
         cartStore.addToCart(selectedProduct);
       } else if (!requiresSelection(product)) {
+        // Add the product directly if no selection is required
         cartStore.addToCart(product);
       }
     };
@@ -90,12 +95,13 @@ export default {
       router.go(-1); // Navigate to the previous page
     };
 
+    // Split product descriptions into separate lines for better readability
     const formattedDescription = product?.fullDescription
       ? product.fullDescription.split('\n')
       : product.description.split('\n');
 
       const requiresSelection = (product) => {
-        // Products with "Kontakt for pris" should not show a dropdown, just disable the button
+        // Products with "Kontakt for pris" should not show a dropdown so disable the button
         if (product.price === 'Kontakt for pris') {
           return false;
         }
@@ -105,7 +111,7 @@ export default {
         return productsRequiringSelection.includes(product.id);
       };
 
-
+    // Dynamically generate dropdown options for products with variations.
     const productOptions = computed(() => {
       if (!product || !requiresSelection(product)) return [];
       const options = [];
@@ -135,10 +141,12 @@ export default {
       return options;
     });
 
+    // Redirect users to the contact page for products with "Kontakt for pris."
     const redirectToContact = () => {
       window.location.href = "https://www.cellatest.com/kontakt";
     };
 
+    // Expose variables and methods to the template
     return {
       product,
       addToCart,
