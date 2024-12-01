@@ -6,6 +6,7 @@ export const useCartStore = defineStore('cart', () => {
   // Initialize `cartItems` with data from local storage
   const cartItems = ref(loadCartFromStorage());
 
+  // Pinia allows us to globally manage shared state for cartItems across components (fx Header.vue and CartPage.vue page)
   const addToCart = (product) => {
     // Create a unique key combining id and product name
     const uniqueKey = `${product.id}-${product.name}`;
@@ -22,9 +23,14 @@ export const useCartStore = defineStore('cart', () => {
     }
   };
 
+  // Pinia's reactive nature ensures that updates to the cart state are reflected in all components (Header.vue)
   const removeFromCart = (index) => {
     cartItems.value.splice(index, 1);
   };
+
+
+  // Using Pinia's `computed` properties, we can derive reactive values from the state,
+  // without duplicating logic across components.
 
   // Total price of all items in the cart
   const cartTotal = computed(() =>
@@ -34,6 +40,10 @@ export const useCartStore = defineStore('cart', () => {
     )
   );
 
+
+  // Pinia's `watch` function ensures that any update to cartItems is synchronized with localStorage,
+  // providing persistent state even after page reloads.
+
   // Watch `cartItems` to persist updates to localStorage
   watch(
     cartItems,
@@ -42,6 +52,9 @@ export const useCartStore = defineStore('cart', () => {
     },
     { deep: true }
   );
+
+  // Pinia's centralized state management allows us to dynamically update the cart state
+  // across all components whenever localStorage changes, ensuring consistent behavior.
 
   // Synchronize with `localStorage` when the storage event is fired
   const syncCartWithStorage = (event) => {
@@ -68,7 +81,8 @@ export const useCartStore = defineStore('cart', () => {
 
 // Load cart data from local storage (if the user has items from previous sessions)
 // If a user added items to their cart during a previous visit, 
-// this function ensures those items are still in the cart when they return.
+// this function ensures those items are still in the cart when they return 
+// (Pinia store starts with the most recent cart data, even after a page reload or app restart)
 function loadCartFromStorage() {
   const storedCart = localStorage.getItem('cartItems');
   return storedCart ? JSON.parse(storedCart) : [];
