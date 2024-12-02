@@ -7,7 +7,7 @@
     </div>
     <p class="text-lg font-bold text-navbar-green text-center mb-4">{{ product.price }}</p>
 
-    <!-- Updated "Læg i kurv" button -->
+    <!-- "Læg i kurv" button -->
     <button 
       @click="addToCart(product)"
       :disabled="requiresSelection(product)"
@@ -27,6 +27,7 @@
 
 <script>
 import { useCartStore } from '../stores/cartStore';
+import { useToast } from 'vue-toastification'; // Using vue-toastification to create notification messages
 
 export default {
   name: 'ProductCard',
@@ -35,8 +36,23 @@ export default {
   },
   setup() {
     const cartStore = useCartStore();
+    const toast = useToast();
+    
     const addToCart = (product) => {
-      cartStore.addToCart(product);
+      if (cartStore.cartItems.find(item => item.id === product.id)) {
+        // Notify that the product is already in the cart
+        toast.warning('Produktet er allerede tilføjet i kurven!', {
+          icon: '⚠️',
+          toastClassName: 'bg-[#e6dfd4] text-[#5e4b3f] font-bold',
+        });
+      } else {
+        cartStore.addToCart(product);
+        // Notify successful product addition
+        toast.success('Produktet er tilføjet i kurven!', {
+          icon: '✔️',
+          toastClassName: 'bg-[#95ad81] text-white font-bold',
+        });
+      }
     };
 
     // Function to determine if selection is required
