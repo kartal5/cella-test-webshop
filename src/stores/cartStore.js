@@ -32,12 +32,13 @@ export const useCartStore = defineStore('cart', () => {
   // Using Pinia's `computed` properties, we can derive reactive values from the state,
   // without duplicating logic across components.
 
-  // Total price of all items in the cart
+  // Total price of all items in the cart (with price parsing to avoid pricing issue for larger numbers)
   const cartTotal = computed(() =>
-    cartItems.value.reduce(
-      (total, item) => total + parseFloat(item.price.replace('DKK ', '')) * item.quantity,
-      0
-    )
+    cartItems.value.reduce((total, item) => {
+      // Regex used to remove "," to ensure numbers are parsed correctly for large prices 
+      const cleanPrice = item.price.replace('DKK ', '').replace(',', '');
+      return total + parseFloat(cleanPrice) * item.quantity;
+    }, 0)
   );
 
 
