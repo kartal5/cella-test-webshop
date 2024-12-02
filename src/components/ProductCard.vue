@@ -36,7 +36,7 @@ export default {
   },
   setup() {
     const cartStore = useCartStore();
-    const toast = useToast();
+    const toast = useToast(); // hook to add notifications
     
     const addToCart = (product) => {
       if (cartStore.cartItems.find(item => item.id === product.id)) {
