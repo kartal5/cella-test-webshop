@@ -43,7 +43,7 @@
         </button>
         <button
           v-else
-          @click="addToCart(product)"
+          @click="addToCartWithNotification"
           :disabled="requiresSelection(product) && !selectedOption"
           class="bg-navbar-green text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition"
         >
@@ -60,25 +60,30 @@ import { useProductStore } from '../stores/productStore';
 import { useCartStore } from '../stores/cartStore';
 import { useRoute, useRouter } from 'vue-router';
 import { ref, computed } from 'vue';
+import { useToast } from 'vue-toastification'; // Importing toast hook
 
 export default {
   name: 'ProductPage',
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const route = useRoute(); // Used to access the current route parameters
+    const router = useRouter(); // Used for navigation between pages
 
-    const { allProducts } = useProductStore();
+    const toast = useToast(); // Initialize toast notifications
+
+    const { allProducts } = useProductStore();   // Access all products from the store
+
+    // Find the specific product based on the route parameter
     const product = allProducts.value.find((p) => p.id === Number(route.params.id));
 
-    const cartStore = useCartStore();
-    const selectedOption = ref(null);
+    const cartStore = useCartStore(); // Access the cart store to manage cart items
+    const selectedOption = ref(null); // Ref to store the selected dropdown option for products requiring selection
 
         
      //Add the product (or its variation) to the cart
      //If the product requires a dropdown selection, ensure the selected option is included
     const addToCart = (product) => {
       if (requiresSelection(product) && selectedOption.value) {
-         // Create a modified product object that includes the selected variation
+        // Add the product with the selected variation
         const selectedProduct = {
           ...product,
           price: selectedOption.value.price, // Use the selected variation's price
@@ -91,6 +96,29 @@ export default {
       }
     };
 
+    const addToCartWithNotification = () => {
+      const isProductInCart = cartStore.cartItems.some((item) =>
+        requiresSelection(product)
+          // Match by name for variations
+          ? item.name === `${product.name} - ${selectedOption.value?.label}`
+          // Match by ID for regular products
+          : item.id === product.id
+      );
+
+      if (isProductInCart) {
+        toast.warning('Produktet er allerede tilføjet i kurven!', {
+          icon: '⚠️',
+          toastClassName: 'bg-[#e6dfd4] text-[#5e4b3f] font-bold',
+        });
+      } else {
+        addToCart(product);
+        toast.success('Produktet er tilføjet i kurven!', {
+          icon: '✔️',
+          toastClassName: 'bg-[#95ad81] text-white font-bold',
+        });
+      }
+    };
+
     const goBack = () => {
       router.go(-1); // Navigate to the previous page
     };
@@ -100,18 +128,19 @@ export default {
       ? product.fullDescription.split('\n')
       : product.description.split('\n');
 
+      // Determine if the product requires a dropdown selection
       const requiresSelection = (product) => {
         // Products with "Kontakt for pris" should not show a dropdown so disable the button
         if (product.price === 'Kontakt for pris') {
           return false;
         }
 
-        // Dropdown logic applies only to products requiring selection
+        // IDs of products requiring selection
         const productsRequiringSelection = [31, 36, 37, 38];
         return productsRequiringSelection.includes(product.id);
       };
 
-    // Dynamically generate dropdown options for products with variations.
+    // Dynamically generate dropdown options for products with variations
     const productOptions = computed(() => {
       if (!product || !requiresSelection(product)) return [];
       const options = [];
@@ -149,6 +178,7 @@ export default {
     // Expose variables and methods to the template
     return {
       product,
+      addToCartWithNotification,
       addToCart,
       goBack,
       formattedDescription,
