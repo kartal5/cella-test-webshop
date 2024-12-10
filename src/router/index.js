@@ -10,10 +10,13 @@ import CartPage from '../views/CartPage.vue';
 import ProductPage from '../views/ProductPage.vue';
 import BlogPage from '../views/BlogPage.vue';
 import BlogPostPage from '../views/BlogPostPage.vue';
+import LoginPage from '../views/LoginPage.vue'; 
+import { useAuthStore } from '../stores/authStore';
 
 const routes = [
   { path: '/admin', component: AdminPanel },
   { path: '/', component: HomePage }, // HomePage.vue as the homepage
+  { path: '/login', component: LoginPage },
   { path: '/cart', component: CartPage },
   { path: '/category/mennesker', component: MenneskerPage },
   { path: '/category/heste', component: HestePage }, 
@@ -31,6 +34,19 @@ const router = createRouter({
   routes,
   linkActiveClass: 'active-link', // Customize the active link class globally
   linkExactActiveClass: 'exact-active-link', // For exact matches only
+});
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+
+  // Define routes that require authentication
+  const authRequiredRoutes = ['/admin', '/cart'];
+
+  if (authRequiredRoutes.includes(to.path) && !authStore.isAuthenticated()) {
+    next('/login');
+  } else {
+    next();
+  }
 });
 
 export default router;
