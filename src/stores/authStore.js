@@ -2,7 +2,8 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useAuthStore = defineStore('auth', () => {
-  // Load user data from localStorage and convert it from a string to an object.. default to null if no data exists
+  // Load user data from localStorage and convert it from a string to an object
+  // Default to null if no data exists
   const user = ref(JSON.parse(localStorage.getItem('user')) || null);
 
   const login = async (email, password) => {
