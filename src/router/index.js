@@ -11,12 +11,15 @@ import ProductPage from '../views/ProductPage.vue';
 import BlogPage from '../views/BlogPage.vue';
 import BlogPostPage from '../views/BlogPostPage.vue';
 import LoginPage from '../views/LoginPage.vue'; 
+import RegisterPage from '../views/RegisterPage.vue';
 import { useAuthStore } from '../stores/authStore';
+
 
 const routes = [
   { path: '/admin', component: AdminPanel },
   { path: '/', component: HomePage }, // HomePage.vue as the homepage
   { path: '/login', component: LoginPage },
+  { path: '/register', component: RegisterPage },
   { path: '/cart', component: CartPage },
   { path: '/category/mennesker', component: MenneskerPage },
   { path: '/category/heste', component: HestePage }, 
@@ -45,7 +48,7 @@ router.beforeEach((to, from, next) => {
   if (authRequiredRoutes.includes(to.path) && !authStore.isAuthenticated()) {
     next({
       path: '/login',
-      query: { redirect: to.fullPath }, // Store the original route
+      query: { redirect: to.fullPath }, // Add the unauthenticated user's intended route as a query parameter to the login URL
     });
   } else {
     next();
