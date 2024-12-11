@@ -43,7 +43,10 @@ router.beforeEach((to, from, next) => {
   const authRequiredRoutes = ['/admin', '/cart'];
 
   if (authRequiredRoutes.includes(to.path) && !authStore.isAuthenticated()) {
-    next('/login');
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }, // Store the original route
+    });
   } else {
     next();
   }

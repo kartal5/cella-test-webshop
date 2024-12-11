@@ -56,7 +56,8 @@ export default {
     const handleLogin = async () => {
       try {
         await authStore.login(email.value, password.value);
-        router.push('/'); // Redirect to homepage after successful login
+        const redirectPath = router.currentRoute.value.query.redirect || '/';
+        router.push(redirectPath); // Redirect to homepage after successful login
       } catch (error) {
         // Handle login error (e.g., show a notification)
         console.error('Login failed:', error);
