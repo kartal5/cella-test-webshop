@@ -8,6 +8,15 @@
         <button @click="handleLogout" class="text-base text-gray-300 font-light hover:text-gray-400">
           Log ud
         </button>
+
+        <!-- Add Admin Link for Authenticated Users -->
+        <span class="text-gray-500 hidden sm:inline">|</span>
+        <router-link
+          to="/admin"
+          class="text-base text-gray-300 font-light hover:text-gray-400"
+        >
+          Admin Panel
+        </router-link>
       </template>
 
       <template v-else>

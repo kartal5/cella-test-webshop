@@ -764,10 +764,32 @@ Dosering: 1 tsk pr. dag.`,
     return Array.from(subcategoriesSet);
   };
 
+  // CRUD methods
+  const addProduct = (newProduct) => {
+    // Find the max current ID to assign a new unique ID
+    const maxId = allProducts.value.reduce((max, p) => Math.max(max, p.id), 0);
+    newProduct.id = maxId + 1;
+    allProducts.value.push(newProduct);
+  };
+
+  const updateProduct = (updatedProduct) => {
+    const index = allProducts.value.findIndex(p => p.id === updatedProduct.id);
+    if (index !== -1) {
+      allProducts.value[index] = { ...updatedProduct };
+    }
+  };
+
+  const deleteProduct = (productId) => {
+    allProducts.value = allProducts.value.filter(p => p.id !== productId);
+  };
+
   return {
     allProducts,
     getProductsByCategory,
     getProductsByCategoryAndSubcategory,
     getSubcategoriesByCategory,
+    addProduct,
+    updateProduct,
+    deleteProduct
   };
 };
