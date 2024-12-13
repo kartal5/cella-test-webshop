@@ -1,5 +1,5 @@
 <template>
-    <footer class="bg-navbar-green py-8 text-white mt-40">
+    <footer class="bg-light-brown py-8 text-white mt-40 pb-0">
       <div class="container mx-auto px-4">
         <!-- Grid Layout for All Sections -->
         <div class="grid grid-cols-1 gap-8 place-items-top md:grid-cols-3">
@@ -50,11 +50,12 @@
         </a>
       </div>
   
-        <!-- Bottom Section -->
-        <div class="text-center mt-8">
+       
+      </div>
+       <!-- Bottom Section -->
+        <div class="bg-dark-brown text-center mt-8 p-2">
           <p class="text-xs">© 2021 CELLA TEST</p>
         </div>
-      </div>
     </footer>
   </template>
   
