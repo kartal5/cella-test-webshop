@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-light-brown py-2 px-4 sm:px-20 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0"
+    class="bg-light-brown py-4 px-4 sm:px-20 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0"
   >
     <div class="flex-shrink-0">
       <router-link to="/">
