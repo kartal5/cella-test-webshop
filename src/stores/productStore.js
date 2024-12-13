@@ -738,12 +738,14 @@ Dosering: 1 tsk pr. dag.`,
   },
   ]);
 
+  // Fetches all products belonging to a specific category
   const getProductsByCategory = (category) => {
     return allProducts.value.filter((product) =>
       product.categories.includes(category)
     );
   };
 
+  // Fetches all products belonging to a specific category AND (&&) subcategory (Vitaminer & Mineraler, Fordøjelse, Olie, Andre produkter)
   const getProductsByCategoryAndSubcategory = (category, subcategory) => {
     return allProducts.value.filter(
       (product) =>
@@ -752,6 +754,7 @@ Dosering: 1 tsk pr. dag.`,
     );
   };
 
+  // Retrieves a list of all subcategories (Vitaminer & Mineraler, Fordøjelse, Olie, Andre produkter) for a given category
   const getSubcategoriesByCategory = (category) => {
     const subcategoriesSet = new Set();
     allProducts.value.forEach((product) => {
@@ -765,13 +768,17 @@ Dosering: 1 tsk pr. dag.`,
   };
 
   // CRUD methods
+
+  // Adds a new product to the store
   const addProduct = (newProduct) => {
-    // Find the max current ID to assign a new unique ID
+    // Generate a unique ID by identifying the highest existing ID and adding 1 to it
     const maxId = allProducts.value.reduce((max, p) => Math.max(max, p.id), 0);
+    // Assign a unique ID to the new product
     newProduct.id = maxId + 1;
     allProducts.value.push(newProduct);
   };
 
+  // Updates an existing product by replacing its details
   const updateProduct = (updatedProduct) => {
     const index = allProducts.value.findIndex(p => p.id === updatedProduct.id);
     if (index !== -1) {
@@ -779,6 +786,7 @@ Dosering: 1 tsk pr. dag.`,
     }
   };
 
+  // Removes a product from the list by its ID
   const deleteProduct = (productId) => {
     allProducts.value = allProducts.value.filter(p => p.id !== productId);
   };

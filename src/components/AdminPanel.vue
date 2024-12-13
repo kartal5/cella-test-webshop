@@ -6,6 +6,7 @@
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
       <form @submit.prevent="handleAddProduct" class="space-y-4">
+        <!-- Input fields for product details -->
         <div>
           <label class="block text-gray-700 font-semibold mb-2" for="name">Navn</label>
           <input
@@ -90,9 +91,10 @@
       </form>
     </div>
 
-    <!-- Products Table -->
+    <!-- Table displaying all products -->
     <div class="overflow-x-auto">
       <table class="min-w-full bg-blog-post border">
+        <!-- Table Headers for ID, Name, Category, etc -->
         <thead>
           <tr>
             <th class="px-6 py-3 border-b text-left">#</th>
@@ -102,12 +104,14 @@
             <th class="px-6 py-3 border-b text-left">Handlinger</th>
           </tr>
         </thead>
+        <!-- Table Rows -->
         <tbody>
           <tr
             v-for="product in allProducts"
             :key="product.id"
             class="hover:bg-gray-50"
           >
+            <!-- Display product details for edit or delete -->
             <td class="px-6 py-4 border-b">{{ product.id }}</td>
             <td class="px-6 py-4 border-b">{{ product.name }}</td>
             <td class="px-6 py-4 border-b">{{ product.categories.join(', ') }}</td>
@@ -140,11 +144,12 @@
       </table>
     </div>
 
-    <!-- Edit Product Modal -->
+    <!-- Modal for editing product details -->
     <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
       <div class="bg-white p-6 rounded-lg shadow-md max-w-md w-full relative">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Rediger Produkt</h3>
         <form @submit.prevent="handleEditProduct" class="space-y-4">
+          <!-- Input fields for editing product details -->
           <div>
             <label class="block text-gray-700 font-semibold mb-2" for="editName">Navn</label>
             <input
@@ -249,10 +254,11 @@ export default {
     const productStore = useProductStore();
     const featuredStore = useFeaturedProductsStore();
 
+    // Extract specific methods and properties from the product and featured stores
     const { allProducts, addProduct, updateProduct, deleteProduct } = productStore;
     const { featuredProductIds, addFeaturedProduct, removeFeaturedProduct } = featuredStore;
 
-    // New product form fields
+    // New product form fields (via Reactive object)
     const newProduct = ref({
       name: '',
       description: '',
@@ -262,10 +268,14 @@ export default {
       categories: [],
       subcategories: []
     });
+
+    // Input fields for categories and subcategories
     const categoriesInput = ref('');
     const subcategoriesInput = ref('');
 
+    // Handles adding a new product
     const handleAddProduct = () => {
+      // Process categories and subcategories inputs into arrays
       newProduct.value.categories = categoriesInput.value
         .split(',')
         .map(cat => cat.trim())
@@ -275,8 +285,9 @@ export default {
         .map(sub => sub.trim())
         .filter(Boolean);
 
+      // Call the addProduct function from the store
       addProduct({ ...newProduct.value });
-      // Reset form
+      // Reset form inputs
       newProduct.value = {
         name: '',
         description: '',
@@ -290,7 +301,7 @@ export default {
       subcategoriesInput.value = '';
     };
 
-    // Edit Product
+    // Edit Product Modal logic
     const showEditModal = ref(false);
     const editProductData = ref({
       id: null,
@@ -305,7 +316,8 @@ export default {
     const editCategoriesInput = ref('');
     const editSubcategoriesInput = ref('');
 
-    const openEditModal = (product) => {
+    // Opens the edit modal with pre-filled product data
+    const openEditModal = (product) => {  // The product to edit
       editProductData.value = { ...product };
       editCategoriesInput.value = product.categories.join(', ');
       editSubcategoriesInput.value = product.subcategories.join(', ');
@@ -350,6 +362,7 @@ export default {
       }
     };
 
+    // Expose methods and data for template
     return {
       allProducts,
       isFeatured,
