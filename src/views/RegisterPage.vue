@@ -1,10 +1,10 @@
 <template>
     <section class="container mt-10 mx-auto px-4 md:px-10">
-      <div class="max-w-md mx-auto bg-blog-post bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold text-navbar-green mb-6 text-center">Opret en ny konto</h2>
+      <div class="max-w-md mx-auto bg-white bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-dark-brown mb-6 text-center">Opret en ny konto</h2>
         <form @submit.prevent="handleRegister">
           <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2" for="email">Email</label>
+            <label class="block text-black font-semibold mb-2" for="email">Email</label>
             <input
               v-model="email"
               type="email"
@@ -14,7 +14,7 @@
             />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2" for="password">Adgangskode</label>
+            <label class="block text-black font-semibold mb-2" for="password">Adgangskode</label>
             <input
               v-model="password"
               type="password"
@@ -24,7 +24,7 @@
             />
           </div>
           <div class="mb-6">
-            <label class="block text-gray-700 font-semibold mb-2" for="confirmPassword">Bekræft adgangskode</label>
+            <label class="block text-black font-semibold mb-2" for="confirmPassword">Bekræft adgangskode</label>
             <input
               v-model="confirmPassword"
               type="password"
@@ -35,14 +35,14 @@
           </div>
           <button
             type="submit"
-            class="w-full bg-navbar-green text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition"
+            class="w-full bg-light-green text-white font-semibold py-3 rounded-lg hover:bg-dark-green transition"
           >
             Opret konto
           </button>
         </form>
-        <p class="mt-6 text-center text-gray-600">
+        <p class="mt-6 text-center text-black">
           Har du allerede en konto?
-          <router-link to="/login" class="text-navbar-green font-semibold hover:underline">
+          <router-link to="/login" class="text-dark-green font-semibold hover:underline">
             Log ind her
           </router-link>
         </p>
