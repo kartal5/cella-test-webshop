@@ -2,8 +2,12 @@
   <section class="container mt-10 mx-auto px-4 md:px-10">
     <h2 class="text-3xl font-bold text-left text-navbar-green mb-8">Produkter til Katte</h2>
 
-    <!-- Loop through each subcategory and display products -->
-    <div v-for="(subcategory, index) in sortedSubcategories" :key="index" class="mb-10">
+    <!-- Only render once we have subcategories -->
+    <div
+      v-for="(subcategory, index) in sortedSubcategories"
+      :key="index"
+      class="mb-10"
+    >
       <h3 class="text-2xl font-semibold mb-4">{{ subcategory }}</h3>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <ProductCard
@@ -19,6 +23,7 @@
 <script>
 import ProductCard from '../components/ProductCard.vue';
 import { useProductStore } from '../stores/productStore';
+import { computed } from 'vue';
 
 export default {
   name: 'KattePage',
@@ -26,21 +31,28 @@ export default {
     ProductCard,
   },
   setup() {
-    const { getSubcategoriesByCategory, getProductsByCategoryAndSubcategory } = useProductStore();
+    const productStore = useProductStore();
 
-    // Get all subcategories for 'katte'
-    const subcategories = getSubcategoriesByCategory('katte');
+    // Use a computed property so that when products load or change,
+    // subcategories update automatically.
+    const subcategories = computed(() =>
+      productStore.getSubcategoriesByCategory('katte')
+    );
 
-    // Sort subcategories so "Andre produkter" appears last
-    const sortedSubcategories = [...subcategories].sort((a, b) => {
-      if (a === 'Andre produkter') return 1; // Move "Andre produkter" to the end
-      if (b === 'Andre produkter') return -1;
-      return 0;
+    // Also make sortedSubcategories a computed property, depending on subcategories.
+    const sortedSubcategories = computed(() => {
+      const subs = subcategories.value;
+      return [...subs].sort((a, b) => {
+        if (a === 'Andre produkter') return 1; // Move "Andre produkter" to the end
+        if (b === 'Andre produkter') return -1;
+        return 0;
+      });
     });
 
-    // Method to get products by subcategory for 'katte' category
+    // This function can remain a normal function, but it relies on the store's
+    // currently loaded products. The template calls it repeatedly whenever it needs data.
     const getProductsBySubcategory = (subcategory) => {
-      return getProductsByCategoryAndSubcategory('katte', subcategory);
+      return productStore.getProductsByCategoryAndSubcategory('katte', subcategory);
     };
 
     return {

@@ -12,7 +12,7 @@
         </span>
       </p>
 
-      <!-- Dropdown for price selection, visible only for products with multiple options -->
+      <!-- Dropdown for price selection -->
       <div v-if="requiresSelection(product)" class="mb-4">
         <label for="option" class="block font-semibold mb-2">Vælg en mulighed:</label>
         <select v-model="selectedOption" class="border rounded-lg p-2 w-full" id="option">
@@ -25,15 +25,12 @@
 
       <!-- Buttons -->
       <div class="flex items-center gap-2 mt-4 mb-4">
-        <!-- Tilbage Button -->
         <button
           @click="goBack"
           class="bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition"
         >
           Tilbage
         </button>
-
-        <!-- Conditional "Kontakt for Pris" or "Læg i kurv" Button -->
         <button
           v-if="product.price === 'Kontakt for pris'"
           @click="redirectToContact"
@@ -51,7 +48,7 @@
         </button>
       </div>
     </div>
-    <p v-else class="text-center text-gray-600 mt-6">Produktet blev ikke fundet.</p>
+    <p v-else class="text-center text-gray-600 mt-6">Produktet bliver hentet...</p>
   </section>
 </template>
 
@@ -59,133 +56,127 @@
 import { useProductStore } from '../stores/productStore';
 import { useCartStore } from '../stores/cartStore';
 import { useRoute, useRouter } from 'vue-router';
-import { ref, computed } from 'vue';
-import { useToast } from 'vue-toastification'; // Importing toast hook
+import { ref, computed, watch } from 'vue';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'ProductPage',
   setup() {
-    const route = useRoute(); // Used to access the current route parameters
-    const router = useRouter(); // Used for navigation between pages
+    const route = useRoute();
+    const router = useRouter();
+    const toast = useToast();
 
-    const toast = useToast(); // Initialize toast notifications
+    const productStore = useProductStore();
+    const cartStore = useCartStore();
 
-    const { allProducts } = useProductStore();   // Access all products from the store
+    const product = ref(null);
+    const selectedOption = ref(null);
 
-    // Find the specific product based on the route parameter
-    const product = allProducts.value.find((p) => p.id === Number(route.params.id));
-
-    const cartStore = useCartStore(); // Access the cart store to manage cart items
-    const selectedOption = ref(null); // Ref to store the selected dropdown option for products requiring selection
-
-        
-     //Add the product (or its variation) to the cart
-     //If the product requires a dropdown selection, ensure the selected option is included
-    const addToCart = (product) => {
-      if (requiresSelection(product) && selectedOption.value) {
-        // Add the product with the selected variation
-        const selectedProduct = {
-          ...product,
-          price: selectedOption.value.price, // Use the selected variation's price
-          name: `${product.name} - ${selectedOption.value.label}`, // Append variation label to the product name
-        };
-        cartStore.addToCart(selectedProduct);
-      } else if (!requiresSelection(product)) {
-        // Add the product directly if no selection is required
-        cartStore.addToCart(product);
-      }
+    // Function to load the product when allProducts or route changes
+    const loadProduct = () => {
+      const productId = Number(route.params.id);
+      const foundProduct = productStore.allProducts.value.find((p) => p.id === productId);
+      product.value = foundProduct || null;
     };
 
-    const addToCartWithNotification = () => {
-      const isProductInCart = cartStore.cartItems.some((item) =>
-        requiresSelection(product)
-          // Match by name for variations
-          ? item.name === `${product.name} - ${selectedOption.value?.label}`
-          // Match by ID for regular products
-          : item.id === product.id
-      );
+    // Watch for allProducts and route param changes
+    watch(
+      [() => productStore.allProducts.value, () => route.params.id],
+      loadProduct,
+      { immediate: true }
+    );
 
-      if (isProductInCart) {
-        toast.warning('Produktet er allerede tilføjet i kurven!', {
-          icon: '⚠️',
-          toastClassName: 'bg-[#e6dfd4] text-[#5e4b3f] font-bold',
-        });
-      } else {
-        addToCart(product);
-        toast.success('Produktet er tilføjet i kurven!', {
-          icon: '✔️',
-          toastClassName: 'bg-[#95ad81] text-white font-bold',
-        });
-      }
-    };
-
-    const goBack = () => {
-      router.go(-1); // Navigate to the previous page
-    };
-
-    // Split product descriptions into separate lines for better readability
-    const formattedDescription = product?.fullDescription
-      ? product.fullDescription.split('\n')
-      : product.description.split('\n');
-
-      // Determine if the product requires a dropdown selection
-      const requiresSelection = (product) => {
-        // Products with "Kontakt for pris" should not show a dropdown so disable the button
-        if (product.price === 'Kontakt for pris') {
-          return false;
-        }
-
-        // IDs of products requiring selection
-        const productsRequiringSelection = [31, 36, 37, 38];
-        return productsRequiringSelection.includes(product.id);
-      };
-
-    // Dynamically generate dropdown options for products with variations
+    // Handle product options dynamically
     const productOptions = computed(() => {
-      if (!product || !requiresSelection(product)) return [];
+      if (!product.value || !requiresSelection(product.value)) return [];
       const options = [];
-      if (product.id === 31) {
-        options.push(
-          { label: 'Leje pr. uge', price: 'DKK 1,500.00' },
-          { label: 'Køb af sæt', price: 'DKK 32,550.00' },
-          { label: 'Køb af dækken', price: 'DKK 18,585.00' },
-          { label: 'Køb af gamacher', price: 'DKK 20,265.00' }
-        );
-      } else if (product.id === 36) {
-        options.push(
-          { label: '1L', price: 'DKK 299.00' },
-          { label: '3L', price: 'DKK 699.00' }
-        );
-      } else if (product.id === 37) {
-        options.push(
-          { label: '1L', price: 'DKK 119.00' },
-          { label: '3L', price: 'DKK 299.00' }
-        );
-      } else if (product.id === 38) {
-        options.push(
-          { label: '1L', price: 'DKK 99.00' },
-          { label: '3L', price: 'DKK 249.00' }
-        );
+      switch (product.value.id) {
+        case 31:
+          options.push(
+            { label: 'Leje pr. uge', price: 'DKK 1,500.00' },
+            { label: 'Køb af sæt', price: 'DKK 32,550.00' },
+            { label: 'Køb af dækken', price: 'DKK 18,585.00' },
+            { label: 'Køb af gamacher', price: 'DKK 20,265.00' }
+          );
+          break;
+        case 36:
+          options.push(
+            { label: '1L', price: 'DKK 299.00' },
+            { label: '3L', price: 'DKK 699.00' }
+          );
+          break;
+        case 37:
+          options.push(
+            { label: '1L', price: 'DKK 119.00' },
+            { label: '3L', price: 'DKK 299.00' }
+          );
+          break;
+        case 38:
+          options.push(
+            { label: '1L', price: 'DKK 99.00' },
+            { label: '3L', price: 'DKK 249.00' }
+          );
+          break;
       }
       return options;
     });
 
-    // Redirect users to the contact page for products with "Kontakt for pris."
-    const redirectToContact = () => {
-      window.location.href = "https://www.cellatest.com/kontakt";
+    // Utility to determine if selection is required
+    const requiresSelection = (product) => {
+      if (product.price === 'Kontakt for pris') return false;
+      return [31, 36, 37, 38].includes(product.id);
     };
 
-    // Expose variables and methods to the template
+    const addToCartWithNotification = () => {
+      if (!product.value) return;
+      const isInCart = cartStore.cartItems.some((item) =>
+        requiresSelection(product.value)
+          ? item.name === `${product.value.name} - ${selectedOption.value?.label}`
+          : item.id === product.value.id
+      );
+
+      if (isInCart) {
+        toast.warning('Produktet er allerede tilføjet i kurven!');
+      } else {
+        addToCart();
+        toast.success('Produktet er tilføjet i kurven!');
+      }
+    };
+
+    const addToCart = () => {
+      if (requiresSelection(product.value) && selectedOption.value) {
+        const selectedProduct = {
+          ...product.value,
+          price: selectedOption.value.price,
+          name: `${product.value.name} - ${selectedOption.value.label}`,
+        };
+        cartStore.addToCart(selectedProduct);
+      } else {
+        cartStore.addToCart(product.value);
+      }
+    };
+
+    const formattedDescription = computed(() =>
+      product.value?.fullDescription
+        ? product.value.fullDescription.split('\n')
+        : product.value?.description?.split('\n') || []
+    );
+
+    const redirectToContact = () => {
+      window.location.href = 'https://www.cellatest.com/kontakt';
+    };
+
+    const goBack = () => router.go(-1);
+
     return {
       product,
-      addToCartWithNotification,
-      addToCart,
-      goBack,
       formattedDescription,
-      requiresSelection,
       productOptions,
       selectedOption,
+      addToCartWithNotification,
+      requiresSelection,
       redirectToContact,
+      goBack,
     };
   },
 };

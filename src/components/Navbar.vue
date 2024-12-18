@@ -11,6 +11,7 @@
 
         <!-- Add Admin Link for Authenticated Users -->
         <span class="text-white hidden sm:inline">|</span>
+
         <router-link
           to="/admin"
           class="text-base text-whitefont-light hover:text-light-brown"
@@ -71,10 +72,10 @@ export default {
       authStore.logout();
     };
 
-    // Define isAuthenticated as a computed property that depends on the authentication store's state
+    // Check if user is logged in (via computed property that depends on the authentication store's state)
     const isAuthenticated = computed(() => authStore.isAuthenticated());
 
-    // Define userEmail as a computed property
+    // Get logged-in user's email (as a computed property)
     const userEmail = computed(() => authStore.user?.email);
 
     return {
