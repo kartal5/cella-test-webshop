@@ -2,24 +2,24 @@
   <div class="bg-white p-4 rounded-3xl shadow-lg hover:shadow-2xl transition-shadow flex flex-col w-full h-full">
     <div class="flex-grow flex flex-col items-center">
       <img :src="product.image" :alt="product.name" class="w-full h-48 object-contain mb-4 rounded" />
-      <h3 class="text-lg font-semibold text-center text-gray-900">{{ product.name }}</h3>
-      <p class="text-center text-gray-600 mb-4 line-clamp-3">{{ product.description }}</p>
+      <h3 class="text-lg font-semibold text-center text-dark-brown px-2">{{ product.name }}</h3>
+      <p class="text-start text-black mb-4 line-clamp-3 px-2">{{ product.description }}</p>
     </div>
-    <p class="text-lg font-bold text-navbar-green text-center mb-4">{{ product.price }}</p>
+    <p class="text-lg font-bold text-dark-green text-end mb-4 px-2">{{ product.price }}</p>
 
     <!-- "Læg i kurv" button -->
     <button 
       @click="addToCart(product)"
       :disabled="requiresSelection(product)"
       :class="{
-        'bg-add-to-cart-btn text-white font-semibold py-2 px-4 rounded w-full hover:bg-green-700 transition': true,
+        'bg-light-green text-white font-semibold py-2 px-4 rounded w-full hover:bg-dark-green transition': true,
         'opacity-50 cursor-not-allowed': requiresSelection(product),
       }">
       Læg i kurv
     </button>
     
     <!-- "Læs Mere" button -->
-    <router-link :to="`/product/${product.id}`" class="bg-blue-400 text-white font-semibold py-2 px-4 rounded w-full hover:bg-blue-600 transition mt-2 text-center block">
+    <router-link :to="`/product/${product.id}`" class="bg-light-brown text-white font-semibold py-2 px-4 rounded w-full hover:bg-dark-brown transition mt-2 text-center block">
       Læs Mere
     </router-link>
   </div>

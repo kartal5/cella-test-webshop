@@ -1,9 +1,9 @@
 <template>
   <section class="container mt-10 mx-auto px-4 md:px-10">
-    <h2 class="text-3xl font-bold text-center text-navbar-green mb-8">UDVALGTE PRODUKTER</h2>
+    <h2 class="text-3xl font-bold text-center text-dark-brown mb-8">UDVALGTE PRODUKTER</h2>
     <div
       v-if="randomProducts.length > 0"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
     >
       <ProductCard
         v-for="product in randomProducts"
@@ -11,7 +11,7 @@
         :product="product"
       />
     </div>
-    <p v-else class="text-center text-gray-600 mt-6">Ingen produkter at vise.</p>
+    <p v-else class="text-center text-black mt-6">Ingen produkter at vise.</p>
   </section>
 </template>
 
@@ -54,7 +54,7 @@ export default {
 
 @media (min-width: 1024px) { /* For large screens and up */
   .grid {
-    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
   }
 }
 

@@ -1,10 +1,10 @@
 <template>
   <section class="container mt-10 mx-auto px-4 md:px-10">
-    <div class="max-w-md mx-auto bg-blog-post bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold text-navbar-green mb-6 text-center">Log ind på din konto</h2>
+    <div class="max-w-md mx-auto bg-white bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold text-dark-brown mb-6 text-center">Log ind på din konto</h2>
       <form @submit.prevent="handleLogin">
         <div class="mb-4">
-          <label class="block text-gray-700 font-semibold mb-2" for="email">Email</label>
+          <label class="block text-black font-semibold mb-2" for="email">Email</label>
           <input
             v-model="email"
             type="email"
@@ -14,7 +14,7 @@
           />
         </div>
         <div class="mb-6">
-          <label class="block text-gray-700 font-semibold mb-2" for="password">Adgangskode</label>
+          <label class="block text-text-black font-semibold mb-2" for="password">Adgangskode</label>
           <input
             v-model="password"
             type="password"
@@ -25,14 +25,14 @@
         </div>
         <button
           type="submit"
-          class="w-full bg-navbar-green text-white font-semibold py-3 rounded-lg hover:bg-green-700 transition"
+          class="w-full bg-light-green text-white font-semibold py-3 rounded-lg hover:bg-dark-green transition"
         >
           Log ind
         </button>
       </form>
-      <p class="mt-6 text-center text-gray-600">
+      <p class="mt-6 text-center text-dark-brown">
         Har du ikke en konto?
-        <router-link to="/register" class="text-navbar-green font-semibold hover:underline">
+        <router-link to="/register" class="text-dark-green font-semibold hover:underline">
           Registrer dig her
         </router-link>
       </p>

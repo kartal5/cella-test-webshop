@@ -1,8 +1,8 @@
 <template>
-    <footer class="bg-navbar-green py-8 text-white mt-40">
+    <footer class="bg-light-brown py-8 text-white mt-40 pb-0">
       <div class="container mx-auto px-4">
         <!-- Grid Layout for All Sections -->
-        <div class="grid grid-cols-1 gap-8 place-items-center md:grid-cols-3">
+        <div class="grid grid-cols-1 gap-8 place-items-top md:grid-cols-3">
           <!-- Left Section: Nyttige Links -->
           <div class="flex flex-col space-y-4 items-center md:items-start text-center md:text-left">
             <h3 class="text-2xl font-bold">Nyttige links</h3>
@@ -22,10 +22,12 @@
           <!-- Right Section: Kontakt -->
           <div class="flex flex-col space-y-4 items-center md:items-end text-center md:text-right">
             <h3 class="text-2xl font-bold">Kontakt</h3>
-            <p class="text-lg">Kølstrupvej 45, 5330 Munkebo</p>
-            <p class="text-lg">Email: <a href="mailto:info@cellatest.com" class="hover:underline">info@cellatest.com</a></p>
-            <p class="text-lg">Telefon: +45 22 29 00 82</p>
-            <p class="text-lg">CVR: 40715355</p>
+            <ul class="space-y-2 text-lg">
+              <li><p class="text-lg">Kølstrupvej 45, 5330 Munkebo</p></li>
+              <li><p class="text-lg">Email: <a href="mailto:info@cellatest.com" class="hover:underline">info@cellatest.com</a></p></li>
+              <li><p class="text-lg">Telefon: +45 22 29 00 82</p></li>
+              <li><p class="text-lg">CVR: 40715355</p></li>
+            </ul>
           </div>
         </div>
   
@@ -48,11 +50,12 @@
         </a>
       </div>
   
-        <!-- Bottom Section -->
-        <div class="text-center mt-8">
+       
+      </div>
+       <!-- Bottom Section -->
+        <div class="bg-dark-brown text-center mt-8 p-2">
           <p class="text-xs">© 2021 CELLA TEST</p>
         </div>
-      </div>
     </footer>
   </template>
   
