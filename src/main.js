@@ -7,6 +7,7 @@ import clickOutside from './directives/clickOutside';
 
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
+import './registerServiceWorker'
 
 const app = createApp(App);
 app.use(createPinia()); // Use Pinia for state management
