@@ -13,6 +13,8 @@ import BlogPostPage from '../views/BlogPostPage.vue';
 import LoginPage from '../views/LoginPage.vue'; 
 import RegisterPage from '../views/RegisterPage.vue';
 import { useAuthStore } from '../stores/authStore';
+import AdminDashboard from '../components/AdminDashboard.vue';
+
 
 
 const routes = [
@@ -29,6 +31,8 @@ const routes = [
   { path: '/product/:id', component: ProductPage },
   { path: '/blog', component: BlogPage },
   { path: '/blog/:id', component: BlogPostPage }, // Dynamic route for individual posts
+  {path: '/AdminDasboard', component: AdminDashboard}, // Admin dashboard
+  
 
 ];
 

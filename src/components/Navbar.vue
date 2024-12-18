@@ -17,6 +17,15 @@
         >
           Admin Panel
         </router-link>
+
+        <span class="text-gray-500 hidden sm:inline">|</span>
+        <router-link
+          to="/AdminDashboard"
+          class="text-base text-gray-300 font-light hover:text-gray-400"
+        >
+          Admin Dashboard
+        </router-link>
+
       </template>
 
       <template v-else>
