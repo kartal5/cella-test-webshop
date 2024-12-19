@@ -3,66 +3,60 @@ import { ref } from 'vue';
 import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { app } from '../firebase/init'; // Make sure to export `app` from init.js
 
-// Initialize Firestore
+// Initialize Firestore database and reference to the 'products' collection
 const db = getFirestore(app);
 const productsCollection = collection(db, 'products');
 
 export const useProductStore = () => {
+  // Reactive reference/variable to store fetched products
   const allProducts = ref([]);
 
-  // Fetch products from Firestore
+  // Fetch products from Firestore and update `allProducts`
   const fetchProducts = async () => {
     const querySnapshot = await getDocs(productsCollection);
     const products = [];
     querySnapshot.forEach((docSnap) => {
-      // docSnap.data() contains the product fields
+      // Extract product data from Firestore and convert its document ID to numeric `id`
+      // "docSnap.data()" contains the product fields
       const productData = docSnap.data();
       products.push({
         ...productData,
-        id: parseInt(docSnap.id, 10)  // Convert docSnap.id to a number
+        id: parseInt(docSnap.id, 10) 
       });
     });
-    allProducts.value = products;
+    allProducts.value = products; // Save the fetched products to be used in the app
   };
 
-  // Call fetchProducts once on store initialization
+  // Load products from Firestore as soon as the store is created
   fetchProducts().catch(console.error);
 
-  // Utility method: If Firestore docs don't store `id` in the data itself,
-  // you can map them by using docSnap.id and store it into the product object.
-  // In that case, ensure that each doc has a unique ID assigned by Firestore.
-
-  // Adds a new product to Firestore and store
+  // Adds a new product to Firestore and store (the product list we see on the page)
   const addProduct = async (newProduct) => {
     // Generate a unique ID client-side or rely on Firestore's auto-ID
     // Remove the line that generated ID from array since Firestore does it
-    // Example: We can let Firestore generate an ID automatically
     const docRef = await addDoc(productsCollection, {
-      ...newProduct,
-      // If you used 'id' in your code heavily, you can store it too:
-      // But commonly we use doc().id after creation.
-      // Firestore auto-generated ID can be obtained via docRef.id
+      ...newProduct,      
     });
 
-    // After adding, if you need the ID in your local state:
-    const addedProduct = { ...newProduct, id: docRef.id };
-    allProducts.value.push(addedProduct);
+    // Firestore auto-generated ID can be obtained via docRef.id
+    const addedProduct = { ...newProduct, id: docRef.id }; // Combine the product details with Firestore's generated ID
+    allProducts.value.push(addedProduct); // Update the local list of products
   };
 
-  // Updates an existing product in Firestore and store
+  // Updates an existing product in Firestore and local store
   const updateProduct = async (updatedProduct) => {
-    // You must have a way to find the product's Firestore doc. 
     // If doc IDs are the same as product IDs, use that:
     const docRef = doc(db, 'products', updatedProduct.id.toString()); 
-    await updateDoc(docRef, { ...updatedProduct });
+    await updateDoc(docRef, { ...updatedProduct }); // Send updated fields
     
+    // Find the index of the product in the local list that matches the updated product's ID:
     const index = allProducts.value.findIndex(p => p.id === updatedProduct.id);
     if (index !== -1) {
-      allProducts.value[index] = { ...updatedProduct };
+      allProducts.value[index] = { ...updatedProduct }; // Update locally
     }
   };
 
-  // Removes a product from Firestore and store
+  // Delete a product from Firestore and remove it locally
   const deleteProduct = async (productId) => {
     const docRef = doc(db, 'products', productId.toString());
     await deleteDoc(docRef);
@@ -70,13 +64,14 @@ export const useProductStore = () => {
     allProducts.value = allProducts.value.filter(p => p.id !== productId);
   };
 
-  // Filter methods remain the same, they just operate on `allProducts.value`
+  // Filter products by category
   const getProductsByCategory = (category) => {
     return allProducts.value.filter((product) =>
       product.categories.includes(category)
     );
   };
 
+  // Filter products by category and subcategory
   const getProductsByCategoryAndSubcategory = (category, subcategory) => {
     return allProducts.value.filter(
       (product) =>
@@ -85,6 +80,7 @@ export const useProductStore = () => {
     );
   };
 
+  // Get unique subcategories for a specific category
   const getSubcategoriesByCategory = (category) => {
     const subcategoriesSet = new Set();
     allProducts.value.forEach((product) => {

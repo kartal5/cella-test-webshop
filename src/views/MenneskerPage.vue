@@ -31,26 +31,25 @@ export default {
     ProductCard,
   },
   setup() {
-    const productStore = useProductStore();
+    const productStore = useProductStore(); // Use the product store
 
-    // Use a computed property so that when products load or change,
-    // subcategories update automatically.
+    // Use a computed property so that when products load or change, subcategories update automatically.
     const subcategories = computed(() =>
       productStore.getSubcategoriesByCategory('mennesker')
     );
 
-    // Also make sortedSubcategories a computed property, depending on subcategories.
+    // Sort subcategories, placing 'Andre produkter' at the end
     const sortedSubcategories = computed(() => {
       const subs = subcategories.value;
       return [...subs].sort((a, b) => {
-        if (a === 'Andre produkter') return 1; // Move "Andre produkter" to the end
+        if (a === 'Andre produkter') return 1;
         if (b === 'Andre produkter') return -1;
         return 0;
       });
     });
 
-    // This function can remain a normal function, but it relies on the store's
-    // currently loaded products. The template calls it repeatedly whenever it needs data.
+    // Gets all products that belong to a specific subcategory within the "mennesker" category
+    // /This function can remain a normal function, but it relies on the store's)
     const getProductsBySubcategory = (subcategory) => {
       return productStore.getProductsByCategoryAndSubcategory('mennesker', subcategory);
     };

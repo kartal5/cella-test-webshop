@@ -12,7 +12,7 @@
         </span>
       </p>
 
-      <!-- Dropdown for price selection -->
+      <!-- Dropdown for price selection, visible only for products with multiple options -->
       <div v-if="requiresSelection(product)" class="mb-4">
         <label for="option" class="block font-semibold mb-2">Vælg en mulighed:</label>
         <select v-model="selectedOption" class="border rounded-lg p-2 w-full" id="option">
@@ -31,6 +31,7 @@
         >
           Tilbage
         </button>
+        <!-- Conditional "Kontakt for Pris" or "Læg i kurv" Button -->
         <button
           v-if="product.price === 'Kontakt for pris'"
           @click="redirectToContact"
@@ -62,17 +63,17 @@ import { useToast } from 'vue-toastification';
 export default {
   name: 'ProductPage',
   setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const toast = useToast();
+    const route = useRoute(); // access the current route parameters
+    const router = useRouter(); // navigation between pages
+    const toast = useToast(); // 
 
-    const productStore = useProductStore();
+    const productStore = useProductStore(); // Access all products from the store
     const cartStore = useCartStore();
 
-    const product = ref(null);
-    const selectedOption = ref(null);
+    const product = ref(null);  // Holds the currently displayed product
+    const selectedOption = ref(null); // Holds selected dropdown option (if applicable)
 
-    // Function to load the product when allProducts or route changes
+    // Function to load the product when the route or products change
     const loadProduct = () => {
       const productId = Number(route.params.id);
       const foundProduct = productStore.allProducts.value.find((p) => p.id === productId);
@@ -86,7 +87,7 @@ export default {
       { immediate: true }
     );
 
-    // Handle product options dynamically
+    // Handle dropdown options dynamically for products requiring selection
     const productOptions = computed(() => {
       if (!product.value || !requiresSelection(product.value)) return [];
       const options = [];
@@ -121,12 +122,13 @@ export default {
       return options;
     });
 
-    // Utility to determine if selection is required
+    // Determine if a dropdown selection is required
     const requiresSelection = (product) => {
       if (product.price === 'Kontakt for pris') return false;
       return [31, 36, 37, 38].includes(product.id);
     };
 
+    // Add product to cart, showing a toast notification
     const addToCartWithNotification = () => {
       if (!product.value) return;
       const isInCart = cartStore.cartItems.some((item) =>
@@ -152,7 +154,7 @@ export default {
         };
         cartStore.addToCart(selectedProduct);
       } else {
-        cartStore.addToCart(product.value);
+        cartStore.addToCart(product.value); // Update for varying products
       }
     };
 
