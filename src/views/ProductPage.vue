@@ -1,55 +1,56 @@
 <template>
   <section class="container mt-10 mx-auto px-4 md:px-10">
-    <div v-if="product" class="product-detail">
-      <!-- Adjust the image size with a CSS class -->
-      <h2 class="text-4xl font-bold text-navbar-green mb-4">{{ product.name }}</h2>
-      <img :src="product.image" :alt="product.name" class="product-image mb-4 rounded" />
-      <p class="text-2xl font-bold text-navbar-green mt-4">{{ product.price }}</p>
-      <p class="text-lg text-gray-700 mb-6">
-        <span v-for="(line, index) in formattedDescription" :key="index">
-          {{ line }}
-          <br v-if="index < formattedDescription.length - 1" />
-        </span>
-      </p>
+    <div>
+      <div v-if="product"
+        class="product-detail bg-white border rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 m-4">
+        <!-- Adjust the image size with a CSS class -->
+        <div>
+          <img :src="product.image" :alt="product.name" class="product-image rounded" />
+        </div>
+        <div>
+          <h2 class="text-4xl font-bold text-dark-brown mb-4">{{ product.name }}</h2>
+          <p class="text-2xl font-bold text-dark-green mt-4">{{ product.price }}</p>
 
-      <!-- Dropdown for price selection, visible only for products with multiple options -->
-      <div v-if="requiresSelection(product)" class="mb-4">
-        <label for="option" class="block font-semibold mb-2">Vælg en mulighed:</label>
-        <select v-model="selectedOption" class="border rounded-lg p-2 w-full" id="option">
-          <option disabled value="">-- Vælg en mulighed --</option>
-          <option v-for="(option, index) in productOptions" :key="index" :value="option">
-            {{ option.label }} - {{ option.price }}
-          </option>
-        </select>
+          <!-- Dropdown for price selection, visible only for products with multiple options -->
+          <div v-if="requiresSelection(product)" class="mb-4">
+            <label for="option" class="block font-semibold mb-2">Vælg en mulighed:</label>
+            <select v-model="selectedOption" class="border rounded-lg p-2 w-full" id="option">
+              <option disabled value="">-- Vælg en mulighed --</option>
+              <option v-for="(option, index) in productOptions" :key="index" :value="option">
+                {{ option.label }} - {{ option.price }}
+              </option>
+            </select>
+          </div>
+          <!-- Buttons -->
+          <div class="flex items-center gap-2 mt-4 mb-4">
+            <button @click="goBack"
+              class="bg-dark-brown text-white font-semibold py-2 px-4 rounded hover:bg-light-brown transition">
+              Tilbage
+            </button>
+            <!-- Conditional "Kontakt for Pris" or "Læg i kurv" Button -->
+            <button v-if="product.price === 'Kontakt for pris'" @click="redirectToContact"
+              class="bg-light-brown text-white font-semibold py-2 px-4 rounded hover:bg-dark-brown transition">
+              Kontakt for Pris
+            </button>
+            <button v-else @click="addToCartWithNotification" :disabled="requiresSelection(product) && !selectedOption"
+              class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">
+              Læg i kurv
+            </button>
+          </div>
+        </div>
       </div>
-
-      <!-- Buttons -->
-      <div class="flex items-center gap-2 mt-4 mb-4">
-        <button
-          @click="goBack"
-          class="bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600 transition"
-        >
-          Tilbage
-        </button>
-        <!-- Conditional "Kontakt for Pris" or "Læg i kurv" Button -->
-        <button
-          v-if="product.price === 'Kontakt for pris'"
-          @click="redirectToContact"
-          class="bg-navbar-green text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition"
-        >
-          Kontakt for Pris
-        </button>
-        <button
-          v-else
-          @click="addToCartWithNotification"
-          :disabled="requiresSelection(product) && !selectedOption"
-          class="bg-navbar-green text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition"
-        >
-          Læg i kurv
-        </button>
+      <p v-else class="text-center text-black mt-6">Produktet bliver hentet...</p>
+      <div class="bg-white bg-white border rounded-lg m-4 p-4 ">
+        <h2 class="text-4xl font-bold text-dark-brown mb-4">Beskrivelse</h2>
+          <p class="text-lg text-black mb-6">
+            <span v-for="(line, index) in formattedDescription" :key="index">
+              {{ line }}
+              <br v-if="index < formattedDescription.length - 1" />
+            </span>
+          </p>
       </div>
     </div>
-    <p v-else class="text-center text-gray-600 mt-6">Produktet bliver hentet...</p>
+
   </section>
 </template>
 
@@ -196,5 +197,37 @@ export default {
 .product-detail {
   max-width: 900px;
   margin: auto;
+}
+
+@media (min-width: 1024px) {
+
+  /* For large screens and up */
+  .grid {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+
+  /* For medium screens */
+  .grid {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+
+  /* For small screens */
+  .grid {
+    grid-template-columns: repeat(1, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+
+  /* For extra small screens */
+  .grid {
+    grid-template-columns: repeat(1, minmax(220px, 1fr));
+  }
 }
 </style>
