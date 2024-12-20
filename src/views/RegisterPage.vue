@@ -9,7 +9,7 @@
               v-model="email"
               type="email"
               id="email"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-light-green"
               required
             />
           </div>
@@ -19,7 +19,7 @@
               v-model="password"
               type="password"
               id="password"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-light-green"
               required
             />
           </div>
@@ -29,7 +29,7 @@
               v-model="confirmPassword"
               type="password"
               id="confirmPassword"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-light-green"
               required
             />
           </div>

@@ -1,19 +1,19 @@
 <template>
     <section class="container mt-10 mx-auto px-4 md:px-10">
       <div v-if="post" class="text-center">
-        <h1 class="text-4xl font-bold text-navbar-green mb-6">{{ post.title }}</h1>
+        <h1 class="text-4xl font-bold text-dark-brown mb-6">{{ post.title }}</h1>
         <img :src="post.image" :alt="post.title" class="w-full h-64 object-cover rounded mb-6" />
         <div class="bg-blog-post p-6 rounded-lg shadow-md text-left mt-6 space-y-6">
           <p
             v-for="(paragraph, index) in post.content"
             :key="index"
-            class="text-lg text-gray-700 leading-relaxed"
+            class="text-lg text-black leading-relaxed"
           >
             {{ paragraph }}
           </p>
         </div>
       </div>
-      <p v-else class="text-center text-gray-600">Indlæser...</p>
+      <p v-else class="text-center text-black">Indlæser...</p>
     </section>
   </template>
   
