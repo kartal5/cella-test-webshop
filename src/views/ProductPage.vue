@@ -1,26 +1,29 @@
 <template>
   <section class="container mt-10 mx-auto px-4 md:px-10">
     <div>
-      <div v-if="product"
-        class="product-detail bg-white border rounded-lg p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 m-4">
+      <div v-if="product" id="product-detail"
+        class="product-detail grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 m-4">
         <!-- Adjust the image size with a CSS class -->
-        <div>
+        <div class="columns-auto bg-white border rounded-lg p-4">
           <img :src="product.image" :alt="product.name" class="product-image rounded" />
         </div>
-        <div>
-          <h2 class="text-4xl font-bold text-dark-brown mb-4">{{ product.name }}</h2>
-          <p class="text-2xl font-bold text-dark-green mt-4">{{ product.price }}</p>
+        <div class="columns-auto bg-white border rounded-lg p-4 flex flex-col">
+          <div class="flex-grow">
+            <h2 class="text-4xl font-bold text-dark-brown mb-4">{{ product.name }}</h2>
+            <p class="text-2xl font-bold text-dark-green mt-4">{{ product.price }}</p>
 
-          <!-- Dropdown for price selection, visible only for products with multiple options -->
-          <div v-if="requiresSelection(product)" class="mb-4">
-            <label for="option" class="block font-semibold mb-2">Vælg en mulighed:</label>
-            <select v-model="selectedOption" class="border rounded-lg p-2 w-full" id="option">
-              <option disabled value="">-- Vælg en mulighed --</option>
-              <option v-for="(option, index) in productOptions" :key="index" :value="option">
-                {{ option.label }} - {{ option.price }}
-              </option>
-            </select>
+            <!-- Dropdown for price selection, visible only for products with multiple options -->
+            <div v-if="requiresSelection(product)" class="mb-4">
+              <label for="option" class="block font-semibold mb-2">Vælg en mulighed:</label>
+              <select v-model="selectedOption" class="border rounded-lg p-2 w-full" id="option">
+                <option disabled value="">-- Vælg en mulighed --</option>
+                <option v-for="(option, index) in productOptions" :key="index" :value="option">
+                  {{ option.label }} - {{ option.price }}
+                </option>
+              </select>
+            </div>
           </div>
+          
           <!-- Buttons -->
           <div class="flex items-center gap-2 mt-4 mb-4">
             <button @click="goBack"
@@ -40,14 +43,14 @@
         </div>
       </div>
       <p v-else class="text-center text-black mt-6">Produktet bliver hentet...</p>
-      <div class="bg-white bg-white border rounded-lg m-4 p-4 ">
+      <div id="product-desc" class="bg-white bg-white border rounded-lg m-4 p-4 flex-col place-content-center">
         <h2 class="text-4xl font-bold text-dark-brown mb-4">Beskrivelse</h2>
-          <p class="text-lg text-black mb-6">
-            <span v-for="(line, index) in formattedDescription" :key="index">
-              {{ line }}
-              <br v-if="index < formattedDescription.length - 1" />
-            </span>
-          </p>
+        <p class="text-lg text-black mb-6">
+          <span v-for="(line, index) in formattedDescription" :key="index">
+            {{ line }}
+            <br v-if="index < formattedDescription.length - 1" />
+          </span>
+        </p>
       </div>
     </div>
 
@@ -188,7 +191,6 @@ export default {
 <style scoped>
 .product-image {
   max-width: 100%;
-  width: 320px;
   height: auto;
   display: block;
   margin: 0 auto;
@@ -199,19 +201,27 @@ export default {
   margin: auto;
 }
 
+#product-desc {
+    max-width: 900px;
+    display: block;
+    margin: 20px auto;
+  }
+
 @media (min-width: 1024px) {
 
   /* For large screens and up */
   .grid {
-    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    grid-template-columns: 2fr 1fr;
   }
+
+  
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
 
   /* For medium screens */
   .grid {
-    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    grid-template-columns: 2fr 1fr;
   }
 }
 
