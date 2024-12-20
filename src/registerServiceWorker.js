@@ -2,10 +2,10 @@
 
 import { register } from 'register-service-worker'
 
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/service-worker.js') // Replace with the actual path to your service worker file
+    navigator.serviceWorker.register('/sw.js') // Register sw.js as the service worker
       .then(registration => {
         console.log('Service Worker registered:', registration);
       })
@@ -14,6 +14,18 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+navigator.serviceWorker.getRegistrations().then(registrations => {
+  for (let registration of registrations) {
+    registration.unregister().then(wasUnregistered => {
+      if (wasUnregistered) {
+        console.log('Service worker unregistered');
+      } else {
+        console.log('Service worker not unregistered');
+      }
+    });
+  }
+});
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {

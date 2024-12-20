@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: 'My Vue App',
-        short_name: 'VueApp',
-        description: 'My Vue 3 PWA app',
+        name: 'CELLATEST PWA',
+        short_name: 'PWA',
+        description: 'CELLATEST pwa app',
         theme_color: '#ffffff'    
       },
     }),
