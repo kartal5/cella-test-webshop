@@ -1,9 +1,79 @@
 <template>
   <section class="container mt-10 mx-auto px-4 md:px-10">
+    
     <h2 class="text-3xl font-bold text-left text-navbar-green mb-8">Admin Panel</h2>
 
-    <!-- Add New Product Form -->
+
+    <!-- Add New Product Form & see admins online or ofline -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
+      <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Admin</h3>
+    <div>
+      <div class="bg-blog-post p-6 rounded-lg shadow-md mb-1">
+          <!-- Grid container for admins -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div v-for="admin in admins" :key="admin.id" class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1">
+        <!-- Admin profile picture -->
+        <img :src="admin.picture" alt="Admin Picture" class="w-16 h-16 rounded-full mr-4">
+        <!-- Admin information -->
+        <div class="flex-1">
+          <!-- Admin name -->
+          <h3 class="text-xl font-semibold">{{ admin.name }}</h3>
+           <!-- Admin email -->
+           <p class="text-gray-700">{{ admin.email }}</p>
+          <!-- Online/Offline status -->
+          <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
+            {{ admin.online ? 'Online' : 'Offline' }}
+          </p>
+        </div>
+
+        
+        <!-- Direct message icon -->
+        <a href="#" @click.prevent="openMessageModal(admin)" class="text-gray-500 hover:text-gray-700 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z"/>
+                </svg>
+              </a>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+ <!-- Modal for sending direct message -->
+ <div v-if="showMessageModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
+      <div class="bg-white p-6 rounded-lg shadow-md max-w-md w-full relative">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Send Besked til {{ selectedAdmin.name }}</h3>
+        <form @submit.prevent="sendMessage">
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2" for="message">Besked</label>
+            <textarea
+              v-model="message"
+              id="message"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              required
+            ></textarea>
+          </div>
+          <div class="flex justify-end space-x-4 mt-4">
+            <button
+              type="button"
+              @click="closeMessageModal"
+              class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition"
+            >
+              Annuller
+            </button>
+            <button
+              type="submit"
+              class="bg-navbar-green text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition"
+            >
+              Send Besked
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+    </div>
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
       <form @submit.prevent="handleAddProduct" class="space-y-4">
         <!-- Input fields for product details -->
@@ -247,10 +317,42 @@
 import { useProductStore } from '../stores/productStore';
 import { useFeaturedProductsStore } from '../stores/featuredProductsStore';
 import { ref } from 'vue';
+import { useAuthStore } from '../stores/authStore'; // Import the auth store
 
 export default {
   name: 'AdminPanel',
   setup() {
+    const authStore = useAuthStore(); // Access the auth store
+
+    const admins = ref([
+      { id: 1, name: 'Helene', email: 'Zentia88@live.dk', picture: '/public/img/logo.png', online: true },
+      { id: 2, name: 'Maria',  email: 'maria@example.com', picture: '/public/img/logo.png', online: false },
+      { id: 3, name: 'Emilie', email:'emilie@example.com', picture: '/public/img/logo.png', online: true },
+      { id: 4, name: 'Seyyit', email: 'seyyit@example.com', picture: '/public/img/logo.png', online: false }
+    ]);
+
+    const showMessageModal = ref(false);
+    const selectedAdmin = ref(null);
+    const message = ref('');
+
+    const openMessageModal = (admin) => {
+      selectedAdmin.value = admin;
+      showMessageModal.value = true;
+    };
+
+    const closeMessageModal = () => {
+      showMessageModal.value = false;
+      message.value = '';
+    };
+    const sendMessage = () => {
+      // Handle sending message logic here
+      const currentUserEmail = authStore.user.email; // Get the current user's email from the auth store
+      console.log(`Send message to: ${selectedAdmin.value.name} (${selectedAdmin.value.email}) from ${currentUserEmail}`);
+      console.log(`Message: ${message.value}`);
+      // Implement the logic to send an email or message here
+      closeMessageModal();
+    };
+
     const productStore = useProductStore();
     const featuredStore = useFeaturedProductsStore();
 
@@ -378,7 +480,14 @@ export default {
       openEditModal,
       closeEditModal,
       handleEditProduct,
-      handleDelete
+      handleDelete,
+      admins,
+      sendMessage,
+      showMessageModal,
+      openMessageModal,
+      selectedAdmin,
+      closeMessageModal,
+      message,
     };
   },
 };
