@@ -1,18 +1,18 @@
 <template>
   <header
-    class="bg-light-brown py-4 px-4 sm:px-20 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0"
+    class="bg-light-brown py-4 px-4 sm:px-20 flex flex-col sm:flex-row items-center justify-between h-28 sm:space-y-0"
   >
     <div class="flex-shrink-0">
       <router-link to="/">
-        <img src="/img/Horse-Lines-LogoIcons.png" alt="Logo" class="h-24 w-auto" />
+        <img src="/img/Horse-Lines-LogoIcons.png" alt="Logo" class="h-20 w-auto" />
       </router-link>
     </div>
     <div class="container mt-5 mx-auto">
-      <div class="flex justify-center space-x-8 pb-2">
+      <div class="flex justify-center space-x-8 font">
         <!-- Home Link -->
         <router-link
           to="/"
-          class="sm:text-lg text-white font-semibold hover:text-dark-brown focus:text-white"
+          class="sm:text-base text-white font-semibold hover:text-dark-brown focus:text-white"
           :class="{ 'active-link': isButikActive }"
         >
           Butik
@@ -20,14 +20,14 @@
         
         <!-- External CELLA TEST Link -->
         <a href="https://www.cellatest.com/" target="_blank" rel="noopener noreferrer"
-          class="sm:text-lg text-white font-semibold hover:text-dark-brown focus:text-white">
+          class="sm:text-base text-white font-semibold hover:text-dark-brown focus:text-white">
           CELLA TEST
         </a>
         
         <!-- Blog Link -->
         <router-link
           to="/blog"
-          class="sm:text-lg text-white font-semibold hover:text-dark-brown focus:text-white"
+          class="sm:text-base text-white font-semibold hover:text-dark-brown focus:text-white"
           :class="{ 'active-link': isBlogActive }"
         >
           Blog
@@ -35,30 +35,32 @@
         
         <!-- External Kontakt Link -->
         <a href="https://www.cellatest.com/kontakt" target="_blank" rel="noopener noreferrer"
-          class="sm:text-lg text-white font-semibold hover:text-dark-brown focus:text-white">
+          class="sm:text-base text-white font-semibold hover:text-dark-brown focus:text-white">
           Kontakt
         </a>
       </div>
     </div>
     <div class="container mx-auto flex justify-center">
-      <div class="w-full max-w-2xl mx-auto relative" v-click-outside="closeDropdown">
+      <div class="w-full max-w-2xl mx-auto relative flex items-center justify-center" v-click-outside="closeDropdown">
           <input
             type="text"
             placeholder="Søg efter produkter"
-            class="w-full h-12 pl-4 pr-12 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            class="w-full h-9 pl-4 pr-12 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
             v-model="searchQuery"
             @input="onInput"
-          />
+          >
           <button
-            class="absolute inset-y-0 right-0 flex items-center pr-4"
+            class="absolute top-1/2 right-0 transform -translate-y-1/2 flex items-center justify-center pr-4"
+    
             @click="onSearch"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-navbar-green"
+              class="h-5 w-5 text-navbar-green "
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              
             >
               <path
                 stroke-linecap="round"
@@ -68,6 +70,8 @@
               />
             </svg>
           </button>
+          </input
+          
 
           <!-- Dropdown for search results -->
           <transition name="dropdown">

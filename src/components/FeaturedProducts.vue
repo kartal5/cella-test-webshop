@@ -3,7 +3,7 @@
     <h2 class="text-3xl font-bold text-center text-dark-brown mb-8">UDVALGTE PRODUKTER</h2>
     <div
       v-if="randomProducts.length > 0"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      class="gap-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 "
     >
       <ProductCard
         v-for="product in randomProducts"
