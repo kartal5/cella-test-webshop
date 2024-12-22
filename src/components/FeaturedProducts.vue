@@ -3,7 +3,7 @@
     <h2 class="text-3xl font-bold text-center text-dark-brown mb-8">UDVALGTE PRODUKTER</h2>
     <div
       v-if="randomProducts.length > 0"
-      class=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 "
+      class=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 content-center	"
     >
       <ProductCard
         v-for="product in randomProducts"
@@ -50,11 +50,16 @@ export default {
 .grid {
   display: grid;
   gap: 3rem 4rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
 }
 
 @media (min-width: 1024px) { /* For large screens and up */
   .grid {
     grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 2.5rem 3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
@@ -62,6 +67,8 @@ export default {
   .grid {
     grid-template-columns: repeat(3, minmax(220px, 1fr));
     gap: 2.5rem 3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
@@ -69,6 +76,8 @@ export default {
   .grid {
     grid-template-columns: repeat(2, minmax(220px, 1fr));
     gap: 2rem 2.5rem;
+    padding-left: 1rem;
+  padding-right: 1rem;
   }
 }
 
@@ -76,6 +85,8 @@ export default {
   .grid {
     grid-template-columns: repeat(1, minmax(220px, 1fr));
     gap: 1.25rem 1.5rem;
+    padding-left: 1rem;
+  padding-right: 1rem;
   }
 }
 </style>
