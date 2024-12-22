@@ -20,7 +20,12 @@
 
         <div class="text-right mt-6">
           <h3 class="text-xl font-bold">Total: DKK {{ cartTotal }}</h3>
-          <button class="bg-navbar-green text-white font-semibold py-2 px-6 rounded mt-4 hover:bg-green-700 transition">Til Betaling</button>
+          <button
+            class="bg-navbar-green text-white font-semibold py-2 px-6 rounded mt-4 hover:bg-green-700 transition"
+            @click="goToPayment"
+          >
+            Til Betaling
+          </button>
         </div>
       </div>
 
@@ -32,11 +37,13 @@
 <script>
 import { useCartStore } from '../stores/cartStore';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'CartPage',
   setup() {
     const cartStore = useCartStore();
+    const router = useRouter();
     
     // Log to confirm cartItems has data on page load
     console.log("Cart Page Cart Items:", cartStore.cartItems);
@@ -50,10 +57,16 @@ export default {
       cartStore.removeFromCart(index);
     };
 
+    // Navigate to the new Payment page
+    const goToPayment = () => {
+      router.push('/payment');
+    };
+
     return {
       cartItems,
       cartTotal,
       removeFromCart,
+      goToPayment,
     };
   },
 };

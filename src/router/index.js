@@ -13,6 +13,7 @@ import BlogPostPage from '../views/BlogPostPage.vue';
 import LoginPage from '../views/LoginPage.vue'; 
 import RegisterPage from '../views/RegisterPage.vue';
 import { useAuthStore } from '../stores/authStore';
+import PaymentPage from '../views/PaymentPage.vue';
 
 
 const routes = [
@@ -27,6 +28,7 @@ const routes = [
   { path: '/category/katte', component: KattePage }, 
   { path: '/category/:name', component: CategoryPage }, // Dynamic category page
   { path: '/product/:id', component: ProductPage },
+  { path: '/payment', component: PaymentPage },
   { path: '/blog', component: BlogPage },
   { path: '/blog/:id', component: BlogPostPage }, // Dynamic route for individual posts
 
@@ -43,7 +45,7 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
 
   // Define routes that require authentication
-  const authRequiredRoutes = ['/admin', '/cart'];
+  const authRequiredRoutes = ['/admin', '/cart', '/payment'];
 
   if (authRequiredRoutes.includes(to.path) && !authStore.isAuthenticated()) {
     next({
