@@ -1,44 +1,73 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { getFirestore, collection, query, where, getDocs, setDoc, doc } from 'firebase/firestore';
+import { app } from '../firebase/init';
+
+const db = getFirestore(app);
+const usersCollection = collection(db, 'users');
 
 export const useAuthStore = defineStore('auth', () => {
-  // Load user data from localStorage (to persist sessions across page reloads) 
-  // and convert it from a string to an object
+  // Load user data from localStorage, and convert it from a string to an object (to persist sessions across page reloads) 
   // Default to null if no data exists
   const user = ref(JSON.parse(localStorage.getItem('user')) || null);
 
-  // Mock login: validates hardcoded credentials and updates user state (normally this calls a backend API)
+  // Helper: Load user data from Firestore based on the email
+  const fetchUserData = async (email) => {
+    const q = query(usersCollection, where('email', '==', email));
+    const querySnapshot = await getDocs(q);
+    let userData = null;
+    querySnapshot.forEach((docSnap) => {
+      userData = docSnap.data();
+    });
+    return userData;
+  };
+
+  // Mock/Hybrid login that also fetches the user’s role from Firestore
   const login = async (email, password) => {
-    // Simulate an API call for authentication (Mock login)
-    // Replace this with actual authentication logic (when backend's registration API is ready)
+    // For an actual production app, replace this with real Firebase Auth calls (signInWithEmailAndPassword, etc.)
     if (email === 'user@example.com' && password === 'password') {
-      user.value = { email };
-      // Save user data to localStorage as a string when logging in
+      // Simulate success, fetch from Firestore
+      let userData = await fetchUserData(email);
+
+      // If user doc doesn’t exist yet, create it with default role: "regular"
+      if (!userData) {
+        userData = { email, role: 'regular' };
+        const docRef = doc(usersCollection); // auto-generated ID
+        await setDoc(docRef, userData);
+      }
+
+      user.value = userData; // e.g. { email: "user@example.com", role: "regular" | "elite" }
       localStorage.setItem('user', JSON.stringify(user.value));
     } else {
       throw new Error('Invalid email or password');
     }
   };
 
-  // Logs out the user by clearing state and localStorage (user is no longer authenticated)
+  // Logs out the user
   const logout = () => {
     user.value = null;
-    // Remove user data from localStorage to clear the session on logout.
     localStorage.removeItem('user');
   };
 
-  // register method to simulate user registration (Mock registration)
-  // If registration is successful, we store the user just like in the login method.
+  // A simple register method that also creates a document in Firestore
   const register = async (email, password) => {
-    // For now, we simply set the user as authenticated by creating a user object with the provided email (API call will be made in real scenario)
-    user.value = { email };
-    localStorage.setItem('user', JSON.stringify(user.value)); // accept the input and store it similarly to the login method
+    // For now, let's store it in Firestore as a "regular" user
+    const userData = { email, role: 'regular' };
+    const docRef = doc(usersCollection); // auto-generated doc ID
+    await setDoc(docRef, userData);
+
+    user.value = userData;
+    localStorage.setItem('user', JSON.stringify(user.value));
   };
 
-  // getter function to determine if a user is currently authenticated
-  // returns "true" if user.value is not null, otherwise "false"
+  // If user is authenticated
   const isAuthenticated = () => {
     return user.value !== null;
+  };
+
+  // Helper to check if user is "elite"
+  const isElite = () => {
+    return user.value?.role === 'elite';
   };
 
   return {
@@ -47,5 +76,6 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
     isAuthenticated,
+    isElite,
   };
 });

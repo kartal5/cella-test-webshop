@@ -1,12 +1,16 @@
 import { defineStore } from 'pinia';
+// Using Pinia's `computed` properties, we can derive reactive values from the state without duplicating logic across components.
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
+import { useAuthStore } from './authStore';
 
 // Define the cart store using Pinia
 export const useCartStore = defineStore('cart', () => {
-  // Initialize `cartItems` with data from local storage
-  const cartItems = ref(loadCartFromStorage());
+  const authStore = useAuthStore();
 
-  // Pinia allows us to globally manage shared state for cartItems across components (fx Header.vue and CartPage.vue page)
+  const cartItems = ref(loadCartFromStorage());     // Initialize `cartItems` with data from local storage
+
+  // Pinia allows us to globally manage shared state for cartItems across components 
+  // fx Header.vue and CartPage.vue page
   const addToCart = (product) => {
     // Create a unique key combining id and product name
     const uniqueKey = `${product.id}-${product.name}`;
@@ -18,34 +22,32 @@ export const useCartStore = defineStore('cart', () => {
       // If found, increment the quantity
       existingItem.quantity += 1;
     } else {
-      // Otherwise, add it as a new entry with its unique key
+      // else add it as a new entry with its unique key
       cartItems.value.push({ ...product, quantity: 1, uniqueKey });
     }
   };
 
-  // Pinia's reactive nature ensures that updates to the cart state are reflected in all components (Header.vue)
+  // Pinia's reactive nature ensures that updates to the cart state are reflected in all components
   const removeFromCart = (index) => {
     cartItems.value.splice(index, 1);
   };
 
-
-  // Using Pinia's `computed` properties, we can derive reactive values from the state,
-  // without duplicating logic across components.
-
-  // Total price of all items in the cart (with price parsing to avoid pricing issue for larger numbers)
-  const cartTotal = computed(() =>
-    cartItems.value.reduce((total, item) => {
-      // Regex used to remove "," to ensure numbers are parsed correctly for large prices 
+  // Calculate total of all items in the cart; if user is elite, discount 10%
+  const cartTotal = computed(() => {
+    let total = cartItems.value.reduce((sum, item) => {
       const cleanPrice = item.price.replace('DKK ', '').replace(',', '');
-      return total + parseFloat(cleanPrice) * item.quantity;
-    }, 0)
-  );
+      return sum + parseFloat(cleanPrice) * item.quantity;
+    }, 0);
+
+    if (authStore.isElite()) {
+      total = total * 0.9; // 10% off
+    }
+    return total;
+  });
 
 
-  // Pinia's `watch` function ensures that any update to cartItems is synchronized with localStorage,
-  // providing persistent state even after page reloads.
-
-  // Watch `cartItems` to persist updates to localStorage
+  // PERSIST LOCALLY..
+  // Pinia's `watch` function ensures that any update to "cartItems" is synchronized with localStorage, providing persistent state even after page reloads.
   watch(
     cartItems,
     (newCartItems) => {
@@ -54,18 +56,15 @@ export const useCartStore = defineStore('cart', () => {
     { deep: true }
   );
 
-  // Pinia's centralized state management allows us to dynamically update the cart state
-  // across all components whenever localStorage changes, ensuring consistent behavior.
-
-  // Synchronize with `localStorage` when the storage event is fired
+  // Pinia allows us to update cart state across all components whenever localStorage changes, ensuring consistent behavior
+  // Synchronize with `localStorage` when "storage" event is fired
   const syncCartWithStorage = (event) => {
     if (event.key === 'cartItems') {
       cartItems.value = event.newValue ? JSON.parse(event.newValue) : [];
     }
   };
 
-  // "window storage" event to ensure changes in one tab are reflected in others:
-
+  // "window storage" event to ensure changes in one tab are reflected in others
   // Add event listener for 'storage' events when component is mounted
   onMounted(() => {
     window.addEventListener('storage', syncCartWithStorage);
@@ -81,9 +80,6 @@ export const useCartStore = defineStore('cart', () => {
 });
 
 // Load cart data from local storage (if the user has items from previous sessions)
-// If a user added items to their cart during a previous visit, 
-// this function ensures those items are still in the cart when they return 
-// (Pinia store starts with the most recent cart data, even after a page reload or app restart)
 function loadCartFromStorage() {
   const storedCart = localStorage.getItem('cartItems');
   return storedCart ? JSON.parse(storedCart) : [];

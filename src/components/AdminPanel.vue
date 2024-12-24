@@ -2,6 +2,93 @@
   <section class="container mt-10 mx-auto px-4 md:px-10">
     <h2 class="text-3xl font-bold text-left text-navbar-green mb-8">Admin Panel</h2>
 
+      <!-- ====================== NEW: User Management ====================== -->
+      <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
+      <h3 class="text-2xl font-semibold text-navbar-green mb-4">Brugerstyring</h3>
+      
+      <!-- Table of all users -->
+      <table class="min-w-full bg-white border">
+        <thead>
+          <tr>
+            <th class="px-6 py-3 border-b text-left">Email</th>
+            <th class="px-6 py-3 border-b text-left">Nuværende Rolle</th>
+            <th class="px-6 py-3 border-b text-left">Skift Rolle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(user, index) in users"
+            :key="index"
+            class="hover:bg-gray-50"
+          >
+            <td class="px-6 py-4 border-b">{{ user.email }}</td>
+            <td class="px-6 py-4 border-b capitalize">{{ user.role }}</td>
+            <td class="px-6 py-4 border-b">
+              <button
+                v-if="user.role !== 'elite'"
+                @click="makeElite(user)"
+                class="bg-green-500 text-white font-semibold py-1 px-3 rounded hover:bg-green-600 transition mr-2"
+              >
+                Opgrader til Elite
+              </button>
+              <button
+                v-else
+                @click="makeRegular(user)"
+                class="bg-gray-500 text-white font-semibold py-1 px-3 rounded hover:bg-gray-600 transition mr-2"
+              >
+                Nedgrader bruger
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ====================== NEW: Messaging Section ====================== -->
+    <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
+      <h3 class="text-2xl font-semibold text-navbar-green mb-4">Send en Besked til Bruger</h3>
+      <form @submit.prevent="sendAdminMessage">
+        <label class="block text-gray-700 font-semibold mb-2">Vælg Bruger</label>
+        <select v-model="selectedUserEmail" class="border p-2 rounded w-full mb-4">
+          <option disabled value="">-- Vælg en bruger --</option>
+          <option v-for="(user, index) in users" :key="index" :value="user.email">
+            {{ user.email }}
+          </option>
+        </select>
+
+        <label class="block text-gray-700 font-semibold mb-2">Besked</label>
+        <textarea
+          v-model="messageContent"
+          class="border p-2 rounded w-full mb-4"
+          placeholder="Skriv din besked her..."
+        ></textarea>
+
+        <button
+          type="submit"
+          class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+        >
+          Send Besked
+        </button>
+      </form>
+
+      <!-- Show all messages (basic approach, admin sees all messages) -->
+      <div class="mt-8">
+        <h4 class="text-xl font-bold text-navbar-green mb-2">All Messages</h4>
+        <div
+          v-for="(msg, idx) in allMessages"
+          :key="idx"
+          class="bg-white p-4 rounded shadow mb-2"
+        >
+          <p class="text-sm text-gray-500 mb-1">
+            <strong>Fra:</strong> {{ msg.from }}
+            <strong>Til:</strong> {{ msg.to }}
+            <strong>Dato:</strong> {{ msg.timestamp?.toDate().toLocaleString() }}
+          </p>
+          <p class="text-gray-800">{{ msg.content }}</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Add New Product Form -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
@@ -84,7 +171,7 @@
 
         <button
           type="submit"
-          class="bg-navbar-green text-white font-semibold py-3 px-6 rounded-lg hover:bg-green-700 transition"
+          class="bg-light-green text-white font-semibold py-3 px-6 rounded-lg hover:bg-dark-green transition"
         >
           Tilføj Produkt
         </button>
@@ -240,13 +327,24 @@
       </div>
     </div>
 
+
   </section>
 </template>
 
 <script>
 import { useProductStore } from '../stores/productStore';
 import { useFeaturedProductsStore } from '../stores/featuredProductsStore';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  addDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { app } from '../firebase/init';
 
 export default {
   name: 'AdminPanel',
@@ -362,6 +460,94 @@ export default {
       }
     };
 
+    const db = getFirestore(app);
+    const usersCollection = collection(db, 'users');
+    const messagesCollection = collection(db, 'messages');
+
+    const users = ref([]); // holds all user docs
+    const selectedUserEmail = ref('');
+    const messageContent = ref('');
+
+    const allMessages = ref([]); // to store all messages
+
+    // 1) Load all users from Firestore
+    const loadUsers = async () => {
+      const querySnapshot = await getDocs(usersCollection);
+      const all = [];
+      querySnapshot.forEach(docSnap => {
+        all.push(docSnap.data());
+      });
+      users.value = all;
+    };
+
+    // 2) Promote to Elite or Demote to Regular
+    const makeElite = async (userObj) => {
+      // We need the doc reference. One approach: query by user email
+      // For simplicity, we'll re-query to find the doc ID. In a real scenario,
+      // you’d store the doc ID in the user object.
+      const querySnapshot = await getDocs(usersCollection);
+      querySnapshot.forEach(async (docSnap) => {
+        const data = docSnap.data();
+        if (data.email === userObj.email) {
+          const userDocRef = doc(db, 'users', docSnap.id);
+          await updateDoc(userDocRef, { role: 'elite' });
+        }
+      });
+      // Reload users
+      loadUsers();
+    };
+
+    const makeRegular = async (userObj) => {
+      const querySnapshot = await getDocs(usersCollection);
+      querySnapshot.forEach(async (docSnap) => {
+        const data = docSnap.data();
+        if (data.email === userObj.email) {
+          const userDocRef = doc(db, 'users', docSnap.id);
+          await updateDoc(userDocRef, { role: 'regular' });
+        }
+      });
+      // Reload users
+      loadUsers();
+    };
+
+    // ============ NEW: Messaging logic ============
+    const sendAdminMessage = async () => {
+      if (!selectedUserEmail.value || !messageContent.value.trim()) return;
+
+      // Admin’s "from" can be "admin@webshop.com" or whichever is relevant
+      // In real usage, you might store the admin’s email in your auth store as well.
+      const newMsg = {
+        from: 'admin@webshop.com',
+        to: selectedUserEmail.value,
+        content: messageContent.value.trim(),
+        timestamp: serverTimestamp(),
+      };
+      await addDoc(messagesCollection, newMsg);
+
+      // Clear input
+      messageContent.value = '';
+      selectedUserEmail.value = '';
+      // Reload messages
+      loadMessages();
+    };
+
+    // Load all messages
+    const loadMessages = async () => {
+      const querySnapshot = await getDocs(messagesCollection);
+      const all = [];
+      querySnapshot.forEach((docSnap) => {
+        all.push(docSnap.data());
+      });
+      // Sort messages by timestamp desc
+      all.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
+      allMessages.value = all;
+    };
+
+    onMounted(() => {
+      loadUsers();
+      loadMessages();
+    });
+
     // Expose methods and data for template
     return {
       allProducts,
@@ -378,7 +564,14 @@ export default {
       openEditModal,
       closeEditModal,
       handleEditProduct,
-      handleDelete
+      handleDelete,
+      users,
+      selectedUserEmail,
+      messageContent,
+      makeElite,
+      makeRegular,
+      sendAdminMessage,
+      allMessages,
     };
   },
 };
