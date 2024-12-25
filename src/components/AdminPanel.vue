@@ -112,6 +112,44 @@
       </table>
     </div>
 
+    <!-- ====================== Messaging Section ====================== -->
+    <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
+      <h3 class="text-2xl font-semibold text-navbar-green mb-4">Fællesbeskeder</h3>
+      <form @submit.prevent="sendBroadcastMessage">
+        <label class="block text-gray-700 font-semibold mb-2">Besked</label>
+        <textarea
+          v-model="messageContent"
+          class="border p-2 rounded w-full mb-4"
+          placeholder="Skriv din besked her..."
+        ></textarea>
+
+        <button
+          type="submit"
+          class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+        >
+          Send Besked til Alle
+        </button>
+      </form>
+
+      <!-- Show all messages (basic approach, admin sees all messages) -->
+      <div class="mt-8">
+        <h4 class="text-xl font-bold text-navbar-green mb-2">All Messages</h4>
+        <div
+          v-for="(msg, idx) in allMessages"
+          :key="idx"
+          class="bg-white p-4 rounded shadow mb-2"
+        >
+          <p class="text-sm text-gray-500 mb-1">
+            <strong>Fra:</strong> {{ msg.from }}
+            <strong>Til:</strong> {{ msg.to === 'all' ? 'Alle' : msg.to }}
+            <strong>Dato:</strong> {{ formatTimestamp(msg.timestamp) }}
+          </p>
+          <p class="text-gray-800">{{ msg.content }}</p>
+        </div>
+      </div>
+    </div>
+
+
     <!-- ====================== Add New Product Form ====================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
@@ -380,9 +418,9 @@ export default {
     // ==================== Admin Display ====================
     const admins = ref([
       { id: 1, name: 'Helene', email: 'Zentia88@live.dk', picture: '/public/img/logo.png', online: true },
-      { id: 2, name: 'Maria',  email: 'maria@example.com', picture: '/public/img/logo.png', online: false },
-      { id: 3, name: 'Emilie', email:'emilie@example.com', picture: '/public/img/logo.png', online: true },
-      { id: 4, name: 'Seyyit', email: 'seyyit@example.com', picture: '/public/img/logo.png', online: false }
+      { id: 2, name: 'Maria', email: 'maria@example.com', picture: '/public/img/logo.png', online: false },
+      { id: 3, name: 'Emilie', email: 'emilie@example.com', picture: '/public/img/logo.png', online: true },
+      { id: 4, name: 'Seyyit', email: 'seyyit@example.com', picture: '/public/img/logo.png', online: false },
     ]);
 
     const showMessageModal = ref(false);
@@ -418,7 +456,6 @@ export default {
 
     // ==================== User Management ====================
     const users = ref([]); // holds all user docs
-    const selectedUserEmail = ref('');
     const messageContent = ref('');
     const allMessages = ref([]); // to store all messages
 
@@ -426,7 +463,7 @@ export default {
     const loadUsers = async () => {
       const querySnapshot = await getDocs(usersCollection);
       const all = [];
-      querySnapshot.forEach(docSnap => {
+      querySnapshot.forEach((docSnap) => {
         all.push({ id: docSnap.id, ...docSnap.data() });
       });
       users.value = all;
@@ -449,12 +486,14 @@ export default {
     };
 
     // ==================== Messaging Section ====================
-    const sendAdminMessage = async () => {
-      if (!selectedUserEmail.value || !messageContent.value.trim()) return;
+    const sendBroadcastMessage = async () => {
+      if (!messageContent.value.trim()) return;
+
+      const currentUserEmail = authStore.user.email; // Get the current user's email
 
       const newMsg = {
-        from: 'admin@webshop.com', // Static admin email or dynamically get from authStore if needed
-        to: selectedUserEmail.value,
+        from: currentUserEmail, // Dynamic sender
+        to: 'all', // Broadcast to all users
         content: messageContent.value.trim(),
         timestamp: serverTimestamp(),
       };
@@ -462,7 +501,6 @@ export default {
 
       // Clear input
       messageContent.value = '';
-      selectedUserEmail.value = '';
       // Reload messages
       loadMessages();
     };
@@ -495,7 +533,7 @@ export default {
       price: 'DKK 250.00',
       image: '',
       categories: [],
-      subcategories: []
+      subcategories: [],
     });
 
     // Input fields for categories and subcategories
@@ -507,11 +545,11 @@ export default {
       // Process categories and subcategories inputs into arrays
       newProduct.value.categories = categoriesInput.value
         .split(',')
-        .map(cat => cat.trim())
+        .map((cat) => cat.trim())
         .filter(Boolean);
       newProduct.value.subcategories = subcategoriesInput.value
         .split(',')
-        .map(sub => sub.trim())
+        .map((sub) => sub.trim())
         .filter(Boolean);
 
       // Call the addProduct function from the store
@@ -524,7 +562,7 @@ export default {
         price: 'DKK 250.00',
         image: '',
         categories: [],
-        subcategories: []
+        subcategories: [],
       };
       categoriesInput.value = '';
       subcategoriesInput.value = '';
@@ -540,13 +578,13 @@ export default {
       price: '',
       image: '',
       categories: [],
-      subcategories: []
+      subcategories: [],
     });
     const editCategoriesInput = ref('');
     const editSubcategoriesInput = ref('');
 
     // Opens the edit modal with pre-filled product data
-    const openEditModal = (product) => {  // The product to edit
+    const openEditModal = (product) => {
       editProductData.value = { ...product };
       editCategoriesInput.value = product.categories.join(', ');
       editSubcategoriesInput.value = product.subcategories.join(', ');
@@ -560,11 +598,11 @@ export default {
     const handleEditProduct = () => {
       editProductData.value.categories = editCategoriesInput.value
         .split(',')
-        .map(cat => cat.trim())
+        .map((cat) => cat.trim())
         .filter(Boolean);
       editProductData.value.subcategories = editSubcategoriesInput.value
         .split(',')
-        .map(sub => sub.trim())
+        .map((sub) => sub.trim())
         .filter(Boolean);
 
       updateProduct(editProductData.value);
@@ -615,9 +653,17 @@ export default {
       sendMessage,
 
       // ==================== User Management ====================
+      users,
+      makeElite,
+      makeRegular,
+
+      // ==================== Messaging Section ====================
+      messageContent,
+      sendBroadcastMessage,
+      allMessages,
+
+      // ==================== Product Management ====================
       allProducts,
-      isFeatured,
-      toggleFeatured,
       newProduct,
       categoriesInput,
       subcategoriesInput,
@@ -630,15 +676,8 @@ export default {
       closeEditModal,
       handleEditProduct,
       handleDelete,
-      users,
-      selectedUserEmail,
-      messageContent,
-      makeElite,
-      makeRegular,
-
-      // ==================== Messaging Section ====================
-      sendAdminMessage,
-      allMessages,
+      isFeatured,
+      toggleFeatured,
 
       // ==================== Utility ====================
       formatTimestamp,
@@ -646,6 +685,7 @@ export default {
   },
 };
 </script>
+
 
 
 <style scoped>
