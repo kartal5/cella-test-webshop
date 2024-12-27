@@ -43,14 +43,12 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
-
-  // Define routes that require authentication
   const authRequiredRoutes = ['/admin', '/cart', '/payment'];
 
-  if (authRequiredRoutes.includes(to.path) && !authStore.isAuthenticated()) {
+  if (authRequiredRoutes.includes(to.path) && (!authStore.isAuthenticated() || !authStore.isVerified())) {
     next({
       path: '/login',
-      query: { redirect: to.fullPath }, // Add the unauthenticated user's intended route as a query parameter to the login URL
+      query: { redirect: to.fullPath },
     });
   } else {
     next();
