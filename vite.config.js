@@ -1,7 +1,11 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vitest/config'; // Import the defineConfig function from Vitest
+import vue from '@vitejs/plugin-vue'; // Import the Vue plugin for Vite
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-})
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './vitest.setup.js', // Used as a part of the setup for the unit tests.
+  },
+});
