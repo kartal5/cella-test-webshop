@@ -6,4 +6,12 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
+
+  component: {
+    devServer: {
+      framework: "vue",
+      bundler: "vite",
+    },
+    supportFile: "cypress/support/component.js", // Ensure this path is correct
+  },
 });
