@@ -32,11 +32,13 @@
 <script>
 import { useCartStore } from '../stores/cartStore';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'CartPage',
   setup() {
     const cartStore = useCartStore();
+    const router = useRouter();
     
     // Log to confirm cartItems has data on page load
     console.log("Cart Page Cart Items:", cartStore.cartItems);
@@ -50,10 +52,16 @@ export default {
       cartStore.removeFromCart(index);
     };
 
+    // Navigate to the new Payment page
+    const goToPayment = () => {
+      router.push('/payment');
+    };
+
     return {
       cartItems,
       cartTotal,
       removeFromCart,
+      goToPayment,
     };
   },
 };

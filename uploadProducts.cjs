@@ -25,18 +25,6 @@ fs.readFile(productsFilePath, 'utf8', async (err, data) => {
   try {
     const products = JSON.parse(data);
 
-    // Optional: Clear existing products in Firestore
-    // WARNING: This will delete all existing documents in the 'products' collection
-    /*
-    const snapshot = await productsCollection.get();
-    const batchClear = db.batch();
-    snapshot.forEach(doc => {
-      batchClear.delete(doc.ref);
-    });
-    await batchClear.commit();
-    console.log('Cleared existing products in Firestore.');
-    */
-
     // Batch upload products
     const batch = db.batch();
     products.forEach(product => {
