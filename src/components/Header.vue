@@ -3,14 +3,14 @@
     class="bg-light-brown py-4 px-4 sm:px-20 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0"
   >
     <div class="flex-shrink-0">
-      <router-link to="/">
+      <router-link id="logo-link" to="/">
         <img src="/img/Horse-Lines-LogoIcons.png" alt="Logo" class="h-24 w-auto" />
       </router-link>
     </div>
     <div class="container mt-5 mx-auto">
       <div class="flex justify-center space-x-8 pb-2">
         <!-- Home Link -->
-        <router-link
+        <router-link id="butik-link"
           to="/"
           class="sm:text-lg text-white font-semibold hover:text-dark-brown focus:text-white"
           :class="{ 'active-link': isButikActive }"
@@ -19,13 +19,13 @@
         </router-link>
         
         <!-- External CELLA TEST Link -->
-        <a href="https://www.cellatest.com/" target="_blank" rel="noopener noreferrer"
+        <a id="cellatest-link" href="https://www.cellatest.com/" target="_blank" rel="noopener noreferrer"
           class="sm:text-lg text-white font-semibold hover:text-dark-brown focus:text-white">
           CELLA TEST
         </a>
         
         <!-- Blog Link -->
-        <router-link
+        <router-link id="blog-link"
           to="/blog"
           class="sm:text-lg text-white font-semibold hover:text-dark-brown focus:text-white"
           :class="{ 'active-link': isBlogActive }"
@@ -34,14 +34,14 @@
         </router-link>
         
         <!-- External Kontakt Link -->
-        <a href="https://www.cellatest.com/kontakt" target="_blank" rel="noopener noreferrer"
+        <a id="kontakt-link" href="https://www.cellatest.com/kontakt" target="_blank" rel="noopener noreferrer"
           class="sm:text-lg text-white font-semibold hover:text-dark-brown focus:text-white">
           Kontakt
         </a>
       </div>
     </div>
     <div class="container mx-auto flex justify-center">
-      <div class="w-full max-w-2xl mx-auto relative" v-click-outside="closeDropdown">
+      <div id="search-bar" class="w-full max-w-2xl mx-auto relative" v-click-outside="closeDropdown">
           <input
             type="text"
             placeholder="Søg efter produkter"
@@ -102,7 +102,7 @@
 
         </div>
         <div class="relative p-1 rounded-md">
-          <router-link to="/cart" class="block text-navbar-green">
+          <router-link id="cart-link" to="/cart" class="block text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-10 w-10"
@@ -230,5 +230,96 @@ export default {
 .dropdown-leave-from {
   opacity: 1;
   transform: translateY(0);
+}
+
+@media (min-width: 768px) and (max-width: 1023px) { /* For medium screens */
+  header {
+    flex-direction: column;
+  }
+
+  #logo-link{
+    justify-content: center;
+  }
+
+  #logo-link img {
+    margin: 5px;
+  }
+
+  #butik-link, #cellatest-link, #blog-link, #kontakt-link {
+    font-size: 16px;
+  }
+
+  
+  #search-bar, #search-bar input {
+    width: 100%;
+    height: 40px;
+  }
+
+  #cart-link svg {
+    height: 30px;
+    width: auto;
+    margin: 1px
+  }
+}
+  
+
+@media (min-width: 640px) and (max-width: 767px) { /* For small screens */
+  header {
+    flex-direction: column;
+  }
+
+  #logo-link{
+    justify-content: center;
+  }
+
+  #logo-link img {
+    max-width: 80px;
+    height: auto;
+    margin: 5px;
+  }
+
+  #butik-link, #cellatest-link, #blog-link, #kontakt-link {
+    font-size: 14px;
+  }
+
+  
+  #search-bar, #search-bar input {
+    width: 100%;
+    height: 40px;
+  }
+
+  #cart-link svg {
+    height: 30px;
+    width: auto;
+    margin: 1px
+  }
+}
+
+@media (max-width: 639px) { /* For extra small screens */
+  #logo-link{
+    justify-content: center;
+  }
+
+  #logo-link img {
+    max-width: 50px;
+    height: auto;
+  }
+
+  #butik-link, #cellatest-link, #blog-link, #kontakt-link {
+    font-size: 14px;
+  }
+
+  
+  #search-bar, #search-bar input {
+    width: 100%;
+    height: 30px;
+  }
+
+  #cart-link svg {
+    height: 25px;
+    width: auto;
+    margin: 1px
+  }
+
 }
 </style>

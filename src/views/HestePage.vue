@@ -1,6 +1,6 @@
 <template>
   <section class="container mt-10 mx-auto px-4 md:px-10">
-    <h2 class="text-3xl font-bold text-left text-navbar-green mb-8">Produkter til Heste</h2>
+    <h2 class="text-3xl font-bold text-left text-dark-brown mb-8">Produkter til Heste</h2>
 
     <!-- Only render once we have subcategories -->
     <div
