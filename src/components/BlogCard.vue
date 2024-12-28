@@ -4,10 +4,10 @@
     >
       <div>
         <img :src="image" :alt="title" class="w-full h-40 object-cover mb-4 rounded" />
-        <h3 class="text-xl font-bold text-gray-900 mb-2">{{ title }}</h3>
-        <p class="text-gray-600 mb-4 line-clamp-3">{{ excerpt }}</p>
+        <h3 class="text-xl font-bold text-blak mb-2">{{ title }}</h3>
+        <p class="text-black mb-4 line-clamp-3">{{ excerpt }}</p>
       </div>
-      <router-link :to="`/blog/${id}`" class="text-navbar-green font-semibold hover:underline mt-auto">
+      <router-link :to="`/blog/${id}`" class="text-dark-green font-semibold hover:underline mt-auto">
         Læs Mere
       </router-link>
     </article>

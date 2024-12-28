@@ -32,6 +32,7 @@
 
       </div>
 
+
       <div class="md:flex mt-5 justify-center">
         
         <router-link to="/category/hunde">
@@ -58,6 +59,7 @@
                 <div class="uppercase tracking-wide text-base text-black font-bold hover:underline">Katte</div>
                 <a href="#" class="block mt-1 text-sm leading-tight font-semibold text-gray-900">Opdag produkter, der styrker din sundhed og livskvalitet</a>
               </div>
+              
             </div>
           </div>
         </router-link>
