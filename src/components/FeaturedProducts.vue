@@ -3,7 +3,7 @@
     <h2 class="text-3xl font-bold text-center text-dark-brown mb-8">UDVALGTE PRODUKTER</h2>
     <div
       v-if="randomProducts.length > 0"
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      class=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 content-center	"
     >
       <ProductCard
         v-for="product in randomProducts"
@@ -49,30 +49,44 @@ export default {
 <style scoped>
 .grid {
   display: grid;
-  gap: 1.5rem;
+  gap: 3rem 4rem;
+  padding-left: 5rem;
+  padding-right: 5rem;
 }
 
 @media (min-width: 1024px) { /* For large screens and up */
   .grid {
     grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 2.5rem 3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) { /* For medium screens */
   .grid {
     grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 2.5rem 3rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
 @media (min-width: 640px) and (max-width: 767px) { /* For small screens */
   .grid {
     grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 2rem 2.5rem;
+    padding-left: 1rem;
+  padding-right: 1rem;
   }
 }
 
 @media (max-width: 639px) { /* For extra small screens */
   .grid {
     grid-template-columns: repeat(1, minmax(220px, 1fr));
+    gap: 1.25rem 1.5rem;
+    padding-left: 1rem;
+  padding-right: 1rem;
   }
 }
 </style>
