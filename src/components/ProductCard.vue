@@ -8,7 +8,7 @@
     <p class="text-lg font-bold text-dark-green text-end mb-4 px-2">{{ product.price }}</p>
 
     <!-- "Læg i kurv" button -->
-    <button 
+    <button id="add-to-cart-btn"
       @click="addToCart(product)"
       :disabled="requiresSelection(product)"
       :class="{
