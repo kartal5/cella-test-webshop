@@ -1,10 +1,10 @@
 <template>
   <div class="container mt-5 mx-auto">
-    <div class="flex justify-center space-x-8 border-b-2 border-gray-200 pb-2">
+    <div class="flex justify-center space-x-8 border-b-2 border-black pb-2">
       <!-- Home Link -->
       <router-link
         to="/"
-        class="sm:text-lg text-base font-semibold hover:text-navbar-green focus:text-navbar-green"
+        class="sm:text-lg text-base font-semibold hover:text-dark-brown focus:text-dark-brown"
         :class="{ 'active-link': isButikActive }"
       >
         Butik
@@ -12,14 +12,14 @@
       
       <!-- External CELLA TEST Link -->
       <a href="https://www.cellatest.com/" target="_blank" rel="noopener noreferrer"
-         class="sm:text-lg text-base font-semibold hover:text-navbar-green focus:text-navbar-green">
+         class="sm:text-lg text-base font-semibold hover:text-dark-brown focus:text-dark-brown">
         CELLA TEST
       </a>
       
       <!-- Blog Link -->
       <router-link
         to="/blog"
-        class="sm:text-lg text-base font-semibold hover:text-navbar-green focus:text-navbar-green"
+        class="sm:text-lg text-base font-semibold hover:text-dark-brown focus:text-dark-brown"
         :class="{ 'active-link': isBlogActive }"
       >
         Blog
@@ -27,7 +27,7 @@
       
       <!-- External Kontakt Link -->
       <a href="https://www.cellatest.com/kontakt" target="_blank" rel="noopener noreferrer"
-         class="sm:text-lg text-base font-semibold hover:text-navbar-green focus:text-navbar-green">
+         class="sm:text-lg text-base font-semibold hover:text-dark-brown focus:text-dark-brown">
         Kontakt
       </a>
     </div>

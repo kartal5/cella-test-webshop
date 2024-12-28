@@ -2,10 +2,10 @@
   <div id="product-card" class="bg-white p-4 rounded-3xl shadow-lg hover:shadow-2xl transition-shadow flex flex-col w-full h-full">
     <div class="flex-grow flex flex-col items-center">
       <img :src="product.image" :alt="product.name" class="w-full h-48 object-contain mb-4 rounded" />
-      <h3 class="text-lg font-semibold text-center text-dark-brown px-2">{{ product.name }}</h3>
+      <h3 class="text-base font-semibold text-center text-dark-brown px-2">{{ product.name }}</h3>
       <p class="text-start text-black mb-4 line-clamp-3 px-2">{{ product.description }}</p>
     </div>
-    <p class="text-lg font-bold text-dark-green text-end mb-4 px-2">{{ product.price }}</p>
+    <p class="text-xs font-bold text-dark-green text-end mb-4 px-2">{{ product.price }}</p>
 
     <!-- "Læg i kurv" button -->
     <button id="add-to-cart-btn"

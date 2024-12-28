@@ -1,15 +1,15 @@
 <template>
     <section class="container mt-10 mx-auto px-4 md:px-10">
-      <h1 class="text-4xl font-bold text-navbar-green text-center mb-8">
+      <h1 class="text-4xl font-bold text-dark-brown text-center mb-8">
         Velkommen til Vores Blog
       </h1>
-      <p class="text-lg text-gray-700 text-center mb-10">
+      <p class="text-lg text-black text-center mb-10">
         Opdag dybdegående artikler om sundhed, velvære og epigenetisk analyse for både dig og dine kæledyr. Vi er her for at hjælpe dig med at leve et sundt og balanceret liv.
       </p>
   
       <!-- Featured Blog Section -->
       <div class="mb-16">
-        <h2 class="text-3xl font-semibold text-navbar-green mb-6">Udvalgte Artikler</h2>
+        <h2 class="text-3xl font-semibold text-dark-brown mb-6">Udvalgte Artikler</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <BlogCard
             v-for="(post, index) in featuredPosts"
