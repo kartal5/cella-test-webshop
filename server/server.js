@@ -1,3 +1,4 @@
+// Set Up the Backend with Express (Node.js Server) to manage Stripe payment
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');

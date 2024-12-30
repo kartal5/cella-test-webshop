@@ -133,6 +133,7 @@ import { useCartStore } from '../stores/cartStore';
 export default {
   name: 'PaymentPage',
   setup() {
+    // Stripe Checkout Integration (Frontend)
     const stripePromise = loadStripe('pk_test_51QafV7Ruib7MNBzAKFp8POBIkJ0r4LDGPXSvkNm4BHDuh0ffyRTbuFiDTZt072s8Oqp3Gc45xB0KVz27xoWrE67F00RkRvmhEq');
     const cartStore = useCartStore();
     const fullName = ref('');
@@ -154,7 +155,7 @@ export default {
 
     const handlePayment = async () => {
   try {
-    // Step 1: Fetch the client secret from your backend
+    // Step 1: Fetch the client secret from Backend
     const response = await fetch('http://localhost:3000/create-payment-intent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

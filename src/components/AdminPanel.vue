@@ -73,44 +73,53 @@
     <!-- ====================== User Management ====================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Brugerstyring</h3>
-      
-      <!-- Table of all users -->
-      <table class="min-w-full bg-white border">
-        <thead>
-          <tr>
-            <th class="px-6 py-3 border-b text-left">Email</th>
-            <th class="px-6 py-3 border-b text-left">Nuværende Rolle</th>
-            <th class="px-6 py-3 border-b text-left">Skift Rolle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(user, index) in users"
-            :key="index"
-            class="hover:bg-gray-50"
-          >
-            <td class="px-6 py-4 border-b">{{ user.email }}</td>
-            <td class="px-6 py-4 border-b capitalize">{{ user.role }}</td>
-            <td class="px-6 py-4 border-b">
-              <button
-                v-if="user.role !== 'elite'"
-                @click="makeElite(user)"
-                class="bg-green-500 text-white font-semibold py-1 px-3 rounded hover:bg-green-600 transition mr-2"
-              >
-                Opgrader til Elite
-              </button>
-              <button
-                v-else
-                @click="makeRegular(user)"
-                class="bg-gray-500 text-white font-semibold py-1 px-3 rounded hover:bg-gray-600 transition mr-2"
-              >
-                Nedgrader bruger
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+
+      <!-- Responsive container -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-auto bg-white border">
+          <thead>
+            <tr>
+              <th class="px-4 py-3 border-b text-left">Email</th>
+              <th class="px-4 py-3 border-b text-left hidden md:table-cell">Nuværende Rolle</th>
+              <th class="px-4 py-3 border-b text-left">Skift Rolle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(user, index) in users"
+              :key="index"
+              class="hover:bg-gray-50"
+            >
+              <td class="px-4 py-2 border-b">
+                <span class="block font-medium text-gray-900">{{ user.email }}</span>
+                <!-- Display role on small screens -->
+                <span class="block text-sm text-gray-500 md:hidden capitalize">
+                  Rolle: {{ user.role }}
+                </span>
+              </td>
+              <td class="px-4 py-2 border-b capitalize hidden md:table-cell">
+                {{ user.role }}
+              </td>
+              <td class="px-4 py-2 border-b">
+                <!-- Dropdown for role selection -->
+                <select
+                  v-model="user.role"
+                  @change="updateUserRole(user)"
+                  class="border p-2 rounded w-full bg-white"
+                >
+                  <option value="regular">Regular</option>
+                  <option value="elite">Elite</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
+
+
+
 
     <!-- ====================== Messaging Section ====================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
@@ -469,21 +478,21 @@ export default {
       users.value = all;
     };
 
-    // Promote to Elite
-    const makeElite = async (userObj) => {
-      const userDocRef = doc(db, 'users', userObj.id);
-      await updateDoc(userDocRef, { role: 'elite' });
-      // Reload users
-      loadUsers();
+    // New method to update the user role in Firestore
+    const updateUserRole = async (user) => {
+      const userDocRef = doc(db, 'users', user.id);
+      try {
+        await updateDoc(userDocRef, { role: user.role });
+        console.log(`User role updated to: ${user.role}`);
+      } catch (error) {
+        console.error('Error updating user role:', error);
+      }
     };
 
-    // Demote to Regular
-    const makeRegular = async (userObj) => {
-      const userDocRef = doc(db, 'users', userObj.id);
-      await updateDoc(userDocRef, { role: 'regular' });
-      // Reload users
+    onMounted(() => {
       loadUsers();
-    };
+    });
+
 
     // ==================== Messaging Section ====================
     const sendBroadcastMessage = async () => {
@@ -654,8 +663,8 @@ export default {
 
       // ==================== User Management ====================
       users,
-      makeElite,
-      makeRegular,
+      updateUserRole,
+      loadUsers,
 
       // ==================== Messaging Section ====================
       messageContent,
