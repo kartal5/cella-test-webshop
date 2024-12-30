@@ -13,6 +13,7 @@ import { getFirestore, doc, setDoc } from 'firebase/firestore';
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Save users metadata to Firestore
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(JSON.parse(localStorage.getItem('user')) || null);
 

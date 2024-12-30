@@ -26,3 +26,5 @@
 
 # Firebase runtime config
 functions/.runtimeconfig.json
+
+.env
