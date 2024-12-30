@@ -1,7 +1,7 @@
 <template>
-  <nav class="flex justify-between items-center flex-wrap bg-dark-brown p-4 sm:p-0 sm:px-20">
+  <nav class="flex justify-between items-center flex-nowrap bg-dark-brown p-4 sm:p-0 sm:px-5">
 
-    <div id="user-nav" class="flex w-full sm:w-auto items-center justify-center sm:justify-start sm:flex-row flex-col space-y-2 sm:space-y-0 sm:space-x-2 p-1">
+    <div id="user-nav" class="flex w-full sm:w-auto items-center justify-center sm:justify-start sm:flex-row flex-row space-y-0 space-x-1 sm:space-x-2 p-1">
       <template v-if="isAuthenticated">
         <span class="text-base text-gray-300 font-light">Velkommen, {{ userEmail }}</span>
         <span class="text-gray-500 hidden sm:inline">|</span>
@@ -38,7 +38,7 @@
     </div>
 
 
-    <div id="some-links" class="flex w-full justify-center sm:w-auto sm:justify-end space-x-2 mt-4 sm:my-0">
+    <div id="some-links" class="flex justify-center sm:w-auto sm:justify-end space-x-1 sm:space-x-2 mt- sm:mt-0">
       <a href="https://instagram.com" aria-label="Instagram" class="text-white">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="white" x="0px" y="0px" width="100" height="100" viewBox="0 0 30 30">
           <path d="M 9.9980469 3 C 6.1390469 3 3 6.1419531 3 10.001953 L 3 20.001953 C 3 23.860953 6.1419531 27 10.001953 27 L 20.001953 27 C 23.860953 27 27 23.858047 27 19.998047 L 27 9.9980469 C 27 6.1390469 23.858047 3 19.998047 3 L 9.9980469 3 z M 22 7 C 22.552 7 23 7.448 23 8 C 23 8.552 22.552 9 22 9 C 21.448 9 21 8.552 21 8 C 21 7.448 21.448 7 22 7 z M 15 9 C 18.309 9 21 11.691 21 15 C 21 18.309 18.309 21 15 21 C 11.691 21 9 18.309 9 15 C 9 11.691 11.691 9 15 9 z M 15 11 A 4 4 0 0 0 11 15 A 4 4 0 0 0 15 19 A 4 4 0 0 0 19 15 A 4 4 0 0 0 15 11 z"></path>
@@ -88,9 +88,9 @@ export default {
 </script>
 
 <style scoped>
-/* Add any specific styles here if needed */
+/* Add any specific styles here if needed 
 
-@media (min-width: 1024px) { /* For large screens and up */
+@media (min-width: 1024px) { /* For large screens and up 
   nav {
     display: flex;
     flex-direction: row;
@@ -99,7 +99,7 @@ export default {
   }
 }
 
-@media (max-width: 639px) { /* For extra small screens */
+@media (max-width: 639px) { /* For extra small screens 
   nav {
     display: flex;
     flex-direction: row;
@@ -133,5 +133,5 @@ export default {
     justify-content: flex-end;
     margin-bottom: 2px;
   }
-}
+} */
 </style>
