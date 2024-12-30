@@ -1,11 +1,17 @@
-import { defineConfig } from 'vitest/config'; // Import the defineConfig function from Vitest
-import vue from '@vitejs/plugin-vue'; // Import the Vue plugin for Vite
+import { defineConfig } from 'vite'; // Import from 'vite', not 'vitest/config'
+import vue from '@vitejs/plugin-vue';
+import path from 'path'; // Import the path module
 
 export default defineConfig({
   plugins: [vue()],
-  test: {
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'), // Configure the alias here
+    },
+  },
+  test: { // Test options remain here
     globals: true,
     environment: 'jsdom',
-    setupFiles: './vitest.setup.js', // Used as a part of the setup for the unit tests.
+    setupFiles: './vitest.setup.js',
   },
 });
