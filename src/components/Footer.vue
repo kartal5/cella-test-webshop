@@ -4,7 +4,7 @@
         <!-- Grid Layout for All Sections -->
         <div class="grid grid-cols-1 gap-8 place-items-top md:grid-cols-3">
           <!-- Left Section: Nyttige Links -->
-          <div class="flex flex-col space-y-4 items-center md:items-start text-center md:text-left">
+          <div id="left-section" class="flex flex-col space-y-4 items-center md:items-start text-center md:text-left">
             <h3 class="text-2xl font-bold">Nyttige links</h3>
             <ul class="space-y-2 text-lg">
               <li><a href="https://bemergroup.com/da_DK/home" target="_blank" rel="noopener noreferrer" class="hover:underline">Bemer</a></li>
@@ -20,7 +20,7 @@
           </div>
   
           <!-- Right Section: Kontakt -->
-          <div class="flex flex-col space-y-4 items-center md:items-end text-center md:text-right">
+          <div id="right-section" class="flex flex-col space-y-4 items-center md:items-end text-center md:text-right">
             <h3 class="text-2xl font-bold">Kontakt</h3>
             <ul class="space-y-2 text-lg">
               <li><p class="text-lg">Kølstrupvej 45, 5330 Munkebo</p></li>
