@@ -3,7 +3,7 @@
     <section class="cart-content container mt-10 mx-auto px-4 md:px-10">
       <h2 class="text-3xl font-bold text-left text-dark-brown mb-8">Din Indkøbskurv</h2>
 
-      <div v-if="cartItems.length > 0" class="space-y-4">
+      <div id="cart-items" v-if="cartItems.length > 0" class="space-y-4">
         <div v-for="(item, index) in cartItems" :key="item.id" class="flex items-center justify-between bg-white p-4 rounded-lg shadow">
           <img :src="item.image" :alt="item.name" class="w-20 h-20 object-contain mr-4 rounded" />
           <div class="flex-grow">
