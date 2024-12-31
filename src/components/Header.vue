@@ -83,6 +83,7 @@
             <ul
               v-if="showDropdown && filteredProducts.length > 0"
               class="absolute z-10 w-full bg-white border border-gray-200 rounded-lg mt-1 max-h-52 overflow-y-auto p-2 shadow-lg"
+              :style="{ top: 'calc(100% + 4px)' }"
             >
               <li
                 v-for="product in filteredProducts"

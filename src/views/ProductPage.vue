@@ -2,16 +2,12 @@
   <section class="container mt-10 mx-auto px-4 md:px-10">
     <div>
       <div v-if="product" id="product-detail"
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-8 mx-4 md:mx-16 lg:mx-32 xl:mx-60">
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-8 mx-4 md:mx-16 lg:mx-32 xl:mx-60">
+        class="product-detail grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 m-4">
         <!-- Adjust the image size with a CSS class -->
-        <div class="bg-white border rounded-lg p-4 max-h-110 flex justify-center items-center">
-          <img :src="product.image" :alt="product.name" class="rounded h-auto max-h-80" />
-        <div class="bg-white border rounded-lg p-4 max-h-110 flex justify-center items-center">
-          <img :src="product.image" :alt="product.name" class="rounded h-auto max-h-80" />
+        <div class="columns-auto bg-white border rounded-lg p-4">
+          <img :src="product.image" :alt="product.name" class="product-image rounded" />
         </div>
-        <div class="bg-white border rounded-lg p-4 flex flex-col">
-        <div class="bg-white border rounded-lg p-4 flex flex-col">
+        <div class="columns-auto bg-white border rounded-lg p-4 flex flex-col">
           <div class="flex-grow">
             <h2 class="text-4xl font-bold text-dark-brown mb-4">{{ product.name }}</h2>
             <p class="text-2xl font-bold text-dark-green mt-4">{{ product.price }}</p>
@@ -47,8 +43,7 @@
         </div>
       </div>
       <p v-else class="text-center text-black mt-6">Produktet bliver hentet...</p>
-      <div id="product-desc" class="bg-white border rounded-lg m-4 p-4 flex flex-col place-content-center mx-4 md:mx-16 lg:mx-32 xl:mx-60">
-      <div id="product-desc" class="bg-white border rounded-lg m-4 p-4 flex flex-col place-content-center mx-4 md:mx-16 lg:mx-32 xl:mx-60">
+      <div id="product-desc" class="bg-white bg-white border rounded-lg m-4 p-4 flex-col place-content-center">
         <h2 class="text-4xl font-bold text-dark-brown mb-4">Beskrivelse</h2>
         <p class="text-lg text-black mb-6">
           <span v-for="(line, index) in formattedDescription" :key="index">
@@ -194,7 +189,6 @@ export default {
 </script>
 
 <style scoped>
-/*
 .product-image {
   max-width: 100%;
   height: auto;
@@ -215,7 +209,7 @@ export default {
 
 @media (min-width: 1024px) {
 
-  /* For large screens and up 
+  /* For large screens and up */
   .grid {
     grid-template-columns: 2fr 1fr;
   }
@@ -225,7 +219,7 @@ export default {
 
 @media (min-width: 768px) and (max-width: 1023px) {
 
-  /* For medium screens 
+  /* For medium screens */
   .grid {
     grid-template-columns: 2fr 1fr;
   }
@@ -233,7 +227,7 @@ export default {
 
 @media (min-width: 640px) and (max-width: 767px) {
 
-  /* For small screens 
+  /* For small screens */
   .grid {
     grid-template-columns: repeat(1, minmax(220px, 1fr));
   }
@@ -241,10 +235,9 @@ export default {
 
 @media (max-width: 639px) {
 
-  /* For extra small screens 
+  /* For extra small screens */
   .grid {
     grid-template-columns: repeat(1, minmax(220px, 1fr));
   }
-} 
-  */
+}
 </style>
