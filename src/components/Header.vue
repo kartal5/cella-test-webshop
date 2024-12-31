@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-light-brown py-4 px-4 sm:px-20 flex flex-col sm:flex-row items-center justify-between h-28 sm:space-y-0"
+    class="bg-light-brown py-4 px-4 sm:px-20 flex flex-col md:flex-col lg:flex-row items-center justify-between h-auto lg:h-28 space-y-4 md:space-y-6 lg:space-y-0"
   >
     <div class="flex-shrink-0">
       <router-link to="/">
@@ -8,7 +8,7 @@
       </router-link>
     </div>
     <div class="container mt-5 mx-auto">
-      <div class="flex justify-center space-x-8 font">
+      <div class="flex justify-center space-x-4 sm:space-x-8 font">
         <!-- Home Link -->
         <router-link id="butik-link"
           to="/"
@@ -75,7 +75,7 @@
               />
             </svg>
           </button>
-          </input
+          </input>
           
 
           <!-- Dropdown for search results -->
@@ -225,7 +225,9 @@ export default {
 </script>
 
 
+
 <style scoped>
+/*
 .dropdown-enter-active,
 .dropdown-leave-active {
   transition: opacity 0.2s ease, transform 0.4s ease;
@@ -241,7 +243,7 @@ export default {
   transform: translateY(0);
 }
 
-@media (min-width: 768px) and (max-width: 1023px) { /* For medium screens */
+@media (min-width: 768px) and (max-width: 1023px) { /* For medium screens 
   header {
     flex-direction: column;
   }
@@ -272,7 +274,7 @@ export default {
 }
   
 
-@media (min-width: 640px) and (max-width: 767px) { /* For small screens */
+@media (min-width: 640px) and (max-width: 767px) { /* For small screens 
   header {
     flex-direction: column;
   }
@@ -304,7 +306,7 @@ export default {
   }
 }
 
-@media (max-width: 639px) { /* For extra small screens */
+@media (max-width: 639px) { /* For extra small screens 
   #logo-link{
     justify-content: center;
   }
@@ -330,5 +332,5 @@ export default {
     margin: 1px
   }
 
-}
+} */
 </style>
