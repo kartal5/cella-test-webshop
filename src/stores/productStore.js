@@ -16,12 +16,12 @@ export const useProductStore = () => {
     const querySnapshot = await getDocs(productsCollection);
     const products = [];
     querySnapshot.forEach((docSnap) => {
-      // Extract product data from Firestore and convert its document ID to numeric `id`
+
       // "docSnap.data()" contains the product fields
       const productData = docSnap.data();
       products.push({
         ...productData,
-        id: parseInt(docSnap.id, 10) 
+        id: docSnap.id,  
       });
     });
     allProducts.value = products; // Save the fetched products to be used in the app
@@ -46,8 +46,11 @@ export const useProductStore = () => {
   // Updates an existing product in Firestore and local store
   const updateProduct = async (updatedProduct) => {
     // If doc IDs are the same as product IDs, use that:
-    const docRef = doc(db, 'products', updatedProduct.id.toString()); 
-    await updateDoc(docRef, { ...updatedProduct }); // Send updated fields
+    const docRef = doc(db, 'products', updatedProduct.id);
+    const updatedData = { ...updatedProduct };
+    delete updatedData.id; 
+
+    await updateDoc(docRef, updatedData);
     
     // Find the index of the product in the local list that matches the updated product's ID:
     const index = allProducts.value.findIndex(p => p.id === updatedProduct.id);
