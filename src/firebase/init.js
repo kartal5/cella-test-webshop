@@ -19,11 +19,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// Conditionally initialize Firebase Analytics
-let analytics;
-if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app);
-}
 
 // Export the app instance for use in other files
 export { app };
