@@ -225,7 +225,9 @@ export default {
 </script>
 
 
+
 <style scoped>
+/*
 .dropdown-enter-active,
 .dropdown-leave-active {
   transition: opacity 0.2s ease, transform 0.4s ease;
@@ -241,7 +243,7 @@ export default {
   transform: translateY(0);
 }
 
-@media (min-width: 768px) and (max-width: 1023px) { /* For medium screens */
+@media (min-width: 768px) and (max-width: 1023px) { /* For medium screens 
   header {
     flex-direction: column;
   }
@@ -272,7 +274,7 @@ export default {
 }
   
 
-@media (min-width: 640px) and (max-width: 767px) { /* For small screens */
+@media (min-width: 640px) and (max-width: 767px) { /* For small screens 
   header {
     flex-direction: column;
   }
@@ -304,7 +306,7 @@ export default {
   }
 }
 
-@media (max-width: 639px) { /* For extra small screens */
+@media (max-width: 639px) { /* For extra small screens 
   #logo-link{
     justify-content: center;
   }
@@ -330,5 +332,5 @@ export default {
     margin: 1px
   }
 
-}
+} */
 </style>

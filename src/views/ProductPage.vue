@@ -3,10 +3,14 @@
     <div>
       <div v-if="product" id="product-detail"
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-8 mx-4 md:mx-16 lg:mx-32 xl:mx-60">
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-8 mx-4 md:mx-16 lg:mx-32 xl:mx-60">
         <!-- Adjust the image size with a CSS class -->
         <div class="bg-white border rounded-lg p-4 max-h-110 flex justify-center items-center">
           <img :src="product.image" :alt="product.name" class="rounded h-auto max-h-80" />
+        <div class="bg-white border rounded-lg p-4 max-h-110 flex justify-center items-center">
+          <img :src="product.image" :alt="product.name" class="rounded h-auto max-h-80" />
         </div>
+        <div class="bg-white border rounded-lg p-4 flex flex-col">
         <div class="bg-white border rounded-lg p-4 flex flex-col">
           <div class="flex-grow">
             <h2 class="text-4xl font-bold text-dark-brown mb-4">{{ product.name }}</h2>
@@ -43,6 +47,7 @@
         </div>
       </div>
       <p v-else class="text-center text-black mt-6">Produktet bliver hentet...</p>
+      <div id="product-desc" class="bg-white border rounded-lg m-4 p-4 flex flex-col place-content-center mx-4 md:mx-16 lg:mx-32 xl:mx-60">
       <div id="product-desc" class="bg-white border rounded-lg m-4 p-4 flex flex-col place-content-center mx-4 md:mx-16 lg:mx-32 xl:mx-60">
         <h2 class="text-4xl font-bold text-dark-brown mb-4">Beskrivelse</h2>
         <p class="text-lg text-black mb-6">
