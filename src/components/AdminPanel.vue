@@ -510,6 +510,10 @@ export default {
     const updateUserRole = async (user) => {
       const userDocRef = doc(db, 'users', user.id);
       try {
+        // Only allow if *this* user is admin, otherwise block or ignore
+        if (!authStore.isAdmin()) {
+          throw new Error('Insufficient permissions');
+        }
         await updateDoc(userDocRef, { role: user.role });
         console.log(`User role updated to: ${user.role}`);
       } catch (error) {
