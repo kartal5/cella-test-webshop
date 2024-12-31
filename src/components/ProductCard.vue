@@ -5,7 +5,7 @@
       <h3 class="text-base font-semibold text-center text-dark-brown px-2">{{ product.name }}</h3>
       <p class="text-start text-black mb-4 line-clamp-3 px-2">{{ product.description }}</p>
     </div>
-    <p class="text-xs font-bold text-dark-green text-end mb-4 px-2">{{ product.price }}</p>
+    <p class="text-xl font-bold text-dark-green text-end mb-4 px-2">{{ product.price }}</p>
 
     <!-- "Læg i kurv" button -->
     <button id="add-to-cart-btn"

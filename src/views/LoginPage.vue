@@ -1,6 +1,6 @@
 <template>
   <section class="container mt-10 mx-auto px-4 md:px-10">
-    <div class="max-w-md mx-auto bg-white bg-white p-6 rounded-lg shadow-md">
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
       <h2 class="text-2xl font-bold text-dark-brown mb-6 text-center">Log ind på din konto</h2>
       <form @submit.prevent="handleLogin">
         <div class="mb-4">
@@ -10,22 +10,27 @@
             type="email"
             id="email"
             class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            required
+            @input="validateEmail"
+            :class="{ 'border-red-500': emailError }"
           />
+          <p v-if="emailError" class="text-red-500 text-sm mt-1">{{ emailError }}</p>
         </div>
         <div class="mb-6">
-          <label class="block text-text-black font-semibold mb-2" for="password">Adgangskode</label>
+          <label class="block text-black font-semibold mb-2" for="password">Adgangskode</label>
           <input
             v-model="password"
             type="password"
             id="password"
             class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            required
+            @input="validatePassword"
+            :class="{ 'border-red-500': passwordError }"
           />
+          <p v-if="passwordError" class="text-red-500 text-sm mt-1">{{ passwordError }}</p>
         </div>
         <button
           type="submit"
           class="w-full bg-light-green text-white font-semibold py-3 rounded-lg hover:bg-dark-green transition"
+          :disabled="!isValid"
         >
           Log ind
         </button>
@@ -41,7 +46,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import { useRouter } from 'vue-router';
 
@@ -50,10 +55,37 @@ export default {
   setup() {
     const email = ref('');
     const password = ref('');
+    const emailError = ref('');
+    const passwordError = ref('');
     const authStore = useAuthStore();
     const router = useRouter();
 
+    // Validation
+    const validateEmail = () => {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      emailError.value = email.value.trim() === '' 
+        ? 'Email er påkrævet.' 
+        : !emailPattern.test(email.value) 
+          ? 'Indtast en gyldig email.' 
+          : '';
+    };
+
+    // Validation
+    const validatePassword = () => {
+      passwordError.value = password.value.trim() === '' 
+        ? 'Adgangskode er påkrævet.' 
+        : password.value.length < 6 
+          ? 'Adgangskode skal være mindst 6 tegn.' 
+          : '';
+    };
+
+    const isValid = computed(() => !emailError.value && !passwordError.value && email.value && password.value);
+
     const handleLogin = async () => {
+      validateEmail();
+      validatePassword();
+      if (!isValid.value) return;
+
       try {
         await authStore.login(email.value, password.value);
         // ensuring users land on the page they wanted to visit initially (if such a destination exists)
@@ -69,7 +101,12 @@ export default {
     return {
       email,
       password,
+      emailError,
+      passwordError,
+      validateEmail,
+      validatePassword,
       handleLogin,
+      isValid,
     };
   },
 };
@@ -77,6 +114,6 @@ export default {
 
 <style scoped>
 .bg-blog-post {
-  background-color: #efede4; 
+  background-color: #efede4;
 }
 </style>
