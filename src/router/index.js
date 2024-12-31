@@ -46,6 +46,8 @@ router.beforeEach((to, from, next) => {
   const authRequiredRoutes = ['/admin', '/cart', '/payment'];
 
   if (authRequiredRoutes.includes(to.path) && (!authStore.isAuthenticated() || !authStore.isVerified())) {
+    // If user is not logget in or verified email,
+    // redirect to login page via redirect-parameter
     next({
       path: '/login',
       query: { redirect: to.fullPath },

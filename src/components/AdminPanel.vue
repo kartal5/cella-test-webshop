@@ -6,35 +6,35 @@
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
       <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Administratorer</h3>
 
-        <!-- Grid container for admins -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div
-            v-for="admin in admins"
-            :key="admin.id"
-            class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
-          >
-            <!-- Admin profile picture -->
-            <img :src="admin.picture" alt="Admin Picture" class="w-16 h-16 rounded-full mr-4">
-            <!-- Admin information -->
-            <div class="flex-1">
-              <!-- Admin name -->
-              <h3 class="text-xl font-semibold">{{ admin.name }}</h3>
-              <!-- Admin email -->
-              <p class="text-gray-700">{{ admin.email }}</p>
-              <!-- Online/Offline status -->
-              <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
-                {{ admin.online ? 'Online' : 'Offline' }}
-              </p>
-            </div>
-
-            <!-- Direct message icon -->
-            <a href="#" @click.prevent="openMessageModal(admin)" class="text-gray-500 hover:text-gray-700 mr-4">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z"/>
-              </svg>
-            </a>
+      <!-- Grid container for admins -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          v-for="admin in admins"
+          :key="admin.id"
+          class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
+        >
+          <!-- Admin profile picture -->
+          <img :src="admin.picture" alt="Admin Picture" class="w-16 h-16 rounded-full mr-4">
+          <!-- Admin information -->
+          <div class="flex-1">
+            <!-- Admin name -->
+            <h3 class="text-xl font-semibold">{{ admin.name }}</h3>
+            <!-- Admin email -->
+            <p class="text-gray-700">{{ admin.email }}</p>
+            <!-- Online/Offline status -->
+            <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
+              {{ admin.online ? 'Online' : 'Offline' }}
+            </p>
           </div>
+
+          <!-- Direct message icon -->
+          <a href="#" @click.prevent="openMessageModal(admin)" class="text-gray-500 hover:text-gray-700 mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z"/>
+            </svg>
+          </a>
         </div>
+      </div>
 
       <!-- Modal for sending direct message -->
       <div v-if="showMessageModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
@@ -117,10 +117,6 @@
       </div>
     </div>
 
-
-
-
-
     <!-- ====================== Messaging Section ====================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Fællesbeskeder</h3>
@@ -157,7 +153,6 @@
         </div>
       </div>
     </div>
-
 
     <!-- ====================== Add New Product Form ====================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
@@ -217,26 +212,42 @@
           </div>
         </div>
 
+        <!-- Updated Categories Dropdown -->
         <div>
-          <label class="block text-gray-700 font-semibold mb-2" for="categories">Kategorier (kommasepareret)</label>
-          <input
-            v-model="categoriesInput"
-            type="text"
+          <label class="block text-gray-700 font-semibold mb-2" for="categories">Kategorier</label>
+          <select
             id="categories"
+            v-model="selectedCategories"
+            multiple
             class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            placeholder="f.eks. mennesker, heste, hunde, katte"
-          />
+          >
+            <option
+              v-for="category in availableCategories"
+              :key="category"
+              :value="category"
+            >
+              {{ category }}
+            </option>
+          </select>
         </div>
 
+        <!-- Updated Subcategories Dropdown -->
         <div>
-          <label class="block text-gray-700 font-semibold mb-2" for="subcategories">Underkategorier (kommasepareret)</label>
-          <input
-            v-model="subcategoriesInput"
-            type="text"
+          <label class="block text-gray-700 font-semibold mb-2" for="subcategories">Underkategorier</label>
+          <select
             id="subcategories"
+            v-model="selectedSubcategories"
+            multiple
             class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            placeholder="f.eks. Vitaminer & Mineraler"
-          />
+          >
+            <option
+              v-for="subcategory in availableSubcategories"
+              :key="subcategory"
+              :value="subcategory"
+            >
+              {{ subcategory }}
+            </option>
+          </select>
         </div>
 
         <button
@@ -358,24 +369,42 @@
             </div>
           </div>
 
+          <!-- Updated Categories Dropdown in Edit Modal -->
           <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="editCategories">Kategorier (kommasepareret)</label>
-            <input
-              v-model="editCategoriesInput"
-              type="text"
+            <label class="block text-gray-700 font-semibold mb-2" for="editCategories">Kategorier</label>
+            <select
               id="editCategories"
+              v-model="selectedEditCategories"
+              multiple
               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            />
+            >
+              <option
+                v-for="category in availableCategories"
+                :key="category"
+                :value="category"
+              >
+                {{ category }}
+              </option>
+            </select>
           </div>
 
+          <!-- Updated Subcategories Dropdown in Edit Modal -->
           <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="editSubcategories">Underkategorier (kommasepareret)</label>
-            <input
-              v-model="editSubcategoriesInput"
-              type="text"
+            <label class="block text-gray-700 font-semibold mb-2" for="editSubcategories">Underkategorier</label>
+            <select
               id="editSubcategories"
+              v-model="selectedEditSubcategories"
+              multiple
               class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            />
+            >
+              <option
+                v-for="subcategory in availableSubcategories"
+                :key="subcategory"
+                :value="subcategory"
+              >
+                {{ subcategory }}
+              </option>
+            </select>
           </div>
 
           <div class="flex justify-end space-x-4">
@@ -398,7 +427,6 @@
     </div>
   </section>
 </template>
-
 
 <script>
 import { useProductStore } from '../stores/productStore';
@@ -489,11 +517,6 @@ export default {
       }
     };
 
-    onMounted(() => {
-      loadUsers();
-    });
-
-
     // ==================== Messaging Section ====================
     const sendBroadcastMessage = async () => {
       if (!messageContent.value.trim()) return;
@@ -534,6 +557,10 @@ export default {
     const { allProducts, addProduct, updateProduct, deleteProduct } = productStore;
     const { featuredProductIds, addFeaturedProduct, removeFeaturedProduct } = featuredStore;
 
+    // Define available categories and subcategories
+    const availableCategories = ref(['mennesker', 'heste', 'hunde', 'katte']);
+    const availableSubcategories = ref(['Vitaminer & Mineraler', 'Fordøjelse', 'Collagen', 'Olie']);
+
     // New product form fields (via Reactive object)
     const newProduct = ref({
       name: '',
@@ -545,24 +572,19 @@ export default {
       subcategories: [],
     });
 
-    // Input fields for categories and subcategories
-    const categoriesInput = ref('');
-    const subcategoriesInput = ref('');
+    // Selected categories and subcategories from dropdowns
+    const selectedCategories = ref([]);
+    const selectedSubcategories = ref([]);
 
     // Handles adding a new product
     const handleAddProduct = () => {
-      // Process categories and subcategories inputs into arrays
-      newProduct.value.categories = categoriesInput.value
-        .split(',')
-        .map((cat) => cat.trim())
-        .filter(Boolean);
-      newProduct.value.subcategories = subcategoriesInput.value
-        .split(',')
-        .map((sub) => sub.trim())
-        .filter(Boolean);
+      // Assign selected categories and subcategories directly
+      newProduct.value.categories = selectedCategories.value;
+      newProduct.value.subcategories = selectedSubcategories.value;
 
       // Call the addProduct function from the store
       addProduct({ ...newProduct.value });
+
       // Reset form inputs
       newProduct.value = {
         name: '',
@@ -573,8 +595,8 @@ export default {
         categories: [],
         subcategories: [],
       };
-      categoriesInput.value = '';
-      subcategoriesInput.value = '';
+      selectedCategories.value = [];
+      selectedSubcategories.value = [];
     };
 
     // Edit Product Modal logic
@@ -589,14 +611,14 @@ export default {
       categories: [],
       subcategories: [],
     });
-    const editCategoriesInput = ref('');
-    const editSubcategoriesInput = ref('');
+    const selectedEditCategories = ref([]);
+    const selectedEditSubcategories = ref([]);
 
     // Opens the edit modal with pre-filled product data
     const openEditModal = (product) => {
       editProductData.value = { ...product };
-      editCategoriesInput.value = product.categories.join(', ');
-      editSubcategoriesInput.value = product.subcategories.join(', ');
+      selectedEditCategories.value = product.categories;
+      selectedEditSubcategories.value = product.subcategories;
       showEditModal.value = true;
     };
 
@@ -605,14 +627,9 @@ export default {
     };
 
     const handleEditProduct = () => {
-      editProductData.value.categories = editCategoriesInput.value
-        .split(',')
-        .map((cat) => cat.trim())
-        .filter(Boolean);
-      editProductData.value.subcategories = editSubcategoriesInput.value
-        .split(',')
-        .map((sub) => sub.trim())
-        .filter(Boolean);
+      // Assign selected categories and subcategories directly
+      editProductData.value.categories = selectedEditCategories.value;
+      editProductData.value.subcategories = selectedEditSubcategories.value;
 
       updateProduct(editProductData.value);
       closeEditModal();
@@ -674,13 +691,15 @@ export default {
       // ==================== Product Management ====================
       allProducts,
       newProduct,
-      categoriesInput,
-      subcategoriesInput,
+      availableCategories,
+      availableSubcategories,
+      selectedCategories,
+      selectedSubcategories,
       handleAddProduct,
       showEditModal,
       editProductData,
-      editCategoriesInput,
-      editSubcategoriesInput,
+      selectedEditCategories,
+      selectedEditSubcategories,
       openEditModal,
       closeEditModal,
       handleEditProduct,
@@ -694,8 +713,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style scoped>
 .bg-blog-post {
