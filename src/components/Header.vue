@@ -193,7 +193,7 @@ export default {
     const goToProduct = (productId) => {
       showDropdown.value = false;
       searchQuery.value = '';
-      router.push(`/product/${productId}`);
+      router.push(`/product/${productId}`); // productId is a string
     };
 
     // Optional: Handle search button click

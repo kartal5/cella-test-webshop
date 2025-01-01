@@ -4,37 +4,39 @@
 
     <!-- ====================== Admin Display ====================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
-      <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Administratorer</h3>
+    <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Administratorer</h3>
 
-      <!-- Grid container for admins -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div
-          v-for="admin in admins"
-          :key="admin.id"
-          class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
+    <!-- Grid container for admins -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div
+        v-for="admin in admins"
+        :key="admin.id"
+        class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
+      >
+        <!-- Admin profile picture -->
+        <img 
+          :src="admin.picture || '/public/img/logo.png'" 
+          alt="Admin Picture" 
+          class="w-16 h-16 rounded-full mr-4"
         >
-          <!-- Admin profile picture -->
-          <img :src="admin.picture" alt="Admin Picture" class="w-16 h-16 rounded-full mr-4">
-          <!-- Admin information -->
-          <div class="flex-1">
-            <!-- Admin name -->
-            <h3 class="text-xl font-semibold">{{ admin.name }}</h3>
-            <!-- Admin email -->
-            <p class="text-gray-700">{{ admin.email }}</p>
-            <!-- Online/Offline status -->
-            <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
-              {{ admin.online ? 'Online' : 'Offline' }}
-            </p>
-          </div>
-
-          <!-- Direct message icon -->
-          <a href="#" @click.prevent="openMessageModal(admin)" class="text-gray-500 hover:text-gray-700 mr-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z"/>
-            </svg>
-          </a>
+        <!-- Admin information -->
+        <div class="flex-1">
+          <h3 class="text-xl font-semibold">{{ admin.name || 'No Name' }}</h3>
+          <p class="text-gray-700">{{ admin.email }}</p>
+          <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
+            {{ admin.online ? 'Online' : 'Offline' }}
+          </p>
         </div>
+
+        <!-- Direct message icon -->
+        <a href="#" @click.prevent="openMessageModal(admin)" class="text-gray-500 hover:text-gray-700 mr-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z"/>
+          </svg>
+        </a>
       </div>
+    </div>
+
 
       <!-- Modal for sending direct message -->
       <div v-if="showMessageModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
@@ -443,6 +445,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { app } from '../firebase/init';
+import { computed } from 'vue';
 
 export default {
   name: 'AdminPanel',
@@ -453,12 +456,6 @@ export default {
     const messagesCollection = collection(db, 'messages');
 
     // ==================== Admin Display ====================
-    const admins = ref([
-      { id: 1, name: 'Helene', email: 'Zentia88@live.dk', picture: '/public/img/logo.png', online: true },
-      { id: 2, name: 'Maria', email: 'maria@example.com', picture: '/public/img/logo.png', online: false },
-      { id: 3, name: 'Emilie', email: 'emilie@example.com', picture: '/public/img/logo.png', online: true },
-      { id: 4, name: 'Seyyit', email: 'seyyit@example.com', picture: '/public/img/logo.png', online: false },
-    ]);
 
     const showMessageModal = ref(false);
     const selectedAdmin = ref(null);
@@ -492,7 +489,12 @@ export default {
     };
 
     // ==================== User Management ====================
-    const users = ref([]); // holds all user docs
+    const users = ref([]);
+    const admins = computed(() => {
+      // This ensures admins is always in sync with users
+      return users.value.filter(user => user.role === 'admin');
+    });
+
     const messageContent = ref('');
     const allMessages = ref([]); // to store all messages
 

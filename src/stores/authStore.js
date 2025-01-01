@@ -8,7 +8,7 @@ import {
   sendEmailVerification,
   signOut,
 } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore'; // <-- Note getDoc import
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore'; 
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Store user document in Firestore
     const userData = {
       email: firebaseUser.email,
-      role: 'regular', //  <-- By default, new users are "regular"
+      role: 'regular', //  <-- By default new users are "regular"
       verified: firebaseUser.emailVerified,
       createdAt: new Date().toISOString(),
     };
@@ -45,12 +45,12 @@ export const useAuthStore = defineStore('auth', () => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const firebaseUser = userCredential.user;
 
-    // If the user has not verified their email, we can block them
+    // If the user has not verified their email block them
     if (!firebaseUser.emailVerified) {
       throw new Error('Email not verified. Please check your inbox.');
     }
 
-    // <-- AFTER sign-in, fetch user doc from Firestore to get their role
+    // AFTER sign-in, fetch user doc from Firestore to get their role
     const docRef = doc(db, 'users', firebaseUser.uid);
     const userDocSnap = await getDoc(docRef);
 
@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = {
       uid: firebaseUser.uid,
       email: firebaseUser.email,
-      role: userData.role,          //  <-- This is crucial
+      role: userData.role,          
       verified: firebaseUser.emailVerified
     };
     localStorage.setItem('user', JSON.stringify(user.value));
@@ -78,7 +78,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = () => user.value !== null;
   const isVerified = () => user.value?.verified;
-  // NEW: an optional helper
   const isAdmin = () => user.value?.role === 'admin';
 
   return {
@@ -88,6 +87,6 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     isAuthenticated,
     isVerified,
-    isAdmin, // expose the helper
+    isAdmin,
   };
 });

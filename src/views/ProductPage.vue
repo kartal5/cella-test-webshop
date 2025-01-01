@@ -79,8 +79,14 @@ export default {
 
     // Function to load the product when the route or products change
     const loadProduct = () => {
-      const productId = Number(route.params.id);
-      const foundProduct = productStore.allProducts.value.find((p) => p.id === productId);
+
+      // Directly use the param as a string
+      const productId = route.params.id;
+      
+      // Look up product in the store by its string id
+      const foundProduct = productStore.allProducts.value.find(
+        (p) => p.id === productId
+      );
       product.value = foundProduct || null;
     };
 
