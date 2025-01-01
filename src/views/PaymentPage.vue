@@ -92,18 +92,36 @@
       <!-- RIGHT: Order Summary -->
       <div class="bg-white p-6 rounded-lg shadow-md">
         <h3 class="text-xl font-semibold text-dark-brown mb-4">Ordresammendrag</h3>
+
         <div v-for="(item, index) in cartItems" :key="index" class="flex justify-between border-b py-2">
           <div>
             <p class="font-medium text-gray-800">{{ item.name }}</p>
             <p class="text-sm text-gray-500">Antal: {{ item.quantity }}</p>
           </div>
+          <!-- Show the item.price label, but remember discount is in the total below -->
           <p class="font-medium text-navbar-green">{{ item.price }}</p>
         </div>
-        <div class="mt-6 flex justify-between items-center">
+
+        <!-- Subtotal row -->
+        <div class="mt-4 flex justify-between items-center" v-if="cartSubtotal !== cartTotal">
+          <p class="text-lg font-semibold">Subtotal:</p>
+          <p class="text-xl font-bold text-navbar-green">DKK {{ cartSubtotal }}</p>
+        </div>
+
+        <!-- Discount row (only if user is Elite) -->
+        <div class="mt-1 flex justify-between items-center text-red-600" v-if="isElite">
+          <p class="text-lg font-semibold">Elite Rabat (10%):</p>
+          <!-- Just showing the difference for clarity -->
+          <p class="text-xl font-bold">- DKK {{ (cartSubtotal - cartTotal).toFixed(2) }}</p>
+        </div>
+
+        <!-- Final total (already discounted if Elite) -->
+        <div class="mt-4 flex justify-between items-center">
           <p class="text-lg font-semibold">Total:</p>
           <p class="text-xl font-bold text-navbar-green">DKK {{ cartTotal }}</p>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -129,6 +147,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCartStore } from '../stores/cartStore';
+import { useAuthStore } from '../stores/authStore';
 
 export default {
   name: 'PaymentPage',
@@ -136,6 +155,7 @@ export default {
     // Stripe Checkout Integration (Frontend)
     const stripePromise = loadStripe('pk_test_51QafV7Ruib7MNBzAKFp8POBIkJ0r4LDGPXSvkNm4BHDuh0ffyRTbuFiDTZt072s8Oqp3Gc45xB0KVz27xoWrE67F00RkRvmhEq');
     const cartStore = useCartStore();
+    const authStore = useAuthStore();
     const fullName = ref('');
     const address = ref('');
     const postalCode = ref('');
@@ -143,8 +163,12 @@ export default {
     const country = ref('Danmark');
     const orderCompleted = ref(false);
     const cartItems = computed(() => cartStore.cartItems);
+    const cartSubtotal = computed(() => cartStore.cartSubtotal.toFixed(2));
     const cartTotal = computed(() => cartStore.cartTotal.toFixed(2));
     let stripe, elements, card;
+
+    // Simple check if user is Elite
+    const isElite = computed(() => authStore.user?.role === 'elite');
 
     onMounted(async () => {
       stripe = await stripePromise;
@@ -206,6 +230,8 @@ export default {
       cartItems,
       cartTotal,
       handlePayment,
+      cartSubtotal,
+      isElite,
     };
   },
 };
