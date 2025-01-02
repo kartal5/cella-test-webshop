@@ -1,22 +1,12 @@
 {
   "hosting": {
-    // 1) Serve from the project’s root folder
-    "public": ".",
-
-    // 2) Make sure to ignore any files/folders you don't want hosted
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**",
-      "server",
-      "src",
-      "package.json",
-      "package-lock.json",
       "cella-test-bachelor-webshop-541266371c3d.json"
     ],
-
-    // 3) For a Vue single-page app, you typically want a rewrite
-    //    so that all subroutes (e.g. /product/123) also serve index.html
     "rewrites": [
       {
         "source": "**",
