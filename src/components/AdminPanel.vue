@@ -15,7 +15,7 @@
       >
         <!-- Admin profile picture -->
         <img 
-          :src="admin.picture || '/public/img/logo.png'" 
+          :src="admin.picture || '/public/img/adminlogo/logo.png'" 
           alt="Admin Picture" 
           class="w-16 h-16 rounded-full mr-4"
         >
