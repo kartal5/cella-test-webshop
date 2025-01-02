@@ -3,7 +3,7 @@
 
     <div id="user-nav" class="flex w-full sm:w-auto items-center justify-center sm:justify-start sm:flex-row flex-row space-y-0 space-x-1 sm:space-x-2 p-1">
       <template v-if="isAuthenticated">
-        <span class="text-base text-gray-300 font-light">Velkommen, {{ userEmail }}</span>
+        <span class="text-base text-gray-300 font-light">Velkoen, {{ userEmail }}</span>
         <span class="text-gray-500 hidden sm:inline">|</span>
         <button @click="handleLogout" class="text-base text-gray-300 font-light hover:text-gray-400">
           Log ud
