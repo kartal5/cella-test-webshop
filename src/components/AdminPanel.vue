@@ -15,7 +15,7 @@
       >
         <!-- Admin profile picture -->
         <img
-          :src="admin.picture || fallbackLogo"
+          :src="admin.picture && admin.picture.trim() !== '' ? admin.picture : fallbackLogo"
           alt="Admin Picture"
           class="w-16 h-16 rounded-full mr-4"
         />
@@ -446,7 +446,7 @@ import {
 } from 'firebase/firestore';
 import { app } from '../firebase/init';
 import { computed } from 'vue';
-import fallbackLogo from '@/assets/logo.png'; 
+import fallbackLogo from '../assets/img/logo.png';
 
 export default {
   name: 'AdminPanel',
