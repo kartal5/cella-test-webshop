@@ -5,14 +5,13 @@
 
     // 2) Make sure to ignore any files/folders you don't want hosted
     "ignore": [
-      "firebase.json",      
-      "**/.*",             // e.g. .git, .env, etc.
+      "firebase.json",
+      "**/.*",
       "**/node_modules/**",
-      "server",            // your server folder with Stripe code
-      "src",               // your source code folder
+      "server",
+      "src",
       "package.json",
       "package-lock.json",
-      "public",
       "cella-test-bachelor-webshop-541266371c3d.json"
     ],
 
