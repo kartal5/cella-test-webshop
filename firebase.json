@@ -1,10 +1,26 @@
 {
-  "functions": {
-    "source": "functions"
-  },
-  "emulators": {
-    "functions": {
-      "configPath": "functions/.runtimeconfig.json"
-    }
+  "hosting": {
+    // 1) Serve from the project’s root folder
+    "public": ".",
+
+    // 2) Make sure to ignore any files/folders you don't want hosted
+    "ignore": [
+      "firebase.json",      
+      "**/.*",             // e.g. .git, .env, etc.
+      "**/node_modules/**",
+      "server",            // your server folder with Stripe code
+      "package.json",
+      "package-lock.json",
+      "cella-test-bachelor-webshop-541266371c3d.json"
+    ],
+
+    // 3) For a Vue single-page app, you typically want a rewrite
+    //    so that all subroutes (e.g. /product/123) also serve index.html
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }
