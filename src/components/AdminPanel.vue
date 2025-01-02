@@ -14,10 +14,11 @@
         class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
       >
         <!-- Admin profile picture -->
-        <img
-          :src="admin.picture || fallbackLogo"
-          alt="Admin Picture"
-        />
+        <img 
+          :src="admin.picture || '/img/logo.png'" 
+          alt="Admin Picture" 
+          class="w-16 h-16 rounded-full mr-4"
+        >
         <!-- Admin information -->
         <div class="flex-1">
           <h3 class="text-xl font-semibold">{{ admin.name || 'No Name' }}</h3>
@@ -445,7 +446,6 @@ import {
 } from 'firebase/firestore';
 import { app } from '../firebase/init';
 import { computed } from 'vue';
-import fallbackLogo from '@/assets/logo.png'; 
 
 export default {
   name: 'AdminPanel',
@@ -675,7 +675,6 @@ export default {
 
     // Expose methods and data for template
     return {
-      fallbackLogo,
       // ==================== Admin Display ====================
       admins,
       showMessageModal,
