@@ -4,7 +4,7 @@
   >
     <div class="flex-shrink-0">
       <router-link to="/">
-        <img src="/img/Horse-Lines-LogoIcons.png" alt="Logo" class="h-20 w-auto" />
+        <img src="/img/global_logo.png" alt="Logo" class="h-24 w-auto" />
       </router-link>
     </div>
     <div class="container mt-5 mx-auto">
@@ -12,7 +12,7 @@
         <!-- Home Link -->
         <router-link id="butik-link"
           to="/"
-          class="sm:text-base text-white font-semibold hover:text-dark-brown focus:text-white"
+          class="text-xl text-white font-semibold hover:text-dark-brown focus:text-white"
           :class="{ 'active-link': isButikActive }"
         >
           Butik
@@ -21,7 +21,7 @@
         <!-- External CELLA TEST Link -->
 
         <a id="cellatest-link" href="https://www.cellatest.com/" target="_blank" rel="noopener noreferrer"
-          class="sm:text-base text-white font-semibold hover:text-dark-brown focus:text-white">
+          class="text-xl text-white font-semibold hover:text-dark-brown focus:text-white">
 
           CELLA TEST
         </a>
@@ -29,7 +29,7 @@
         <!-- Blog Link -->
         <router-link id="blog-link"
           to="/blog"
-          class="sm:text-base text-white font-semibold hover:text-dark-brown focus:text-white"
+          class="text-xl text-white font-semibold hover:text-dark-brown focus:text-white"
           :class="{ 'active-link': isBlogActive }"
         >
           Blog
@@ -38,7 +38,7 @@
         <!-- External Kontakt Link -->
 
         <a id="kontakt-link" href="https://www.cellatest.com/kontakt" target="_blank" rel="noopener noreferrer"
-          class="sm:text-base text-white font-semibold hover:text-dark-brown focus:text-white">
+          class="text-xl text-white font-semibold hover:text-dark-brown focus:text-white">
 
           Kontakt
         </a>
@@ -46,11 +46,11 @@
     </div>
     <div class="container mx-auto flex justify-center">
 
-      <div id="search-bar" class="w-full max-w-2xl mx-auto relative flex items-center justify-center" v-click-outside="closeDropdown">
+      <div id="search-bar" class="w-full max-w-2xl mx-auto relative flex items-center " v-click-outside="closeDropdown">
           <input
             type="text"
             placeholder="Søg efter produkter"
-            class="w-full h-9 pl-4 pr-12 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            class="w-full h-12 pl-4 pr-12 text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
             v-model="searchQuery"
             @input="onInput"
           >

@@ -16,7 +16,7 @@
   
           <!-- Center Section: Logo -->
           <div class="flex flex-col items-center space-y-4 mt-8">
-            <img src="/img/logo-footer.png" alt="Cella Test Logo" class="w-36 h-36" />
+            <img src="/img/global_logo.png" alt="Cella Test Logo" class="w-36 h-36" />
           </div>
   
           <!-- Right Section: Kontakt -->
