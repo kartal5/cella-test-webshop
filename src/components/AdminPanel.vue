@@ -419,7 +419,7 @@
             </button>
             <button
               type="submit"
-              class="bg-navbar-green text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition"
+              class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
             >
               Gem ændringer
             </button>

@@ -21,7 +21,7 @@
         <div class="text-right mt-6">
           <h3 class="text-xl font-bold">Total: DKK {{ cartTotal }}</h3>
           <button id="checkout"
-            class="bg-navbar-green text-white font-semibold py-2 px-6 rounded mt-4 hover:bg-green-700 transition"
+            class="bg-light-green text-white font-semibold py-2 px-6 rounded mt-4 hover:bg-dark-green transition"
             @click="goToPayment"
           >
             Til Betaling
