@@ -14,11 +14,10 @@
         class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
       >
         <!-- Admin profile picture -->
-        <img 
-          :src="admin.picture || '/public/img/logo.png'" 
-          alt="Admin Picture" 
-          class="w-16 h-16 rounded-full mr-4"
-        >
+        <img
+          :src="admin.picture || '/img/logo.png'"
+          alt="Admin Picture"
+        />
         <!-- Admin information -->
         <div class="flex-1">
           <h3 class="text-xl font-semibold">{{ admin.name || 'No Name' }}</h3>
