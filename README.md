@@ -9,16 +9,16 @@ Velkommen til vores e-handelsprojekt, som benytter Vue 3, Pinia og Firebase/Fire
 
 ## Overblik
 
-- **Frontend**: 
+- **Frontend**:  
 [Vue 3](https://vuejs.org/) med [Pinia](https://pinia.vuejs.org/) til state management, Tailwind CSS til styling og Vue Router til navigering.  
 
-- **Backend**: 
+- **Backend**:  
 [Node.js](https://nodejs.org/) med [Express](https://expressjs.com/) til at håndtere server-side logik, herunder Stripe-integration. (betaling med testkort)
 
-- **Database & Hosting**: 
-[Firebase/Firestore](https://firebase.google.com/) til at gemme produktdata, brugerkonti m.m.  
+- **Database & Hosting**:  
+[Firebase/Firestore](https://firebase.google.com/) til at gemme produktdata, brugerkonti m.m. Firebase Hosting bruges til at gøre applikationen tilgængelig online.
 
-- **Betaling**: 
+- **Betaling**:  
 [Stripe](https://stripe.com/) til at håndtere og simulere online kortbetalinger. (testtilstand)
 
 ---
@@ -71,17 +71,16 @@ Disse trin er kun tiltænkt **demo/undervisningsformål**.
 1. **Klon** eller download dette repository fra GitHub. (https://github.com/kartal5/cella-test-webshop/)
 2. Åbn en terminal i hovedmappen.
 
-
 ## Kørsel af projektet
 
 For at demonstrere appens primære funktioner kan du følge disse trin:
 
 ---
 
-### 1. Kør backend
+### 1. Kør backend (foregår lokalt!)
 
-	cd server
-	node server.js
+   cd server
+   node server.js
 
 Serveren vil starte på `http://localhost:3000`. Den håndterer nu Stripe-betalingerne.
 
@@ -90,14 +89,35 @@ Serveren vil starte på `http://localhost:3000`. Den håndterer nu Stripe-betali
 ### 2. Kør frontend
 Åbn en ny terminal i projektets hovedmappe og kør:
 
-	npm install
-	npm run dev
+   npm install
+   npm run dev
 
 Nu vil Vue-appen køre lokalt på `http://localhost:xxxx` (et portnummer som Vite vælger).
 
 ---
 
-## 3. Registrering & Login
+### 3. Deployment og hosting
+For at gøre applikationen tilgængelig online benytter vi Firebase Hosting. Her er trinnene for deployment:
+
+1. **Byg projektet til produktion**:  
+   ```
+   npm run build
+   ```
+   Dette genererer en `dist/` mappe med alle nødvendige filer til deployment.
+
+2. **Deploy til Firebase Hosting**:  
+   Sørg for, at Firebase CLI er installeret og opsat korrekt. Kør derefter:
+   ```
+   firebase deploy
+   ```
+   Dette uploader alle filer fra `dist/` mappen og gør projektet tilgængeligt via Firebase Hosting.
+
+   - **Hosting URL**: https://cella-test-bachelor-webshop.web.app
+   - **Project Console**: [Firebase Console](https://console.firebase.google.com/project/cella-test-bachelor-webshop/overview)
+
+---
+
+### 4. Registrering & Login
 
 1. **Registrering**  
    - Gå til `http://localhost:5173/register` (eller det portnummer Vite bruger).  
@@ -112,7 +132,7 @@ Nu vil Vue-appen køre lokalt på `http://localhost:xxxx` (et portnummer som Vit
 
 ---
 
-### 4. Test af betaling
+### 5. Test af betaling
 1. Navigér til “Din kurv” og fortsæt til “Til Betaling”.  
 2. Indtast gyldige leverings- og kortoplysninger.  
 3. **Stripe Test Card**: `4242 4242 4242 4242` med vilkårlig fremtidig udløbsdato og CVC.  
@@ -142,6 +162,5 @@ Nu vil Vue-appen køre lokalt på `http://localhost:xxxx` (et portnummer som Vit
 - Appen bruger e-mailbekræftelse i Firebase. Sørg for at aktivere det i Firebase-konsollen, hvis du tester på egen konto.
 
 ---
-
 
 **God fornøjelse med gennemgangen!**
