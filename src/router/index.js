@@ -98,8 +98,7 @@ const router = createRouter({
   linkExactActiveClass: 'exact-active-link',
 });
 
-// Global guard example:
-// - Requires user to be logged in + verified for /cart or /payment
+// Global guard example: Requires user to be logged in + verified for /cart or /payment
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const authRequiredRoutes = ['/cart', '/payment'];

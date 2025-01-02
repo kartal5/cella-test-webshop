@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     // If the user has not verified their email block them
     if (!firebaseUser.emailVerified) {
-      throw new Error('Email not verified. Please check your inbox.');
+      throw new Error('Email er ikke bekræftet. Check din indbakke.');
     }
 
     // AFTER sign-in, fetch user doc from Firestore to get their role
@@ -56,7 +56,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     if (!userDocSnap.exists()) {
       // Should rarely happen, means no user doc found
-      throw new Error('No user record found. Contact support.');
+      throw new Error('Ingen bruger fundet. Kontakt support.');
     }
 
     const userData = userDocSnap.data();
