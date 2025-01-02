@@ -9,8 +9,10 @@
       "**/.*",             // e.g. .git, .env, etc.
       "**/node_modules/**",
       "server",            // your server folder with Stripe code
+      "src",               // your source code folder
       "package.json",
       "package-lock.json",
+      "public",
       "cella-test-bachelor-webshop-541266371c3d.json"
     ],
 
