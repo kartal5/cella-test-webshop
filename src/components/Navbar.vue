@@ -16,7 +16,7 @@
           to="/admin"
           class="text-base text-whitefont-light hover:text-light-brown"
         >
-          Admin Panel
+          Admin Panelet
         </router-link>
       </template>
 
