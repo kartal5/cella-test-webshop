@@ -1,5 +1,3 @@
-// src/router/index.js
-
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../views/HomePage.vue';
 import AdminPanel from '../components/AdminPanel.vue';
@@ -15,6 +13,7 @@ import BlogPostPage from '../views/BlogPostPage.vue';
 import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import PaymentPage from '../views/PaymentPage.vue';
+import OrdersPage from '../views/OrdersPage.vue';
 
 // Import the authStore to guard routes
 import { useAuthStore } from '../stores/authStore';
@@ -38,6 +37,21 @@ const routes = [
     },
   },
   {
+    // route for viewing completed orders
+    path: '/admin/orders',
+    component: OrdersPage,
+    beforeEnter: (to, from, next) => {
+      const authStore = useAuthStore();
+      if (!authStore.isAuthenticated() || !authStore.isVerified() || !authStore.isAdmin()) {
+        next({ 
+          path: '/login', 
+          query: { redirect: to.fullPath } });
+      } else {
+        next();
+      }
+    },
+  },
+  {
     path: '/',
     component: HomePage,
   },
@@ -54,22 +68,8 @@ const routes = [
     component: CartPage,
   },
   {
-    path: '/category/mennesker',
-    component: MenneskerPage,
-  },
-  {
-    path: '/category/heste',
-    component: HestePage,
-  },
-  {
-    path: '/category/hunde',
-    component: HundePage,
-  },
-  {
-    path: '/category/katte',
-    component: KattePage,
-  },
-  {
+    // No more repeated pages for each animal category. 
+    // We rely on the route param (:name) to know whether it’s “mennesker,” “hunde,” etc.
     path: '/category/:name',
     component: CategoryPage,
   },

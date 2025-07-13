@@ -2,46 +2,56 @@
   <section class="container mt-10 mx-auto px-4 md:px-10">
     <h2 class="text-3xl font-bold text-left text-navbar-green mb-8">Admin Panel</h2>
 
-    <!-- ====================== Admin Display ====================== -->
+    <!-- ==================== Admin Display ==================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
-    <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Administratorer</h3>
+      <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Administratorer</h3>
 
-    <!-- Grid container for admins -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div
-        v-for="admin in admins"
-        :key="admin.id"
-        class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
-      >
-        <!-- Admin profile picture -->
-        <img
-          :src="admin.picture || fallbackLogo"
-          alt="Admin Picture"
-          class="w-16 h-16 rounded-full mr-4"
-        />
-        <!-- Admin information -->
-        <div class="flex-1">
-          <h3 class="text-xl font-semibold">{{ admin.name || 'No Name' }}</h3>
-          <p class="text-gray-700">{{ admin.email }}</p>
-          <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
-            {{ admin.online ? 'Online' : 'Offline' }}
-          </p>
+      <!-- Grid container for admins -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          v-for="admin in admins"
+          :key="admin.id"
+          class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
+        >
+          <!-- Admin profile picture -->
+          <img
+            :src="admin.picture || fallbackLogo"
+            alt="Admin Picture"
+            class="w-16 h-16 rounded-full mr-4"
+          />
+          <!-- Admin information -->
+          <div class="flex-1">
+            <h3 class="text-xl font-semibold">{{ admin.name || 'No Name' }}</h3>
+            <p class="text-gray-700">{{ admin.email }}</p>
+            <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
+              {{ admin.online ? 'Online' : 'Offline' }}
+            </p>
+          </div>
+
+          <!-- Direct message icon -->
+          <a
+            href="#"
+            @click.prevent="openMessageModal(admin)"
+            class="text-gray-500 hover:text-gray-700 mr-4"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z"
+              />
+            </svg>
+          </a>
         </div>
-
-        <!-- Direct message icon -->
-        <a href="#" @click.prevent="openMessageModal(admin)" class="text-gray-500 hover:text-gray-700 mr-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z"/>
-          </svg>
-        </a>
       </div>
-    </div>
-
 
       <!-- Modal for sending direct message -->
-      <div v-if="showMessageModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
+      <div
+        v-if="showMessageModal"
+        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4"
+      >
         <div class="bg-white p-6 rounded-lg shadow-md max-w-md w-full relative">
-          <h3 class="text-2xl font-semibold text-navbar-green mb-4">Send Besked til {{ selectedAdmin.name }}</h3>
+          <h3 class="text-2xl font-semibold text-navbar-green mb-4">
+            Send Besked til {{ selectedAdmin.name }}
+          </h3>
           <form @submit.prevent="sendMessage">
             <div>
               <label class="block text-gray-700 font-semibold mb-2" for="message">Besked</label>
@@ -72,7 +82,7 @@
       </div>
     </div>
 
-    <!-- ====================== User Management ====================== -->
+    <!-- ==================== User Management ==================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Brugerstyring</h3>
 
@@ -119,7 +129,7 @@
       </div>
     </div>
 
-    <!-- ====================== Messaging Section ====================== -->
+    <!-- ==================== Messaging Section ==================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Fællesbeskeder</h3>
       <form @submit.prevent="sendBroadcastMessage">
@@ -140,7 +150,7 @@
 
       <!-- Show all messages (basic approach, admin sees all messages) -->
       <div class="mt-8">
-        <h4 class="text-xl font-bold text-navbar-green mb-2">All Messages</h4>
+        <h4 class="text-xl font-bold text-navbar-green mb-2">Alle Beskeder</h4>
         <div
           v-for="(msg, idx) in allMessages"
           :key="idx"
@@ -156,28 +166,28 @@
       </div>
     </div>
 
-    <!-- ====================== Add New Product Form ====================== -->
+    <!-- ==================== Add New Product Form ==================== -->
     <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
       <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
       <form @submit.prevent="handleAddProduct" class="space-y-4">
-        <!-- Input fields for product details -->
+        <!-- Fields for name, description, price, discount etc.) -->
         <div>
           <label class="block text-gray-700 font-semibold mb-2" for="name">Navn</label>
           <input
             v-model="newProduct.name"
             type="text"
             id="name"
-            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
             required
           />
         </div>
-        
+
         <div>
           <label class="block text-gray-700 font-semibold mb-2" for="description">Kort Beskrivelse</label>
           <textarea
             v-model="newProduct.description"
             id="description"
-            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
             required
           ></textarea>
         </div>
@@ -187,71 +197,86 @@
           <textarea
             v-model="newProduct.fullDescription"
             id="fullDescription"
-            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
           ></textarea>
         </div>
 
-        <div class="flex gap-4">
-          <div class="flex-1">
+        <!-- Two fields in the same row: Price & Elite Discount -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Price -->
+          <div>
             <label class="block text-gray-700 font-semibold mb-2" for="price">Pris</label>
             <input
               v-model="newProduct.price"
               type="text"
               id="price"
-              placeholder="e.g. DKK 250.00 eller 'Kontakt for pris'"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              placeholder="DKK 250.00 eller 'Kontakt for pris'"
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
             />
           </div>
-          <div class="flex-1">
-            <label class="block text-gray-700 font-semibold mb-2" for="image">Billede (URL)</label>
+          <!-- Elite Discount -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2" for="eliteDiscount">
+              Elite Discount (%)
+            </label>
             <input
-              v-model="newProduct.image"
-              type="text"
-              id="image"
-              placeholder="/img/produkter/epinutrics_epic.jpg"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              v-model="newProduct.eliteDiscount"
+              type="number"
+              id="eliteDiscount"
+              placeholder="0"
+              min="0"
+              max="100"
+              step="1"
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
             />
           </div>
         </div>
 
-        <!-- Updated Categories Dropdown -->
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2" for="categories">Kategorier</label>
-          <select
-            id="categories"
-            v-model="selectedCategories"
-            multiple
-            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-          >
-            <option
-              v-for="category in availableCategories"
-              :key="category"
-              :value="category"
+        <!-- Categories & Subcategories in same row (optional) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Categories -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2" for="categories">
+              Kategorier
+            </label>
+            <select
+              id="categories"
+              v-model="selectedCategories"
+              multiple
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
             >
-              {{ category }}
-            </option>
-          </select>
+              <option
+                v-for="category in availableCategories"
+                :key="category"
+                :value="category"
+              >
+                {{ category }}
+              </option>
+            </select>
+          </div>
+          <!-- Subcategories -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2" for="subcategories">
+              Underkategorier
+            </label>
+            <select
+              id="subcategories"
+              v-model="selectedSubcategories"
+              multiple
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            >
+              <option
+                v-for="subcategory in availableSubcategories"
+                :key="subcategory"
+                :value="subcategory"
+              >
+                {{ subcategory }}
+              </option>
+            </select>
+          </div>
         </div>
 
-        <!-- Updated Subcategories Dropdown -->
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2" for="subcategories">Underkategorier</label>
-          <select
-            id="subcategories"
-            v-model="selectedSubcategories"
-            multiple
-            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-          >
-            <option
-              v-for="subcategory in availableSubcategories"
-              :key="subcategory"
-              :value="subcategory"
-            >
-              {{ subcategory }}
-            </option>
-          </select>
-        </div>
-
+        <!-- Submit button -->
         <button
           type="submit"
           class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
@@ -261,14 +286,27 @@
       </form>
     </div>
 
+    <!-- ===================== SEARCH BOX FOR PRODUCTS ===================== -->
+    <!-- Search input specifically for filtering products in the table -->
+    <div class="mb-4 pt-6 flex justify-center">
+      <input
+        v-model="adminSearch"
+        type="text"
+        placeholder="🔍 Søg listen af produkter..."
+        class="border p-3 rounded-lg shadow-md w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+      />
+    </div>
+
+
     <!-- ====================== Table displaying all products ====================== -->
     <div class="overflow-x-auto">
       <table class="min-w-full bg-blog-post border">
-        <!-- Table Headers for ID, Name, Category, etc -->
+        <!-- Table Headers for ID, Name, Category, etc. -->
         <thead>
           <tr>
             <th class="px-6 py-3 border-b text-left">#</th>
             <th class="px-6 py-3 border-b text-left">Produktnavn</th>
+            <th class="px-6 py-3 border-b text-left">Elite Discount (%)</th>
             <th class="px-6 py-3 border-b text-left">Kategori(er)</th>
             <th class="px-6 py-3 border-b text-left">Udvalgt</th>
             <th class="px-6 py-3 border-b text-left">Handlinger</th>
@@ -276,19 +314,23 @@
         </thead>
         <!-- Table Rows -->
         <tbody>
+          <!-- REPLACE any old "v-for='product in allProducts'" with 'filteredProducts' -->
           <tr
-            v-for="product in allProducts"
+            v-for="product in filteredProducts"
             :key="product.id"
             class="hover:bg-gray-50"
           >
             <!-- Display product details for edit or delete -->
             <td class="px-6 py-4 border-b">{{ product.id }}</td>
             <td class="px-6 py-4 border-b">{{ product.name }}</td>
-            <td class="px-6 py-4 border-b">{{ product.categories.join(', ') }}</td>
+            <td class="px-6 py-4 border-b">{{ product.eliteDiscount ?? 0 }}</td>
+            <td class="px-6 py-4 border-b">
+              {{ product.categories.join(', ') }}
+            </td>
             <td class="px-6 py-4 border-b">
               <input
                 type="checkbox"
-                :checked="isFeatured(product.id)" 
+                :checked="isFeatured(product.id)"
                 @change="toggleFeatured(product.id)"
               />
             </td>
@@ -315,12 +357,18 @@
     </div>
 
     <!-- ====================== Modal for editing product details ====================== -->
-    <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
-      <div class="bg-white p-6 rounded-lg shadow-md max-w-md w-full relative">
+    <div
+      v-if="showEditModal"
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4"
+    >
+      <div
+        class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl max-h-screen overflow-y-auto relative"
+      >
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Rediger Produkt</h3>
-        <form @submit.prevent="handleEditProduct" class="space-y-4">
-          <!-- Input fields for editing product details -->
-          <div>
+
+        <form @submit.prevent="handleEditProduct" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Name -->
+          <div class="flex flex-col">
             <label class="block text-gray-700 font-semibold mb-2" for="editName">Navn</label>
             <input
               v-model="editProductData.name"
@@ -330,9 +378,57 @@
               required
             />
           </div>
-          
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="editDescription">Kort Beskrivelse</label>
+
+          <!-- Elite Discount -->
+          <div class="flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editEliteDiscount">
+              Elite Discount (%)
+            </label>
+            <div class="relative">
+              <input
+                v-model="editProductData.eliteDiscount"
+                type="number"
+                id="editEliteDiscount"
+                placeholder="0"
+                min="0"
+                max="100"
+                class="w-full p-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              />
+              <span class="absolute inset-y-0 right-4 flex items-center text-gray-500 pointer-events-none">
+                %
+              </span>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div class="flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editPrice">Pris</label>
+            <input
+              v-model="editProductData.price"
+              type="text"
+              id="editPrice"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            />
+          </div>
+
+          <!-- Image -->
+          <div class="flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editImage">
+              Billede (URL)
+            </label>
+            <input
+              v-model="editProductData.image"
+              type="text"
+              id="editImage"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            />
+          </div>
+
+          <!-- Short Description -->
+          <div class="md:col-span-2 flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editDescription">
+              Kort Beskrivelse
+            </label>
             <textarea
               v-model="editProductData.description"
               id="editDescription"
@@ -341,8 +437,11 @@
             ></textarea>
           </div>
 
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="editFullDescription">Fuldbeskrivelse</label>
+          <!-- Full Description -->
+          <div class="md:col-span-2 flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editFullDescription">
+              Fuldbeskrivelse
+            </label>
             <textarea
               v-model="editProductData.fullDescription"
               id="editFullDescription"
@@ -350,30 +449,11 @@
             ></textarea>
           </div>
 
-          <div class="flex gap-4">
-            <div class="flex-1">
-              <label class="block text-gray-700 font-semibold mb-2" for="editPrice">Pris</label>
-              <input
-                v-model="editProductData.price"
-                type="text"
-                id="editPrice"
-                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              />
-            </div>
-            <div class="flex-1">
-              <label class="block text-gray-700 font-semibold mb-2" for="editImage">Billede (URL)</label>
-              <input
-                v-model="editProductData.image"
-                type="text"
-                id="editImage"
-                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              />
-            </div>
-          </div>
-
-          <!-- Updated Categories Dropdown in Edit Modal -->
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="editCategories">Kategorier</label>
+          <!-- Categories -->
+          <div class="md:col-span-2 flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editCategories">
+              Kategorier
+            </label>
             <select
               id="editCategories"
               v-model="selectedEditCategories"
@@ -390,9 +470,11 @@
             </select>
           </div>
 
-          <!-- Updated Subcategories Dropdown in Edit Modal -->
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="editSubcategories">Underkategorier</label>
+          <!-- Subcategories -->
+          <div class="md:col-span-2 flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editSubcategories">
+              Underkategorier
+            </label>
             <select
               id="editSubcategories"
               v-model="selectedEditSubcategories"
@@ -409,7 +491,8 @@
             </select>
           </div>
 
-          <div class="flex justify-end space-x-4">
+          <!-- ACTION BUTTONS -->
+          <div class="md:col-span-2 flex justify-end space-x-4 mt-4">
             <button
               type="button"
               @click="closeEditModal"
@@ -431,33 +514,23 @@
 </template>
 
 <script>
+import { ref, onMounted, computed } from 'vue';
+import { getFirestore, collection, getDocs, updateDoc, doc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { app } from '../firebase/init';
+import { useAuthStore } from '../stores/authStore'; 
 import { useProductStore } from '../stores/productStore';
 import { useFeaturedProductsStore } from '../stores/featuredProductsStore';
-import { ref, onMounted } from 'vue';
-import { useAuthStore } from '../stores/authStore'; // Import the auth store
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  updateDoc,
-  doc,
-  addDoc,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { app } from '../firebase/init';
-import { computed } from 'vue';
 import fallbackLogo from '../assets/img/logo.png';
 
 export default {
   name: 'AdminPanel',
   setup() {
-    const authStore = useAuthStore(); // Access the auth store
+    const authStore = useAuthStore();
     const db = getFirestore(app);
     const usersCollection = collection(db, 'users');
     const messagesCollection = collection(db, 'messages');
 
     // ==================== Admin Display ====================
-
     const showMessageModal = ref(false);
     const selectedAdmin = ref(null);
     const message = ref('');
@@ -466,40 +539,30 @@ export default {
       selectedAdmin.value = admin;
       showMessageModal.value = true;
     };
-
     const closeMessageModal = () => {
       showMessageModal.value = false;
       message.value = '';
     };
-
     const sendMessage = async () => {
       if (!selectedAdmin.value || !message.value.trim()) return;
-
-      const currentUserEmail = authStore.user.email; // Get the current user's email from the auth store
-
+      const currentUserEmail = authStore.user.email; // your admin's email
       const newMsg = {
-        from: currentUserEmail, // Dynamic sender
+        from: currentUserEmail,
         to: selectedAdmin.value.email,
         content: message.value.trim(),
         timestamp: serverTimestamp(),
       };
       await addDoc(messagesCollection, newMsg);
-
-      // Optional: You can implement a notification or confirmation here
       closeMessageModal();
     };
 
     // ==================== User Management ====================
     const users = ref([]);
     const admins = computed(() => {
-      // This ensures admins is always in sync with users
+      // filter all users whose role === 'admin'
       return users.value.filter(user => user.role === 'admin');
     });
 
-    const messageContent = ref('');
-    const allMessages = ref([]); // to store all messages
-
-    // Load all users from Firestore
     const loadUsers = async () => {
       const querySnapshot = await getDocs(usersCollection);
       const all = [];
@@ -509,66 +572,63 @@ export default {
       users.value = all;
     };
 
-    // New method to update the user role in Firestore
     const updateUserRole = async (user) => {
       const userDocRef = doc(db, 'users', user.id);
       try {
-        // Only allow if *this* user is admin, otherwise block or ignore
         if (!authStore.isAdmin()) {
           throw new Error('Insufficient permissions');
         }
         await updateDoc(userDocRef, { role: user.role });
-        console.log(`User role updated to: ${user.role}`);
       } catch (error) {
         console.error('Error updating user role:', error);
       }
     };
 
     // ==================== Messaging Section ====================
+    const messageContent = ref('');
+    const allMessages = ref([]);
+
     const sendBroadcastMessage = async () => {
       if (!messageContent.value.trim()) return;
-
-      const currentUserEmail = authStore.user.email; // Get the current user's email
-
+      const currentUserEmail = authStore.user.email;
       const newMsg = {
-        from: currentUserEmail, // Dynamic sender
-        to: 'all', // Broadcast to all users
+        from: currentUserEmail,
+        to: 'all',
         content: messageContent.value.trim(),
         timestamp: serverTimestamp(),
       };
       await addDoc(messagesCollection, newMsg);
-
-      // Clear input
       messageContent.value = '';
-      // Reload messages
       loadMessages();
     };
 
-    // Load all messages
     const loadMessages = async () => {
       const querySnapshot = await getDocs(messagesCollection);
       const all = [];
       querySnapshot.forEach((docSnap) => {
         all.push(docSnap.data());
       });
-      // Sort messages by timestamp desc
+      // sort by timestamp desc
       all.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
       allMessages.value = all;
+    };
+
+    const formatTimestamp = (timestamp) => {
+      if (!timestamp) return 'N/A';
+      const date = timestamp.toDate();
+      return date.toLocaleString();
     };
 
     // ==================== Product Management ====================
     const productStore = useProductStore();
     const featuredStore = useFeaturedProductsStore();
-
-    // Extract specific methods and properties from the product and featured stores
     const { allProducts, addProduct, updateProduct, deleteProduct } = productStore;
     const { featuredProductIds, addFeaturedProduct, removeFeaturedProduct } = featuredStore;
 
-    // Define available categories and subcategories
+    // We define available categories & subcategories
     const availableCategories = ref(['mennesker', 'heste', 'hunde', 'katte']);
     const availableSubcategories = ref(['Vitaminer & Mineraler', 'Fordøjelse', 'Collagen', 'Olie']);
 
-    // New product form fields (via Reactive object)
     const newProduct = ref({
       name: '',
       description: '',
@@ -577,22 +637,16 @@ export default {
       image: '',
       categories: [],
       subcategories: [],
+      eliteDiscount: 0,
     });
-
-    // Selected categories and subcategories from dropdowns
     const selectedCategories = ref([]);
     const selectedSubcategories = ref([]);
 
-    // Handles adding a new product
     const handleAddProduct = () => {
-      // Assign selected categories and subcategories directly
       newProduct.value.categories = selectedCategories.value;
       newProduct.value.subcategories = selectedSubcategories.value;
-
-      // Call the addProduct function from the store
       addProduct({ ...newProduct.value });
-
-      // Reset form inputs
+      // Reset form
       newProduct.value = {
         name: '',
         description: '',
@@ -601,12 +655,13 @@ export default {
         image: '',
         categories: [],
         subcategories: [],
+        eliteDiscount: 0,
       };
       selectedCategories.value = [];
       selectedSubcategories.value = [];
     };
 
-    // Edit Product Modal logic
+    // Edit product modal
     const showEditModal = ref(false);
     const editProductData = ref({
       id: null,
@@ -617,43 +672,37 @@ export default {
       image: '',
       categories: [],
       subcategories: [],
+      eliteDiscount: 0,
     });
     const selectedEditCategories = ref([]);
     const selectedEditSubcategories = ref([]);
 
-    // Opens the edit modal with pre-filled product data
     const openEditModal = (product) => {
       editProductData.value = { ...product };
       selectedEditCategories.value = product.categories;
       selectedEditSubcategories.value = product.subcategories;
       showEditModal.value = true;
     };
-
     const closeEditModal = () => {
       showEditModal.value = false;
     };
-
     const handleEditProduct = () => {
-      // Assign selected categories and subcategories directly
       editProductData.value.categories = selectedEditCategories.value;
       editProductData.value.subcategories = selectedEditSubcategories.value;
-
       updateProduct(editProductData.value);
       closeEditModal();
     };
 
-    // Delete Product
     const handleDelete = (productId) => {
       if (confirm('Er du sikker på at du vil slette dette produkt?')) {
         deleteProduct(productId);
       }
     };
 
-    // Featured handling
+    // Featured product toggles
     const isFeatured = (productId) => {
       return featuredProductIds.includes(productId);
     };
-
     const toggleFeatured = (productId) => {
       if (isFeatured(productId)) {
         removeFeaturedProduct(productId);
@@ -662,22 +711,29 @@ export default {
       }
     };
 
-    // Utility function to format timestamp
-    const formatTimestamp = (timestamp) => {
-      if (!timestamp) return 'N/A';
-      const date = timestamp.toDate();
-      return date.toLocaleString();
-    };
+    // ==================== NEW: Admin Search for Products ====================
+    const adminSearch = ref('');
+    const filteredProducts = computed(() => {
+      const term = adminSearch.value.trim().toLowerCase();
+      if (!term) {
+        return allProducts.value;
+      }
+      return allProducts.value.filter((p) => {
+        const nameMatch = p.name?.toLowerCase().includes(term);
+        const idMatch = p.id?.toLowerCase().includes(term);
+        return nameMatch || idMatch;
+      });
+    });
 
     onMounted(() => {
       loadUsers();
       loadMessages();
     });
 
-    // Expose methods and data for template
     return {
       fallbackLogo,
-      // ==================== Admin Display ====================
+
+      // Admin display
       admins,
       showMessageModal,
       selectedAdmin,
@@ -686,17 +742,17 @@ export default {
       closeMessageModal,
       sendMessage,
 
-      // ==================== User Management ====================
+      // User Management
       users,
       updateUserRole,
       loadUsers,
 
-      // ==================== Messaging Section ====================
+      // Messaging Section
       messageContent,
       sendBroadcastMessage,
       allMessages,
 
-      // ==================== Product Management ====================
+      // Product Management
       allProducts,
       newProduct,
       availableCategories,
@@ -712,10 +768,16 @@ export default {
       closeEditModal,
       handleEditProduct,
       handleDelete,
+
+      // Featured
       isFeatured,
       toggleFeatured,
 
-      // ==================== Utility ====================
+      // Admin Search
+      adminSearch,
+      filteredProducts,
+
+      // Utility
       formatTimestamp,
     };
   },
@@ -724,6 +786,6 @@ export default {
 
 <style scoped>
 .bg-blog-post {
-  background-color: #efede4; 
+  background-color: #efede4;
 }
 </style>

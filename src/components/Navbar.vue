@@ -14,10 +14,19 @@
 
         <router-link id="admin-link"
           to="/admin"
-          class="text-base text-whitefont-light hover:text-light-brown"
+          class="text-base text-white font-light hover:text-light-brown"
         >
           Admin Panel
         </router-link>
+
+        <span class="text-white hidden sm:inline">|</span>
+        <router-link
+          to="/admin/orders"
+          class="text-base bg-dark-brown text-white rounded hover:bg-light-brown transition mb-6"
+        >
+          Ordreoversigt
+        </router-link>
+
       </template>
 
       <template v-else>

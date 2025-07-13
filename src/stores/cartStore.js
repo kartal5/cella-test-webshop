@@ -23,30 +23,40 @@ export const useCartStore = defineStore('cart', () => {
   // 1) Compute the raw subtotal
   const cartSubtotal = computed(() => {
     return cartItems.value.reduce((sum, item) => {
-      // Skip items that have "Kontakt for pris" or are otherwise un-parseable
-      if (item.price.toLowerCase().includes('kontakt')) {
-        return sum;
-      }
-      // Attempt to parse numeric price from "DKK 250.00"
+      if (item.price.toLowerCase().includes('kontakt')) return sum;
       const numericPrice = parseFloat(
-        item.price
-          .toLowerCase()
-          .replace('dkk', '')
-          .replace(',', '')
-          .trim()
-      );
-      if (!isNaN(numericPrice)) {
-        return sum + numericPrice * item.quantity;
-      }
-      return sum;
+        item.price.toLowerCase().replace('dkk','').trim()
+      ) || 0;
+      return sum + numericPrice * item.quantity;
     }, 0);
   });
 
   // 2) Compute discount if user is Elite
   const cartTotal = computed(() => {
+    // is user "elite"?
     const isElite = authStore.user?.role === 'elite';
-    const discountFactor = isElite ? 0.9 : 1; // 10% discount
-    return parseFloat((cartSubtotal.value * discountFactor).toFixed(2));
+    let total = 0;
+
+    cartItems.value.forEach((item) => {
+      // Parse the base price:
+      if (!item.price || item.price.toLowerCase().includes('kontakt')) return;
+      const numericPrice = parseFloat(
+        item.price.toLowerCase().replace('dkk','').trim()
+      ) || 0;
+
+      let itemTotal = numericPrice * item.quantity;
+
+      // If user is elite, apply the product’s discount
+      if (isElite && item.eliteDiscount && item.eliteDiscount > 0) {
+        const discountRate = item.eliteDiscount / 100;
+        itemTotal = itemTotal * (1 - discountRate);
+      }
+
+      total += itemTotal;
+    });
+
+    // Round or format as needed:
+    return +total.toFixed(2);
   });
 
   // Persist cart to localStorage
