@@ -104,14 +104,13 @@
 
         <!-- Subtotal row -->
         <div class="mt-4 flex justify-between items-center" v-if="cartSubtotal !== cartTotal">
-          <p class="text-lg font-semibold">Subtotal:</p>
+          <p class="text-lg font-semibold">Delsum:</p>
           <p class="text-xl font-bold text-navbar-green">DKK {{ cartSubtotal }}</p>
         </div>
 
         <!-- Discount row (only if user is Elite) -->
-        <div class="mt-1 flex justify-between items-center text-red-600" v-if="isElite">
-          <p class="text-lg font-semibold">Elite Rabat (10%):</p>
-          <!-- Just showing the difference for clarity -->
+        <div class="mt-1 flex justify-between items-center text-red-600" v-if="cartSubtotal != cartTotal">
+          <p class="text-lg font-semibold">Elite Rabat:</p>
           <p class="text-xl font-bold">- DKK {{ (cartSubtotal - cartTotal).toFixed(2) }}</p>
         </div>
 
@@ -144,10 +143,12 @@
 </template>
 
 <script>
+import { getFirestore, collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, computed, onMounted } from 'vue';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCartStore } from '../stores/cartStore';
 import { useAuthStore } from '../stores/authStore';
+import { app } from '../firebase/init.js';
 
 export default {
   name: 'PaymentPage',
@@ -177,47 +178,76 @@ export default {
       card.mount('#card-element');
     });
 
+    const db = getFirestore(app);
+
     const handlePayment = async () => {
-  try {
-    // Step 1: Fetch the client secret from Backend
-    const response = await fetch('http://localhost:3000/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: Math.round(cartTotal.value * 100) }), // Send the amount in the request
-    });
+      try {
+        // Step 1: Fetch the client secret from Backend
+        const response = await fetch('http://localhost:3000/create-payment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: Math.round(cartTotal.value * 100) }), // Send the amount in the request
+        });
 
-    const { clientSecret } = await response.json(); // Retrieve the clientSecret from the backend response
+        const { clientSecret } = await response.json(); // Retrieve the clientSecret from the backend response
 
-    // Step 2: Confirm the payment using the client secret
-    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: card,
-        billing_details: {
-          name: fullName.value,
-          address: {
-            line1: address.value,
-            city: city.value,
-            postal_code: postalCode.value,
-            country: country.value,
+        // Step 2: Confirm the payment using the client secret
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: card,
+            billing_details: {
+              name: fullName.value,
+              address: {
+                line1: address.value,
+                city: city.value,
+                postal_code: postalCode.value,
+                country: country.value,
+              },
+            },
           },
-        },
-      },
-    });
+        });
+        
+        // 3. If payment is successful:
+        if (paymentIntent.status === 'succeeded') {
+          console.log('Payment succeeded:', paymentIntent);
 
-    // Step 3: Handle payment result
-    if (error) {
-      console.error('Payment error:', error.message);
-      alert(`Payment failed: ${error.message}`);
-    } else if (paymentIntent.status === 'succeeded') {
-      console.log('Payment succeeded:', paymentIntent);
-      cartStore.cartItems.splice(0, cartStore.cartItems.length); // Clear the cart
-      orderCompleted.value = true; // Show order completion screen
-    }
-  } catch (err) {
-    console.error('Payment process error:', err.message);
-    alert(`Payment process failed: ${err.message}`);
-  }
-};
+          // Build an order object with relevant data
+          const orderData = {
+            userId: authStore.user?.uid || null,
+            createdAt: serverTimestamp(),
+            status: 'paid',
+            paymentIntentId: paymentIntent.id,
+            items: cartItems.value.map((item) => ({
+              id: item.id,
+              name: item.name,
+              quantity: item.quantity,
+              price: parseFloat(item.price.replace('DKK', '').trim()) || 0,
+            })),
+            amount: parseFloat(cartTotal.value),  // or handle subunits
+            currency: 'DKK',
+            shippingInfo: {
+              fullName: fullName.value,
+              address: address.value,
+              city: city.value,
+              postalCode: postalCode.value,
+              country: country.value,
+            },
+          };
+
+          // 4. Write to Firestore
+          const ordersRef = collection(db, 'orders');
+          const newOrderRef = doc(ordersRef); // auto-generate ID
+          await setDoc(newOrderRef, orderData);
+
+          // 5. Clear Cart & Show success
+          cartStore.cartItems.splice(0, cartStore.cartItems.length); 
+          orderCompleted.value = true;
+        }
+      } catch (err) {
+        console.error('Payment process error:', err.message);
+        alert(`Payment process failed: ${err.message}`);
+      }
+    };
 
 
     return {
