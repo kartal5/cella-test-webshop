@@ -11,7 +11,7 @@
           <img
             :src="product.image"
             :alt="product.name"
-            class="product-image rounded"
+            class="product-image w-full max-h-[400px] object-contain mx-auto rounded"
           />
         </div>
 
