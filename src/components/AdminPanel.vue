@@ -2,510 +2,314 @@
   <section class="container mt-10 mx-auto px-4 md:px-10">
     <h2 class="text-3xl font-bold text-left text-navbar-green mb-8">Admin Panel</h2>
 
-    <!-- ==================== Admin Display ==================== -->
-    <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
-      <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Administratorer</h3>
-
-      <!-- Grid container for admins -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div
-          v-for="admin in admins"
-          :key="admin.id"
-          class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1"
-        >
-          <!-- Admin profile picture -->
-          <img
-            :src="admin.picture || fallbackLogo"
-            alt="Admin Picture"
-            class="w-16 h-16 rounded-full mr-4"
-          />
-          <!-- Admin information -->
-          <div class="flex-1">
-            <h3 class="text-xl font-semibold">{{ admin.name || 'No Name' }}</h3>
-            <p class="text-gray-700">{{ admin.email }}</p>
-            <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
-              {{ admin.online ? 'Online' : 'Offline' }}
-            </p>
-          </div>
-
-          <!-- Direct message icon -->
-          <a
-            href="#"
-            @click.prevent="openMessageModal(admin)"
-            class="text-gray-500 hover:text-gray-700 mr-4"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z"
-              />
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Modal for sending direct message -->
-      <div
-        v-if="showMessageModal"
-        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4"
-      >
-        <div class="bg-white p-6 rounded-lg shadow-md max-w-md w-full relative">
-          <h3 class="text-2xl font-semibold text-navbar-green mb-4">
-            Send Besked til {{ selectedAdmin.name }}
-          </h3>
-          <form @submit.prevent="sendMessage">
-            <div>
-              <label class="block text-gray-700 font-semibold mb-2" for="message">Besked</label>
-              <textarea
-                v-model="message"
-                id="message"
-                class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-                required
-              ></textarea>
-            </div>
-            <div class="flex justify-end space-x-4 mt-4">
-              <button
-                type="button"
-                @click="closeMessageModal"
-                class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition"
-              >
-                Annuller
-              </button>
-              <button
-                type="submit"
-                class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
-              >
-                Send Besked
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== User Management ==================== -->
-    <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
-      <h3 class="text-2xl font-semibold text-navbar-green mb-4">Brugerstyring</h3>
-
-      <!-- Responsive container -->
-      <div class="overflow-x-auto">
-        <table class="min-w-full table-auto bg-white border">
-          <thead>
-            <tr>
-              <th class="px-4 py-3 border-b text-left">Email</th>
-              <th class="px-4 py-3 border-b text-left hidden md:table-cell">Nuværende Rolle</th>
-              <th class="px-4 py-3 border-b text-left">Skift Rolle</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(user, index) in users"
-              :key="index"
-              class="hover:bg-gray-50"
-            >
-              <td class="px-4 py-2 border-b">
-                <span class="block font-medium text-gray-900">{{ user.email }}</span>
-                <!-- Display role on small screens -->
-                <span class="block text-sm text-gray-500 md:hidden capitalize">
-                  Rolle: {{ user.role }}
-                </span>
-              </td>
-              <td class="px-4 py-2 border-b capitalize hidden md:table-cell">
-                {{ user.role }}
-              </td>
-              <td class="px-4 py-2 border-b">
-                <!-- Dropdown for role selection -->
-                <select
-                  v-model="user.role"
-                  @change="updateUserRole(user)"
-                  class="border p-2 rounded w-full bg-white"
-                >
-                  <option value="regular">Regular</option>
-                  <option value="elite">Elite</option>
-                </select>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ==================== Messaging Section ==================== -->
-    <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8 mt-8">
-      <h3 class="text-2xl font-semibold text-navbar-green mb-4">Fællesbeskeder</h3>
-      <form @submit.prevent="sendBroadcastMessage">
-        <label class="block text-gray-700 font-semibold mb-2">Besked</label>
-        <textarea
-          v-model="messageContent"
-          class="border p-2 rounded w-full mb-4"
-          placeholder="Skriv din besked her..."
-        ></textarea>
-
+    <div class="border-b border-gray-300 mb-8">
+      <nav class="flex space-x-2" aria-label="Tabs">
         <button
-          type="submit"
-          class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+          @click="activeTab = 'products'"
+          :class="[
+            'px-4 py-2 font-medium text-sm rounded-t-lg focus:outline-none',
+            activeTab === 'products' ? 'bg-light-green text-white' : 'text-gray-600 hover:bg-gray-200'
+          ]"
         >
-          Send Besked til Alle
+          Produkter
         </button>
-      </form>
-
-      <!-- Show all messages (basic approach, admin sees all messages) -->
-      <div class="mt-8">
-        <h4 class="text-xl font-bold text-navbar-green mb-2">Alle Beskeder</h4>
-        <div
-          v-for="(msg, idx) in allMessages"
-          :key="idx"
-          class="bg-white p-4 rounded shadow mb-2"
-        >
-          <p class="text-sm text-gray-500 mb-1">
-            <strong>Fra:</strong> {{ msg.from }}
-            <strong>Til:</strong> {{ msg.to === 'all' ? 'Alle' : msg.to }}
-            <strong>Dato:</strong> {{ formatTimestamp(msg.timestamp) }}
-          </p>
-          <p class="text-gray-800">{{ msg.content }}</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ==================== Add New Product Form ==================== -->
-    <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
-      <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
-      <form @submit.prevent="handleAddProduct" class="space-y-4">
-        <!-- Fields for name, description, price, discount etc.) -->
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2" for="name">Navn</label>
-          <input
-            v-model="newProduct.name"
-            type="text"
-            id="name"
-            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            required
-          />
-        </div>
-
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2" for="description">Kort Beskrivelse</label>
-          <textarea
-            v-model="newProduct.description"
-            id="description"
-            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            required
-          ></textarea>
-        </div>
-
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2" for="fullDescription">Fuldbeskrivelse</label>
-          <textarea
-            v-model="newProduct.fullDescription"
-            id="fullDescription"
-            class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-          ></textarea>
-        </div>
-
-        <!-- Two fields in the same row: Price & Elite Discount -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Price -->
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="price">Pris</label>
-            <input
-              v-model="newProduct.price"
-              type="text"
-              id="price"
-              placeholder="DKK 250.00 eller 'Kontakt for pris'"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            />
-          </div>
-          <!-- Elite Discount -->
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="eliteDiscount">
-              Elite Discount (%)
-            </label>
-            <input
-              v-model="newProduct.eliteDiscount"
-              type="number"
-              id="eliteDiscount"
-              placeholder="0"
-              min="0"
-              max="100"
-              step="1"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            />
-          </div>
-        </div>
-
-        <!-- Categories & Subcategories in same row (optional) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Categories -->
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="categories">
-              Kategorier
-            </label>
-            <select
-              id="categories"
-              v-model="selectedCategories"
-              multiple
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            >
-              <option
-                v-for="category in availableCategories"
-                :key="category"
-                :value="category"
-              >
-                {{ category }}
-              </option>
-            </select>
-          </div>
-          <!-- Subcategories -->
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="subcategories">
-              Underkategorier
-            </label>
-            <select
-              id="subcategories"
-              v-model="selectedSubcategories"
-              multiple
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            >
-              <option
-                v-for="subcategory in availableSubcategories"
-                :key="subcategory"
-                :value="subcategory"
-              >
-                {{ subcategory }}
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Submit button -->
         <button
-          type="submit"
-          class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+          @click="activeTab = 'users'"
+          :class="[
+            'px-4 py-2 font-medium text-sm rounded-t-lg focus:outline-none',
+            activeTab === 'users' ? 'bg-light-green text-white' : 'text-gray-600 hover:bg-gray-200'
+          ]"
         >
-          Tilføj Produkt
+          Brugere & Admins
         </button>
-      </form>
+        <button
+          @click="activeTab = 'messages'"
+          :class="[
+            'px-4 py-2 font-medium text-sm rounded-t-lg focus:outline-none',
+            activeTab === 'messages' ? 'bg-light-green text-white' : 'text-gray-600 hover:bg-gray-200'
+          ]"
+        >
+          Beskeder
+        </button>
+      </nav>
     </div>
 
-    <!-- ===================== SEARCH BOX FOR PRODUCTS ===================== -->
-    <!-- Search input specifically for filtering products in the table -->
-    <div class="mb-4 pt-6 flex justify-center">
-      <input
-        v-model="adminSearch"
-        type="text"
-        placeholder="🔍 Søg listen af produkter..."
-        class="border p-3 rounded-lg shadow-md w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-      />
-    </div>
-
-
-    <!-- ====================== Table displaying all products ====================== -->
-    <div class="overflow-x-auto">
-      <table class="min-w-full bg-blog-post border">
-        <!-- Table Headers for ID, Name, Category, etc. -->
-        <thead>
-          <tr>
-            <th class="px-6 py-3 border-b text-left">#</th>
-            <th class="px-6 py-3 border-b text-left">Produktnavn</th>
-            <th class="px-6 py-3 border-b text-left">Elite Discount (%)</th>
-            <th class="px-6 py-3 border-b text-left">Kategori(er)</th>
-            <th class="px-6 py-3 border-b text-left">Udvalgt</th>
-            <th class="px-6 py-3 border-b text-left">Handlinger</th>
-          </tr>
-        </thead>
-        <!-- Table Rows -->
-        <tbody>
-          <!-- REPLACE any old "v-for='product in allProducts'" with 'filteredProducts' -->
-          <tr
-            v-for="product in filteredProducts"
-            :key="product.id"
-            class="hover:bg-gray-50"
-          >
-            <!-- Display product details for edit or delete -->
-            <td class="px-6 py-4 border-b">{{ product.id }}</td>
-            <td class="px-6 py-4 border-b">{{ product.name }}</td>
-            <td class="px-6 py-4 border-b">{{ product.eliteDiscount ?? 0 }}</td>
-            <td class="px-6 py-4 border-b">
-              {{ product.categories.join(', ') }}
-            </td>
-            <td class="px-6 py-4 border-b">
-              <input
-                type="checkbox"
-                :checked="isFeatured(product.id)"
-                @change="toggleFeatured(product.id)"
-              />
-            </td>
-            <td class="px-6 py-4 border-b">
-              <!-- Edit Button -->
-              <button
-                class="bg-blue-500 text-white font-semibold py-1 px-3 rounded hover:bg-blue-600 transition mr-2"
-                @click="openEditModal(product)"
-              >
-                Rediger
-              </button>
-
-              <!-- Delete Button -->
-              <button
-                class="bg-red-500 text-white font-semibold py-1 px-3 rounded hover:bg-red-600 transition"
-                @click="handleDelete(product.id)"
-              >
-                Slet
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ====================== Modal for editing product details ====================== -->
-    <div
-      v-if="showEditModal"
-      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4"
-    >
-      <div
-        class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl max-h-screen overflow-y-auto relative"
-      >
-        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Rediger Produkt</h3>
-
-        <form @submit.prevent="handleEditProduct" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Name -->
-          <div class="flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editName">Navn</label>
+    <div v-if="activeTab === 'products'">
+      <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Nyt Produkt</h3>
+        <form @submit.prevent="handleAddProduct" class="space-y-4">
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2" for="name">Navn</label>
             <input
-              v-model="editProductData.name"
+              v-model="newProduct.name"
               type="text"
-              id="editName"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              id="name"
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
               required
             />
           </div>
 
-          <!-- Elite Discount -->
-          <div class="flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editEliteDiscount">
-              Elite Discount (%)
-            </label>
-            <div class="relative">
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2" for="description">Kort Beskrivelse</label>
+            <textarea
+              v-model="newProduct.description"
+              id="description"
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              required
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2" for="fullDescription">Fuldbeskrivelse</label>
+            <textarea
+              v-model="newProduct.fullDescription"
+              id="fullDescription"
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            ></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700 font-semibold mb-2" for="price">Pris</label>
               <input
-                v-model="editProductData.eliteDiscount"
+                v-model="newProduct.price"
+                type="text"
+                id="price"
+                placeholder="DKK 250.00 eller 'Kontakt for pris'"
+                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-semibold mb-2" for="eliteDiscount">
+                Elite Discount (%)
+              </label>
+              <input
+                v-model="newProduct.eliteDiscount"
                 type="number"
-                id="editEliteDiscount"
+                id="eliteDiscount"
                 placeholder="0"
                 min="0"
                 max="100"
-                class="w-full p-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                step="1"
+                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
               />
-              <span class="absolute inset-y-0 right-4 flex items-center text-gray-500 pointer-events-none">
-                %
-              </span>
             </div>
           </div>
 
-          <!-- Price -->
-          <div class="flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editPrice">Pris</label>
-            <input
-              v-model="editProductData.price"
-              type="text"
-              id="editPrice"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700 font-semibold mb-2" for="categories">Kategorier</label>
+              <select id="categories" v-model="selectedCategories" multiple class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green">
+                <option v-for="category in availableCategories" :key="category" :value="category">
+                  {{ category }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-gray-700 font-semibold mb-2" for="subcategories">Underkategorier</label>
+              <select id="subcategories" v-model="selectedSubcategories" multiple class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green">
+                <option v-for="subcategory in availableSubcategories" :key="subcategory" :value="subcategory">
+                  {{ subcategory }}
+                </option>
+              </select>
+            </div>
           </div>
 
-          <!-- Image -->
-          <div class="flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editImage">
-              Billede (URL)
-            </label>
-            <input
-              v-model="editProductData.image"
-              type="text"
-              id="editImage"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            />
-          </div>
+          <button type="submit" class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">
+            Tilføj Produkt
+          </button>
+        </form>
+      </div>
 
-          <!-- Short Description -->
-          <div class="md:col-span-2 flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editDescription">
-              Kort Beskrivelse
-            </label>
-            <textarea
-              v-model="editProductData.description"
-              id="editDescription"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              required
-            ></textarea>
+      <div class="bg-blog-post p-6 rounded-lg shadow-md">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Produktliste</h3>
+        <div class="mb-4 flex justify-center">
+          <input
+            v-model="adminSearch"
+            type="text"
+            placeholder="🔍 Søg listen af produkter..."
+            class="border p-3 rounded-lg shadow-md w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+          />
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white border">
+            <thead>
+              <tr>
+                <th class="px-6 py-3 border-b text-left">#</th>
+                <th class="px-6 py-3 border-b text-left">Produktnavn</th>
+                <th class="px-6 py-3 border-b text-left">Elite Discount (%)</th>
+                <th class="px-6 py-3 border-b text-left">Kategori(er)</th>
+                <th class="px-6 py-3 border-b text-left">Udvalgt</th>
+                <th class="px-6 py-3 border-b text-left">Handlinger</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="product in filteredProducts" :key="product.id" class="hover:bg-gray-50">
+                <td class="px-6 py-4 border-b">{{ product.id }}</td>
+                <td class="px-6 py-4 border-b">{{ product.name }}</td>
+                <td class="px-6 py-4 border-b">{{ product.eliteDiscount ?? 0 }}</td>
+                <td class="px-6 py-4 border-b">{{ product.categories.join(', ') }}</td>
+                <td class="px-6 py-4 border-b">
+                  <input
+                    type="checkbox"
+                    :checked="isFeatured(product.id)"
+                    @change="toggleFeatured(product.id)"
+                  />
+                </td>
+                <td class="px-6 py-4 border-b">
+                  <button class="bg-blue-500 text-white font-semibold py-1 px-3 rounded hover:bg-blue-600 transition mr-2" @click="openEditModal(product)">
+                    Rediger
+                  </button>
+                  <button class="bg-red-500 text-white font-semibold py-1 px-3 rounded hover:bg-red-600 transition" @click="handleDelete(product.id)">
+                    Slet
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div v-if="activeTab === 'users'">
+      <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
+        <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Administratorer</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div v-for="admin in admins" :key="admin.id" class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1">
+            <img :src="admin.picture || fallbackLogo" alt="Admin Picture" class="w-16 h-16 rounded-full mr-4" />
+            <div class="flex-1">
+              <h3 class="text-xl font-semibold">{{ admin.name || 'No Name' }}</h3>
+              <p class="text-gray-700">{{ admin.email }}</p>
+              <p :class="{'text-green-500': admin.online, 'text-red-500': !admin.online}">
+                {{ admin.online ? 'Online' : 'Offline' }}
+              </p>
+            </div>
+            <a href="#" @click.prevent="openMessageModal(admin)" class="text-gray-500 hover:text-gray-700 mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z" />
+              </svg>
+            </a>
           </div>
-
-          <!-- Full Description -->
-          <div class="md:col-span-2 flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editFullDescription">
-              Fuldbeskrivelse
-            </label>
-            <textarea
-              v-model="editProductData.fullDescription"
-              id="editFullDescription"
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            ></textarea>
+        </div>
+      </div>
+      <div class="bg-blog-post p-6 rounded-lg shadow-md">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Brugerstyring</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table-auto bg-white border">
+            <thead>
+              <tr>
+                <th class="px-4 py-3 border-b text-left">Email</th>
+                <th class="px-4 py-3 border-b text-left hidden md:table-cell">Nuværende Rolle</th>
+                <th class="px-4 py-3 border-b text-left">Skift Rolle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(user, index) in users" :key="index" class="hover:bg-gray-50">
+                <td class="px-4 py-2 border-b">
+                  <span class="block font-medium text-gray-900">{{ user.email }}</span>
+                  <span class="block text-sm text-gray-500 md:hidden capitalize">Rolle: {{ user.role }}</span>
+                </td>
+                <td class="px-4 py-2 border-b capitalize hidden md:table-cell">{{ user.role }}</td>
+                <td class="px-4 py-2 border-b">
+                  <select v-model="user.role" @change="updateUserRole(user)" class="border p-2 rounded w-full bg-white">
+                    <option value="regular">Regular</option>
+                    <option value="elite">Elite</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div v-if="activeTab === 'messages'">
+      <div class="bg-blog-post p-6 rounded-lg shadow-md">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Fællesbeskeder</h3>
+        <form @submit.prevent="sendBroadcastMessage">
+          <label class="block text-gray-700 font-semibold mb-2">Besked</label>
+          <textarea v-model="messageContent" class="border p-2 rounded w-full mb-4" placeholder="Skriv din besked her..."></textarea>
+          <button type="submit" class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">
+            Send Besked til Alle
+          </button>
+        </form>
+        <div class="mt-8">
+          <h4 class="text-xl font-bold text-navbar-green mb-2">Alle Beskeder</h4>
+          <div v-for="(msg, idx) in allMessages" :key="idx" class="bg-white p-4 rounded shadow mb-2">
+            <p class="text-sm text-gray-500 mb-1">
+              <strong>Fra:</strong> {{ msg.from }}
+              <strong>Til:</strong> {{ msg.to === 'all' ? 'Alle' : msg.to }}
+              <strong>Dato:</strong> {{ formatTimestamp(msg.timestamp) }}
+            </p>
+            <p class="text-gray-800">{{ msg.content }}</p>
           </div>
-
-          <!-- Categories -->
-          <div class="md:col-span-2 flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editCategories">
-              Kategorier
-            </label>
-            <select
-              id="editCategories"
-              v-model="selectedEditCategories"
-              multiple
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            >
-              <option
-                v-for="category in availableCategories"
-                :key="category"
-                :value="category"
-              >
-                {{ category }}
-              </option>
-            </select>
+        </div>
+      </div>
+    </div>
+    <div v-if="showMessageModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
+      <div class="bg-white p-6 rounded-lg shadow-md max-w-md w-full relative">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Send Besked til {{ selectedAdmin.name }}</h3>
+        <form @submit.prevent="sendMessage">
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2" for="message">Besked</label>
+            <textarea v-model="message" id="message" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" required></textarea>
           </div>
-
-          <!-- Subcategories -->
-          <div class="md:col-span-2 flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editSubcategories">
-              Underkategorier
-            </label>
-            <select
-              id="editSubcategories"
-              v-model="selectedEditSubcategories"
-              multiple
-              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            >
-              <option
-                v-for="subcategory in availableSubcategories"
-                :key="subcategory"
-                :value="subcategory"
-              >
-                {{ subcategory }}
-              </option>
-            </select>
-          </div>
-
-          <!-- ACTION BUTTONS -->
-          <div class="md:col-span-2 flex justify-end space-x-4 mt-4">
-            <button
-              type="button"
-              @click="closeEditModal"
-              class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition"
-            >
+          <div class="flex justify-end space-x-4 mt-4">
+            <button type="button" @click="closeMessageModal" class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition">
               Annuller
             </button>
-            <button
-              type="submit"
-              class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
-            >
-              Gem ændringer
+            <button type="submit" class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">
+              Send Besked
             </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
+      <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl max-h-screen overflow-y-auto relative">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Rediger Produkt</h3>
+        <form @submit.prevent="handleEditProduct" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editName">Navn</label>
+            <input v-model="editProductData.name" type="text" id="editName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" required />
+          </div>
+          <div class="flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editEliteDiscount">Elite Discount (%)</label>
+            <div class="relative">
+              <input v-model="editProductData.eliteDiscount" type="number" id="editEliteDiscount" placeholder="0" min="0" max="100" class="w-full p-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" />
+              <span class="absolute inset-y-0 right-4 flex items-center text-gray-500 pointer-events-none">%</span>
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editPrice">Pris</label>
+            <input v-model="editProductData.price" type="text" id="editPrice" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" />
+          </div>
+          <div class="flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editImage">Billede (URL)</label>
+            <input v-model="editProductData.image" type="text" id="editImage" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" />
+          </div>
+          <div class="md:col-span-2 flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editDescription">Kort Beskrivelse</label>
+            <textarea v-model="editProductData.description" id="editDescription" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" required></textarea>
+          </div>
+          <div class="md:col-span-2 flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editFullDescription">Fuldbeskrivelse</label>
+            <textarea v-model="editProductData.fullDescription" id="editFullDescription" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"></textarea>
+          </div>
+          <div class="md:col-span-2 flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editCategories">Kategorier</label>
+            <select id="editCategories" v-model="selectedEditCategories" multiple class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green">
+              <option v-for="category in availableCategories" :key="category" :value="category">{{ category }}</option>
+            </select>
+          </div>
+          <div class="md:col-span-2 flex flex-col">
+            <label class="block text-gray-700 font-semibold mb-2" for="editSubcategories">Underkategorier</label>
+            <select id="editSubcategories" v-model="selectedEditSubcategories" multiple class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green">
+              <option v-for="subcategory in availableSubcategories" :key="subcategory" :value="subcategory">{{ subcategory }}</option>
+            </select>
+          </div>
+          <div class="md:col-span-2 flex justify-end space-x-4 mt-4">
+            <button type="button" @click="closeEditModal" class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition">Annuller</button>
+            <button type="submit" class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">Gem ændringer</button>
           </div>
         </form>
       </div>
@@ -525,6 +329,7 @@ import fallbackLogo from '../assets/img/logo.png';
 export default {
   name: 'AdminPanel',
   setup() {
+    const activeTab = ref('products'); // Default tab
     const authStore = useAuthStore();
     const db = getFirestore(app);
     const usersCollection = collection(db, 'users');
@@ -627,7 +432,7 @@ export default {
 
     // We define available categories & subcategories
     const availableCategories = ref(['mennesker', 'heste', 'hunde', 'katte']);
-    const availableSubcategories = ref(['Vitaminer & Mineraler', 'Fordøjelse', 'Collagen', 'Olie']);
+    const availableSubcategories = ref(['Vitaminer & Mineraler', 'Fordøjelse', 'Collagen', 'Olie', 'Andre produkter']);
 
     const newProduct = ref({
       name: '',
@@ -720,7 +525,7 @@ export default {
       }
       return allProducts.value.filter((p) => {
         const nameMatch = p.name?.toLowerCase().includes(term);
-        const idMatch = p.id?.toLowerCase().includes(term);
+        const idMatch = String(p.id).toLowerCase().includes(term);
         return nameMatch || idMatch;
       });
     });
@@ -731,9 +536,8 @@ export default {
     });
 
     return {
+      activeTab,
       fallbackLogo,
-
-      // Admin display
       admins,
       showMessageModal,
       selectedAdmin,
@@ -741,18 +545,12 @@ export default {
       openMessageModal,
       closeMessageModal,
       sendMessage,
-
-      // User Management
       users,
       updateUserRole,
       loadUsers,
-
-      // Messaging Section
       messageContent,
       sendBroadcastMessage,
       allMessages,
-
-      // Product Management
       allProducts,
       newProduct,
       availableCategories,
@@ -768,21 +566,16 @@ export default {
       closeEditModal,
       handleEditProduct,
       handleDelete,
-
-      // Featured
       isFeatured,
       toggleFeatured,
-
-      // Admin Search
       adminSearch,
       filteredProducts,
-
-      // Utility
       formatTimestamp,
     };
   },
 };
 </script>
+
 
 <style scoped>
 .bg-blog-post {
