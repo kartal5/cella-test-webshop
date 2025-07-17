@@ -34,93 +34,19 @@
       </nav>
     </div>
 
+    <!-- ==================== PRODUCTS TAB ==================== -->
     <div v-if="activeTab === 'products'">
-      <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
-        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Nyt Produkt</h3>
-        <form @submit.prevent="handleAddProduct" class="space-y-4">
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="name">Navn</label>
-            <input
-              v-model="newProduct.name"
-              type="text"
-              id="name"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              required
-            />
-          </div>
-
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="description">Kort Beskrivelse</label>
-            <textarea
-              v-model="newProduct.description"
-              id="description"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              required
-            ></textarea>
-          </div>
-
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="fullDescription">Fuldbeskrivelse</label>
-            <textarea
-              v-model="newProduct.fullDescription"
-              id="fullDescription"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-            ></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-gray-700 font-semibold mb-2" for="price">Pris</label>
-              <input
-                v-model="newProduct.price"
-                type="text"
-                id="price"
-                placeholder="DKK 250.00 eller 'Kontakt for pris'"
-                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 font-semibold mb-2" for="eliteDiscount">
-                Elite Discount (%)
-              </label>
-              <input
-                v-model="newProduct.eliteDiscount"
-                type="number"
-                id="eliteDiscount"
-                placeholder="0"
-                min="0"
-                max="100"
-                step="1"
-                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-gray-700 font-semibold mb-2" for="categories">Kategorier</label>
-              <select id="categories" v-model="selectedCategories" multiple class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green">
-                <option v-for="category in availableCategories" :key="category" :value="category">
-                  {{ category }}
-                </option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-gray-700 font-semibold mb-2" for="subcategories">Underkategorier</label>
-              <select id="subcategories" v-model="selectedSubcategories" multiple class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green">
-                <option v-for="subcategory in availableSubcategories" :key="subcategory" :value="subcategory">
-                  {{ subcategory }}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">
-            Tilføj Produkt
-          </button>
-        </form>
+      <!-- Button to open Add Product Modal -->
+      <div class="mb-6">
+        <button
+          @click="showAddProductModal = true"
+          class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+        >
+          Tilføj Ny Produkt
+        </button>
       </div>
 
+      <!-- Product List with Pagination -->
       <div class="bg-blog-post p-6 rounded-lg shadow-md">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Produktliste</h3>
         <div class="mb-4 flex justify-center">
@@ -133,7 +59,7 @@
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full bg-white border">
-            <thead>
+            <thead class="sticky top-0 bg-gray-50">
               <tr>
                 <th class="px-6 py-3 border-b text-left">#</th>
                 <th class="px-6 py-3 border-b text-left">Produktnavn</th>
@@ -144,7 +70,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="product in filteredProducts" :key="product.id" class="hover:bg-gray-50">
+              <tr v-for="product in paginatedProducts" :key="product.id" class="hover:bg-gray-50">
                 <td class="px-6 py-4 border-b">{{ product.id }}</td>
                 <td class="px-6 py-4 border-b">{{ product.name }}</td>
                 <td class="px-6 py-4 border-b">{{ product.eliteDiscount ?? 0 }}</td>
@@ -168,14 +94,47 @@
             </tbody>
           </table>
         </div>
+        <div class="mt-4 flex justify-between items-center">
+          <div class="text-sm text-gray-600">
+            Viser {{ (currentPage - 1) * itemsPerPage + 1 }} til 
+            {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} af 
+            {{ filteredProducts.length }} produkter
+          </div>
+          <div class="flex space-x-2">
+            <button
+              @click="currentPage--"
+              :disabled="currentPage === 1"
+              class="px-3 py-1 rounded border bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              Forrige
+            </button>
+            <span class="px-3 py-1">
+              Side {{ currentPage }} af {{ totalPages }}
+            </span>
+            <button
+              @click="currentPage++"
+              :disabled="currentPage === totalPages"
+              class="px-3 py-1 rounded border bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              Næste
+            </button>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- ==================== USERS TAB ==================== -->
     <div v-if="activeTab === 'users'">
+      <!-- Administrators Section -->
       <div class="bg-blog-post p-6 rounded-lg shadow-md mb-8">
         <h3 class="text-3xl font-bold text-left text-navbar-green mb-3">Administratorer</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div v-for="admin in admins" :key="admin.id" class="flex items-center p-1 bg-white rounded-lg shadow-md mb-1">
-            <img :src="admin.picture || fallbackLogo" alt="Admin Picture" class="w-16 h-16 rounded-full mr-4" />
+          <div v-for="admin in admins" :key="admin.id" class="flex items-center p-3 bg-white rounded-lg shadow-md">
+            <img 
+              :src="admin.picture || fallbackLogo" 
+              alt="Admin Picture" 
+              class="w-16 h-16 rounded-full mr-4 object-cover" 
+            />
             <div class="flex-1">
               <h3 class="text-xl font-semibold">{{ admin.name || 'No Name' }}</h3>
               <p class="text-gray-700">{{ admin.email }}</p>
@@ -183,19 +142,37 @@
                 {{ admin.online ? 'Online' : 'Offline' }}
               </p>
             </div>
-            <a href="#" @click.prevent="openMessageModal(admin)" class="text-gray-500 hover:text-gray-700 mr-4">
+            <button 
+              @click="openMessageModal(admin)" 
+              class="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition"
+              title="Send besked"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 12.713l11.985-6.713-11.985-6.713-11.985 6.713 11.985 6.713zm0 2.287l-12-6.75v11.75h24v-11.75l-12 6.75z" />
               </svg>
-            </a>
+            </button>
           </div>
         </div>
       </div>
+
+      <!-- User Management Section with search -->
       <div class="bg-blog-post p-6 rounded-lg shadow-md">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Brugerstyring</h3>
-        <div class="overflow-x-auto">
+        
+        <!-- Search box for users -->
+        <div class="mb-4">
+          <input
+            v-model="userSearch"
+            type="text"
+            placeholder="🔍 Søg brugere..."
+            class="border p-2 rounded-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-navbar-green"
+          />
+        </div>
+
+        <!-- Scrollable user table -->
+        <div class="overflow-x-auto max-h-[400px] overflow-y-auto">
           <table class="min-w-full table-auto bg-white border">
-            <thead>
+            <thead class="sticky top-0 bg-gray-50">
               <tr>
                 <th class="px-4 py-3 border-b text-left">Email</th>
                 <th class="px-4 py-3 border-b text-left hidden md:table-cell">Nuværende Rolle</th>
@@ -203,14 +180,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(user, index) in users" :key="index" class="hover:bg-gray-50">
+              <tr v-for="(user, index) in filteredUsers" :key="index" class="hover:bg-gray-50">
                 <td class="px-4 py-2 border-b">
                   <span class="block font-medium text-gray-900">{{ user.email }}</span>
-                  <span class="block text-sm text-gray-500 md:hidden capitalize">Rolle: {{ user.role }}</span>
+                  <span class="block text-sm text-gray-500 md:hidden capitalize">
+                    Rolle: {{ user.role }}
+                  </span>
                 </td>
-                <td class="px-4 py-2 border-b capitalize hidden md:table-cell">{{ user.role }}</td>
+                <td class="px-4 py-2 border-b capitalize hidden md:table-cell">
+                  {{ user.role }}
+                </td>
                 <td class="px-4 py-2 border-b">
-                  <select v-model="user.role" @change="updateUserRole(user)" class="border p-2 rounded w-full bg-white">
+                  <select 
+                    v-model="user.role" 
+                    @change="updateUserRole(user)" 
+                    class="border p-2 rounded w-full bg-white focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                  >
                     <option value="regular">Regular</option>
                     <option value="elite">Elite</option>
                   </select>
@@ -221,42 +206,191 @@
         </div>
       </div>
     </div>
+
+    <!-- ==================== MESSAGES TAB ==================== -->
     <div v-if="activeTab === 'messages'">
       <div class="bg-blog-post p-6 rounded-lg shadow-md">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Fællesbeskeder</h3>
+        
         <form @submit.prevent="sendBroadcastMessage">
           <label class="block text-gray-700 font-semibold mb-2">Besked</label>
-          <textarea v-model="messageContent" class="border p-2 rounded w-full mb-4" placeholder="Skriv din besked her..."></textarea>
-          <button type="submit" class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">
+          <textarea 
+            v-model="messageContent" 
+            class="border p-2 rounded w-full mb-4 focus:outline-none focus:ring-2 focus:ring-navbar-green" 
+            placeholder="Skriv din besked her..."
+            rows="4"
+          ></textarea>
+          <button 
+            type="submit" 
+            class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+          >
             Send Besked til Alle
           </button>
         </form>
-        <div class="mt-8">
-          <h4 class="text-xl font-bold text-navbar-green mb-2">Alle Beskeder</h4>
-          <div v-for="(msg, idx) in allMessages" :key="idx" class="bg-white p-4 rounded shadow mb-2">
-            <p class="text-sm text-gray-500 mb-1">
-              <strong>Fra:</strong> {{ msg.from }}
-              <strong>Til:</strong> {{ msg.to === 'all' ? 'Alle' : msg.to }}
-              <strong>Dato:</strong> {{ formatTimestamp(msg.timestamp) }}
-            </p>
-            <p class="text-gray-800">{{ msg.content }}</p>
+
+        <!-- Collapsible messages section -->
+        <details class="mt-6">
+          <summary class="cursor-pointer fontallel font-medium mb-4 text-lg">
+            Vis alle beskeder ({{ allMessages.length }})
+          </summary>
+          <div class="mt-2 space-y-2 max-h-[300px] overflow-y-auto">
+            <div v-for="(msg, idx) in allMessages" :key="idx" class="bg-white p-4 rounded shadow mb-2">
+              <p class="text-sm text-gray-500 mb-1">
+                <strong>Fra:</strong> {{ msg.from }}
+                <strong>Til:</strong> {{ msg.to === 'all' ? 'Alle' : msg.to }}
+                <strong>Dato:</strong> {{ formatTimestamp(msg.timestamp) }}
+              </p>
+              <p class="text-gray-800">{{ msg.content }}</p>
+            </div>
           </div>
-        </div>
+        </details>
       </div>
     </div>
-    <div v-if="showMessageModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
-      <div class="bg-white p-6 rounded-lg shadow-md max-w-md w-full relative">
-        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Send Besked til {{ selectedAdmin.name }}</h3>
-        <form @submit.prevent="sendMessage">
+
+    <!-- ==================== MODALS ==================== -->
+    
+    <!-- Add Product Modal -->
+    <div 
+      v-if="showAddProductModal" 
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
+        <form @submit.prevent="handleAddProduct" class="space-y-4">
+          <!-- Name -->
           <div>
-            <label class="block text-gray-700 font-semibold mb-2" for="message">Besked</label>
-            <textarea v-model="message" id="message" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" required></textarea>
+            <label class="block text-gray-700 font-semibold mb-2">Navn</label>
+            <input
+              v-model="newProduct.name"
+              type="text"
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              required
+            />
           </div>
-          <div class="flex justify-end space-x-4 mt-4">
-            <button type="button" @click="closeMessageModal" class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition">
+
+          <!-- Description -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Kort Beskrivelse</label>
+            <textarea
+              v-model="newProduct.description"
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              rows="2"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Price and Elite Discount -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700 font-semibold mb-2">Pris</label>
+              <input
+                v-model="newProduct.price"
+                type="text"
+                placeholder="DKK 250.00 eller 'Kontakt for pris'"
+                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 font-semibold mb-2">Elite Discount (%)</label>
+              <input
+                v-model="newProduct.eliteDiscount"
+                type="number"
+                min="0"
+                max="100"
+                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              />
+            </div>
+          </div>
+
+          <!-- Categories and Subcategories -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-gray-700 font-semibold mb-2">Kategorier</label>
+              <select 
+                v-model="selectedCategories" 
+                multiple 
+                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                size="4"
+              >
+                <option v-for="cat in availableCategories" :key="cat" :value="cat">{{ cat }}</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-gray-700 font-semibold mb-2">Underkategorier</label>
+              <select 
+                v-model="selectedSubcategories" 
+                multiple 
+                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                size="4"
+              >
+                <option v-for="sub in availableSubcategories" :key="sub" :value="sub">{{ sub }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Collapsible Full Description -->
+          <details class="border rounded-lg p-4">
+            <summary class="cursor-pointer font-semibold text-gray-700">
+              Fuldbeskrivelse (Valgfri)
+            </summary>
+            <textarea
+              v-model="newProduct.fullDescription"
+              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green mt-2"
+              rows="4"
+            ></textarea>
+          </details>
+
+          <!-- Form buttons -->
+          <div class="flex justify-end space-x-2">
+            <button
+              type="button"
+              @click="closeAddProductModal"
+              class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition"
+            >
               Annuller
             </button>
-            <button type="submit" class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">
+            <button
+              type="submit"
+              class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+            >
+              Tilføj Produkt
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div 
+      v-if="showMessageModal" 
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-md max-w-md w-full relative">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-4">
+          Send Besked til {{ selectedAdmin?.name }}
+        </h3>
+        <form @submit.prevent="sendMessage">
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Besked</label>
+            <textarea 
+              v-model="message" 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" 
+              rows="4"
+              required
+            ></textarea>
+          </div>
+          <div class="flex justify-end space-x-4 mt-4">
+            <button 
+              type="button" 
+              @click="closeMessageModal" 
+              class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition"
+            >
+              Annuller
+            </button>
+            <button 
+              type="submit" 
+              class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+            >
               Send Besked
             </button>
           </div>
@@ -264,52 +398,123 @@
       </div>
     </div>
     
-    <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
-      <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl max-h-screen overflow-y-auto relative">
+    <!-- Edit Product Modal -->
+    <div 
+      v-if="showEditModal" 
+      class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-3xl max-h-[90vh] overflow-y-auto relative">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Rediger Produkt</h3>
         <form @submit.prevent="handleEditProduct" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editName">Navn</label>
-            <input v-model="editProductData.name" type="text" id="editName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" required />
+          <!-- Name -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Navn</label>
+            <input 
+              v-model="editProductData.name" 
+              type="text" 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" 
+              required 
+            />
           </div>
-          <div class="flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editEliteDiscount">Elite Discount (%)</label>
-            <div class="relative">
-              <input v-model="editProductData.eliteDiscount" type="number" id="editEliteDiscount" placeholder="0" min="0" max="100" class="w-full p-3 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" />
-              <span class="absolute inset-y-0 right-4 flex items-center text-gray-500 pointer-events-none">%</span>
-            </div>
+          
+          <!-- Elite Discount -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Elite Discount (%)</label>
+            <input 
+              v-model="editProductData.eliteDiscount" 
+              type="number" 
+              min="0" 
+              max="100" 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" 
+            />
           </div>
-          <div class="flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editPrice">Pris</label>
-            <input v-model="editProductData.price" type="text" id="editPrice" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" />
+          
+          <!-- Price -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Pris</label>
+            <input 
+              v-model="editProductData.price" 
+              type="text" 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" 
+            />
           </div>
-          <div class="flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editImage">Billede (URL)</label>
-            <input v-model="editProductData.image" type="text" id="editImage" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" />
+          
+          <!-- Image -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Billede (URL)</label>
+            <input 
+              v-model="editProductData.image" 
+              type="text" 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" 
+            />
           </div>
-          <div class="md:col-span-2 flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editDescription">Kort Beskrivelse</label>
-            <textarea v-model="editProductData.description" id="editDescription" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" required></textarea>
+          
+          <!-- Short Description -->
+          <div class="md:col-span-2">
+            <label class="block text-gray-700 font-semibold mb-2">Kort Beskrivelse</label>
+            <textarea 
+              v-model="editProductData.description" 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green" 
+              rows="2"
+              required
+            ></textarea>
           </div>
-          <div class="md:col-span-2 flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editFullDescription">Fuldbeskrivelse</label>
-            <textarea v-model="editProductData.fullDescription" id="editFullDescription" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"></textarea>
+          
+          <!-- Full Description -->
+          <div class="md:col-span-2">
+            <label class="block text-gray-700 font-semibold mb-2">Fuldbeskrivelse</label>
+            <textarea 
+              v-model="editProductData.fullDescription" 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              rows="3"
+            ></textarea>
           </div>
-          <div class="md:col-span-2 flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editCategories">Kategorier</label>
-            <select id="editCategories" v-model="selectedEditCategories" multiple class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green">
-              <option v-for="category in availableCategories" :key="category" :value="category">{{ category }}</option>
+          
+          <!-- Categories -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Kategorier</label>
+            <select 
+              v-model="selectedEditCategories" 
+              multiple 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              size="4"
+            >
+              <option v-for="category in availableCategories" :key="category" :value="category">
+                {{ category }}
+              </option>
             </select>
           </div>
-          <div class="md:col-span-2 flex flex-col">
-            <label class="block text-gray-700 font-semibold mb-2" for="editSubcategories">Underkategorier</label>
-            <select id="editSubcategories" v-model="selectedEditSubcategories" multiple class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green">
-              <option v-for="subcategory in availableSubcategories" :key="subcategory" :value="subcategory">{{ subcategory }}</option>
+          
+          <!-- Subcategories -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Underkategorier</label>
+            <select 
+              v-model="selectedEditSubcategories" 
+              multiple 
+              class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              size="4"
+            >
+              <option v-for="subcategory in availableSubcategories" :key="subcategory" :value="subcategory">
+                {{ subcategory }}
+              </option>
             </select>
           </div>
+          
+          <!-- Action buttons -->
           <div class="md:col-span-2 flex justify-end space-x-4 mt-4">
-            <button type="button" @click="closeEditModal" class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition">Annuller</button>
-            <button type="submit" class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition">Gem ændringer</button>
+            <button 
+              type="button" 
+              @click="closeEditModal" 
+              class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded hover:bg-gray-400 transition"
+            >
+              Annuller
+            </button>
+            <button 
+              type="submit" 
+              class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+            >
+              Gem ændringer
+            </button>
           </div>
         </form>
       </div>
@@ -318,7 +523,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { getFirestore, collection, getDocs, updateDoc, doc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { app } from '../firebase/init';
 import { useAuthStore } from '../stores/authStore'; 
@@ -329,7 +534,7 @@ import fallbackLogo from '../assets/img/logo.png';
 export default {
   name: 'AdminPanel',
   setup() {
-    const activeTab = ref('products'); // Default tab
+    const activeTab = ref('products');
     const authStore = useAuthStore();
     const db = getFirestore(app);
     const usersCollection = collection(db, 'users');
@@ -344,13 +549,15 @@ export default {
       selectedAdmin.value = admin;
       showMessageModal.value = true;
     };
+    
     const closeMessageModal = () => {
       showMessageModal.value = false;
       message.value = '';
     };
+    
     const sendMessage = async () => {
       if (!selectedAdmin.value || !message.value.trim()) return;
-      const currentUserEmail = authStore.user.email; // your admin's email
+      const currentUserEmail = authStore.user.email;
       const newMsg = {
         from: currentUserEmail,
         to: selectedAdmin.value.email,
@@ -359,13 +566,24 @@ export default {
       };
       await addDoc(messagesCollection, newMsg);
       closeMessageModal();
+      loadMessages();
     };
 
     // ==================== User Management ====================
     const users = ref([]);
+    const userSearch = ref('');
+    
     const admins = computed(() => {
-      // filter all users whose role === 'admin'
       return users.value.filter(user => user.role === 'admin');
+    });
+
+    const filteredUsers = computed(() => {
+      const term = userSearch.value.trim().toLowerCase();
+      if (!term) return users.value;
+      return users.value.filter(user => 
+        user.email?.toLowerCase().includes(term) ||
+        user.role?.toLowerCase().includes(term)
+      );
     });
 
     const loadUsers = async () => {
@@ -413,7 +631,6 @@ export default {
       querySnapshot.forEach((docSnap) => {
         all.push(docSnap.data());
       });
-      // sort by timestamp desc
       all.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
       allMessages.value = all;
     };
@@ -421,7 +638,7 @@ export default {
     const formatTimestamp = (timestamp) => {
       if (!timestamp) return 'N/A';
       const date = timestamp.toDate();
-      return date.toLocaleString();
+      return date.toLocaleString('da-DK');
     };
 
     // ==================== Product Management ====================
@@ -430,10 +647,11 @@ export default {
     const { allProducts, addProduct, updateProduct, deleteProduct } = productStore;
     const { featuredProductIds, addFeaturedProduct, removeFeaturedProduct } = featuredStore;
 
-    // We define available categories & subcategories
     const availableCategories = ref(['mennesker', 'heste', 'hunde', 'katte']);
     const availableSubcategories = ref(['Vitaminer & Mineraler', 'Fordøjelse', 'Collagen', 'Olie', 'Andre produkter']);
 
+    // Add Product Modal State
+    const showAddProductModal = ref(false);
     const newProduct = ref({
       name: '',
       description: '',
@@ -447,10 +665,8 @@ export default {
     const selectedCategories = ref([]);
     const selectedSubcategories = ref([]);
 
-    const handleAddProduct = () => {
-      newProduct.value.categories = selectedCategories.value;
-      newProduct.value.subcategories = selectedSubcategories.value;
-      addProduct({ ...newProduct.value });
+    const closeAddProductModal = () => {
+      showAddProductModal.value = false;
       // Reset form
       newProduct.value = {
         name: '',
@@ -464,6 +680,13 @@ export default {
       };
       selectedCategories.value = [];
       selectedSubcategories.value = [];
+    };
+
+    const handleAddProduct = () => {
+      newProduct.value.categories = selectedCategories.value;
+      newProduct.value.subcategories = selectedSubcategories.value;
+      addProduct({ ...newProduct.value });
+      closeAddProductModal();
     };
 
     // Edit product modal
@@ -484,13 +707,15 @@ export default {
 
     const openEditModal = (product) => {
       editProductData.value = { ...product };
-      selectedEditCategories.value = product.categories;
-      selectedEditSubcategories.value = product.subcategories;
+      selectedEditCategories.value = product.categories || [];
+      selectedEditSubcategories.value = product.subcategories || [];
       showEditModal.value = true;
     };
+    
     const closeEditModal = () => {
       showEditModal.value = false;
     };
+    
     const handleEditProduct = () => {
       editProductData.value.categories = selectedEditCategories.value;
       editProductData.value.subcategories = selectedEditSubcategories.value;
@@ -508,6 +733,7 @@ export default {
     const isFeatured = (productId) => {
       return featuredProductIds.includes(productId);
     };
+    
     const toggleFeatured = (productId) => {
       if (isFeatured(productId)) {
         removeFeaturedProduct(productId);
@@ -516,7 +742,7 @@ export default {
       }
     };
 
-    // ==================== NEW: Admin Search for Products ====================
+    // Product Search and Pagination
     const adminSearch = ref('');
     const filteredProducts = computed(() => {
       const term = adminSearch.value.trim().toLowerCase();
@@ -526,8 +752,24 @@ export default {
       return allProducts.value.filter((p) => {
         const nameMatch = p.name?.toLowerCase().includes(term);
         const idMatch = String(p.id).toLowerCase().includes(term);
-        return nameMatch || idMatch;
+        const categoryMatch = p.categories?.some(cat => cat.toLowerCase().includes(term));
+        return nameMatch || idMatch || categoryMatch;
       });
+    });
+
+    const currentPage = ref(1);
+    const itemsPerPage = 10;
+    const totalPages = computed(() => {
+      return Math.max(1, Math.ceil(filteredProducts.value.length / itemsPerPage));
+    });
+    const paginatedProducts = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return filteredProducts.value.slice(start, end);
+    });
+
+    watch(adminSearch, () => {
+      currentPage.value = 1;
     });
 
     onMounted(() => {
@@ -536,8 +778,11 @@ export default {
     });
 
     return {
+      // Tab management
       activeTab,
       fallbackLogo,
+
+      // Admin display
       admins,
       showMessageModal,
       selectedAdmin,
@@ -545,18 +790,29 @@ export default {
       openMessageModal,
       closeMessageModal,
       sendMessage,
+
+      // User Management
       users,
+      userSearch,
+      filteredUsers,
       updateUserRole,
       loadUsers,
+
+      // Messaging Section
       messageContent,
       sendBroadcastMessage,
       allMessages,
+      formatTimestamp,
+
+      // Product Management
       allProducts,
+      showAddProductModal,
       newProduct,
       availableCategories,
       availableSubcategories,
       selectedCategories,
       selectedSubcategories,
+      closeAddProductModal,
       handleAddProduct,
       showEditModal,
       editProductData,
@@ -566,19 +822,51 @@ export default {
       closeEditModal,
       handleEditProduct,
       handleDelete,
+
+      // Featured
       isFeatured,
       toggleFeatured,
+
+      // Product Search and Pagination
       adminSearch,
       filteredProducts,
-      formatTimestamp,
+      currentPage,
+      itemsPerPage,
+      totalPages,
+      paginatedProducts,
     };
   },
 };
 </script>
 
-
 <style scoped>
 .bg-blog-post {
   background-color: #efede4;
+}
+
+/* Custom scrollbar for scrollable sections */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Sticky table headers */
+thead.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 </style>
