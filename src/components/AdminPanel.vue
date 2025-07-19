@@ -82,14 +82,20 @@
                     @change="toggleFeatured(product.id)"
                   />
                 </td>
-                <td class="px-2 py-2 border-b">
-                  <button class="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition mr-1" @click="openEditModal(product)">
-                    Rediger
-                  </button>
-                  <button class="bg-red-500 text-white font-semibold py-1 px-3 rounded hover:bg-red-600 transition" @click="handleDelete(product.id)">
-                    Slet
-                  </button>
-                </td>
+              <td class="px-2 py-2 border-b">
+                <button 
+                  class="px-3 py-1 rounded border border-green-500 text-green-800 hover:bg-green-50 transition bg-green-200 mr-2" 
+                  @click="openEditModal(product)"
+                >
+                  Rediger
+                </button>
+                <button 
+                  class="px-3 py-1 rounded border border-red-500 text-red-800 hover:bg-red-50 transition bg-red-200" 
+                  @click="handleDelete(product.id)"
+                >
+                  Slet
+                </button>
+              </td>
               </tr>
             </tbody>
           </table>
@@ -1097,4 +1103,5 @@ thead.sticky {
 .focus\:ring-green-500:focus {
   ring-color: #10b981;
 }
+
 </style>

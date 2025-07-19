@@ -45,7 +45,6 @@ The content is organized as follows:
 .firebase/hosting.ZGlzdA.cache
 .firebaserc
 .github/workflows/github-actions-demo.yml
-.gitignore
 cypress.config.js
 cypress/component/product-cart-unit-test.cy.js
 cypress/e2e/cellatest-e2e-cart-purchase.cy.js
@@ -1631,10 +1630,10 @@ img/blog/immunforsvar_tips.jpg,1731944941367,0cab9f14c1144f7a669bd9bce4094fd5bc9
 img/blog/haarcelletest_dyr.jpg,1731945528678,fe5f9174f5e0c26a4f4dd2e707c06d20afd7d28583365cda33758011452a7ee9
 img/blog/haarcelletest.jpg,1731943983081,e58d371a6214791d2791bf027eb6cb42ad0a1b2b3cccea963197c294edbd03cc
 img/adminlogo/logo.png,1728748506385,76fc329192ac98e632c40cd234f676753f3ab32d6fd8ab25e518df0d146371ec
-index.html,1752773070335,7f9c73cfbfed314ce9ae041d4c80a3331d2ab828cd471c55d83af2af1ea4a164
-assets/index-CI7tC6rM.css,1752773070335,34fb42f3516b356b6b2cb1c63c61e82e76d35b7f347d15f2f84f10cbc28dbe28
-assets/logo-CkAEtsad.png,1752773070335,76fc329192ac98e632c40cd234f676753f3ab32d6fd8ab25e518df0d146371ec
-assets/index-DVLq3wTF.js,1752773070335,8d2925e80edb0f90ce0970b100292de3aaa98dea77dd48e92545f7e63d8d54bb
+index.html,1752930029693,3a61ca6c8e0799d61d16b07a891ef6e0bd6df18ef513c9aae8b425178ff49dd1
+assets/index-DbYSrDlM.css,1752930029693,9d2ef56edda856afb3918d95d700966c7df50e1a6ae1355980791c7a5ed7f4c1
+assets/logo-CkAEtsad.png,1752930029693,76fc329192ac98e632c40cd234f676753f3ab32d6fd8ab25e518df0d146371ec
+assets/index-B7FGFAvT.js,1752930029694,9c4adefc1586a6d553fda8b88583afb3847578e6d40a3fb2e8423aa9afbfa7fd
 </file>
 
 <file path=".firebaserc">
@@ -1663,31 +1662,6 @@ jobs:
             - name: list files in the repository
               run: ls ${{ github.workspace }}
             - run: echo "This job's status is ${{ job.status }}."
-</file>
-
-<file path=".gitignore">
-# Dependencies
-node_modules/
-
-# Build output
-dist/
-build/
-
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Editor junk
-.vscode/
-.idea/
-.DS_Store
-
-# Env and secrets
-.env
-functions/.runtimeconfig.json
 </file>
 
 <file path="cypress.config.js">
@@ -4099,9 +4073,9 @@ describe('ProductCard.vue', () => {
       </div>
 
       <!-- Product List with Pagination -->
-      <div class="bg-blog-post p-6 rounded-lg shadow-md">
-        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Produktliste</h3>
-        <div class="mb-4 flex justify-center">
+      <div class="bg-blog-post p-3 rounded-lg shadow-md">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-3">Produktliste</h3>
+        <div class="mb-3 flex justify-center">
           <input
             v-model="adminSearch"
             type="text"
@@ -4110,32 +4084,32 @@ describe('ProductCard.vue', () => {
           />
         </div>
         <div class="overflow-x-auto">
-          <table class="min-w-full bg-white border">
+          <table class="min-w-full table-auto text-sm bg-white border">
             <thead class="sticky top-0 bg-gray-50">
               <tr>
-                <th class="px-6 py-3 border-b text-left">#</th>
-                <th class="px-6 py-3 border-b text-left">Produktnavn</th>
-                <th class="px-6 py-3 border-b text-left">Elite Discount (%)</th>
-                <th class="px-6 py-3 border-b text-left">Kategori(er)</th>
-                <th class="px-6 py-3 border-b text-left">Udvalgt</th>
-                <th class="px-6 py-3 border-b text-left">Handlinger</th>
+                <th class="px-2 py-2 border-b text-left">#</th>
+                <th class="px-2 py-2 border-b text-left">Produktnavn</th>
+                <th class="px-2 py-2 border-b text-left">Elite Discount (%)</th>
+                <th class="px-2 py-2 border-b text-left">Kategori(er)</th>
+                <th class="px-2 py-2 border-b text-left">Udvalgt</th>
+                <th class="px-2 py-2 border-b text-left">Handlinger</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="product in paginatedProducts" :key="product.id" class="hover:bg-gray-50">
-                <td class="px-6 py-4 border-b">{{ product.id }}</td>
-                <td class="px-6 py-4 border-b">{{ product.name }}</td>
-                <td class="px-6 py-4 border-b">{{ product.eliteDiscount ?? 0 }}</td>
-                <td class="px-6 py-4 border-b">{{ product.categories.join(', ') }}</td>
-                <td class="px-6 py-4 border-b">
+                <td class="px-2 py-2 border-b">{{ product.id }}</td>
+                <td class="px-2 py-2 border-b">{{ product.name }}</td>
+                <td class="px-2 py-2 border-b">{{ product.eliteDiscount ?? 0 }}</td>
+                <td class="px-2 py-2 border-b">{{ product.categories.join(', ') }}</td>
+                <td class="px-2 py-2 border-b">
                   <input
                     type="checkbox"
                     :checked="isFeatured(product.id)"
                     @change="toggleFeatured(product.id)"
                   />
                 </td>
-                <td class="px-6 py-4 border-b">
-                  <button class="bg-blue-500 text-white font-semibold py-1 px-3 rounded hover:bg-blue-600 transition mr-2" @click="openEditModal(product)">
+                <td class="px-2 py-2 border-b">
+                  <button class="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition mr-1" @click="openEditModal(product)">
                     Rediger
                   </button>
                   <button class="bg-red-500 text-white font-semibold py-1 px-3 rounded hover:bg-red-600 transition" @click="handleDelete(product.id)">
@@ -4146,8 +4120,8 @@ describe('ProductCard.vue', () => {
             </tbody>
           </table>
         </div>
-        <div class="mt-4 flex justify-between items-center">
-          <div class="text-sm text-gray-600">
+        <div class="mt-3 flex justify-between items-center text-sm">
+          <div class="text-gray-600">
             Viser {{ (currentPage - 1) * itemsPerPage + 1 }} til 
             {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} af 
             {{ filteredProducts.length }} produkter
@@ -4208,16 +4182,16 @@ describe('ProductCard.vue', () => {
       </div>
 
       <!-- User Management Section with search -->
-      <div class="bg-blog-post p-6 rounded-lg shadow-md">
+      <div class="bg-blog-post p-3 rounded-lg shadow-md">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Brugerstyring</h3>
         
         <!-- Search box for users -->
-        <div class="mb-4">
+        <div class="mb-3">
           <input
             v-model="userSearch"
             type="text"
             placeholder="🔍 Søg brugere..."
-            class="border p-2 rounded-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            class="border p-1 rounded-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-navbar-green text-sm"
           />
         </div>
 
@@ -4226,27 +4200,27 @@ describe('ProductCard.vue', () => {
           <table class="min-w-full table-auto bg-white border">
             <thead class="sticky top-0 bg-gray-50">
               <tr>
-                <th class="px-4 py-3 border-b text-left">Email</th>
-                <th class="px-4 py-3 border-b text-left hidden md:table-cell">Nuværende Rolle</th>
-                <th class="px-4 py-3 border-b text-left">Skift Rolle</th>
+                <th class="px-2 py-2 border-b text-left">Email</th>
+                <th class="px-2 py-2 border-b text-left hidden md:table-cell">Nuværende Rolle</th>
+                <th class="px-2 py-2 border-b text-left">Skift Rolle</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(user, index) in filteredUsers" :key="index" class="hover:bg-gray-50">
-                <td class="px-4 py-2 border-b">
+                <td class="px-2 py-2 border-b">
                   <span class="block font-medium text-gray-900">{{ user.email }}</span>
-                  <span class="block text-sm text-gray-500 md:hidden capitalize">
+                  <span class="block text-xs text-gray-500 md:hidden capitalize">
                     Rolle: {{ user.role }}
                   </span>
                 </td>
-                <td class="px-4 py-2 border-b capitalize hidden md:table-cell">
+                <td class="px-2 py-2 border-b capitalize hidden md:table-cell">
                   {{ user.role }}
                 </td>
-                <td class="px-4 py-2 border-b">
+                <td class="px-2 py-2 border-b">
                   <select 
                     v-model="user.role" 
                     @change="updateUserRole(user)" 
-                    class="border p-2 rounded w-full bg-white focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                    class="border p-1 rounded w-full bg-white focus:outline-none focus:ring-2 focus:ring-navbar-green text-sm"
                   >
                     <option value="regular">Regular</option>
                     <option value="elite">Elite</option>
@@ -4308,27 +4282,48 @@ describe('ProductCard.vue', () => {
     >
       <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
+        
+        <!-- Validation Summary -->
+        <div v-if="hasValidationErrors" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <h4 class="text-red-800 font-semibold mb-2">Venligst ret følgende fejl:</h4>
+          <ul class="text-red-700 text-sm space-y-1">
+            <li v-for="error in validationErrorsList" :key="error">• {{ error }}</li>
+          </ul>
+        </div>
+
         <form @submit.prevent="handleAddProduct" class="space-y-4">
           <!-- Name -->
           <div>
-            <label class="block text-gray-700 font-semibold mb-2">Navn</label>
+            <label class="block text-gray-700 font-semibold mb-2">
+              Navn <span class="text-red-500">*</span>
+            </label>
             <input
               v-model="newProduct.name"
               type="text"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              required
+              :class="[
+                'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                validationErrors.name ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+              ]"
+              @input="clearFieldError('name')"
             />
+            <p v-if="validationErrors.name" class="text-red-500 text-sm mt-1">{{ validationErrors.name }}</p>
           </div>
 
           <!-- Description -->
           <div>
-            <label class="block text-gray-700 font-semibold mb-2">Kort Beskrivelse</label>
+            <label class="block text-gray-700 font-semibold mb-2">
+              Kort Beskrivelse <span class="text-red-500">*</span>
+            </label>
             <textarea
               v-model="newProduct.description"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              :class="[
+                'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                validationErrors.description ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+              ]"
               rows="2"
-              required
+              @input="clearFieldError('description')"
             ></textarea>
+            <p v-if="validationErrors.description" class="text-red-500 text-sm mt-1">{{ validationErrors.description }}</p>
           </div>
 
           <!-- Price and Elite Discount -->
@@ -4339,8 +4334,13 @@ describe('ProductCard.vue', () => {
                 v-model="newProduct.price"
                 type="text"
                 placeholder="DKK 250.00 eller 'Kontakt for pris'"
-                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                :class="[
+                  'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                  validationErrors.price ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+                ]"
+                @input="clearFieldError('price')"
               />
+              <p v-if="validationErrors.price" class="text-red-500 text-sm mt-1">{{ validationErrors.price }}</p>
             </div>
             <div>
               <label class="block text-gray-700 font-semibold mb-2">Elite Discount (%)</label>
@@ -4349,23 +4349,53 @@ describe('ProductCard.vue', () => {
                 type="number"
                 min="0"
                 max="100"
-                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                step="1"
+                :class="[
+                  'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                  validationErrors.eliteDiscount ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+                ]"
+                @input="clearFieldError('eliteDiscount')"
               />
+              <p v-if="validationErrors.eliteDiscount" class="text-red-500 text-sm mt-1">{{ validationErrors.eliteDiscount }}</p>
             </div>
+          </div>
+
+          <!-- Image URL -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Billede URL</label>
+            <input
+              v-model="newProduct.image"
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              :class="[
+                'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                validationErrors.image ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+              ]"
+              @input="clearFieldError('image')"
+            />
+            <p v-if="validationErrors.image" class="text-red-500 text-sm mt-1">{{ validationErrors.image }}</p>
           </div>
 
           <!-- Categories and Subcategories -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-gray-700 font-semibold mb-2">Kategorier</label>
+              <label class="block text-gray-700 font-semibold mb-2">
+                Kategorier <span class="text-red-500">*</span>
+              </label>
               <select 
                 v-model="selectedCategories" 
                 multiple 
-                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                :class="[
+                  'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                  validationErrors.categories ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+                ]"
                 size="4"
+                @change="clearFieldError('categories')"
               >
                 <option v-for="cat in availableCategories" :key="cat" :value="cat">{{ cat }}</option>
               </select>
+              <p class="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd for at vælge flere</p>
+              <p v-if="validationErrors.categories" class="text-red-500 text-sm mt-1">{{ validationErrors.categories }}</p>
             </div>
             <div>
               <label class="block text-gray-700 font-semibold mb-2">Underkategorier</label>
@@ -4377,6 +4407,7 @@ describe('ProductCard.vue', () => {
               >
                 <option v-for="sub in availableSubcategories" :key="sub" :value="sub">{{ sub }}</option>
               </select>
+              <p class="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd for at vælge flere</p>
             </div>
           </div>
 
@@ -4389,6 +4420,7 @@ describe('ProductCard.vue', () => {
               v-model="newProduct.fullDescription"
               class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green mt-2"
               rows="4"
+              placeholder="Detaljeret beskrivelse af produktet..."
             ></textarea>
           </details>
 
@@ -4403,9 +4435,15 @@ describe('ProductCard.vue', () => {
             </button>
             <button
               type="submit"
-              class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+              :disabled="isSubmitting"
+              :class="[
+                'font-semibold py-2 px-4 rounded transition',
+                isSubmitting 
+                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                  : 'bg-light-green text-white hover:bg-dark-green'
+              ]"
             >
-              Tilføj Produkt
+              {{ isSubmitting ? 'Tilføjer...' : 'Tilføj Produkt' }}
             </button>
           </div>
         </form>
@@ -4592,6 +4630,100 @@ export default {
     const usersCollection = collection(db, 'users');
     const messagesCollection = collection(db, 'messages');
 
+    // ==================== Validation State ====================
+    const validationErrors = ref({});
+    const isSubmitting = ref(false);
+
+    const hasValidationErrors = computed(() => {
+      return Object.keys(validationErrors.value).length > 0;
+    });
+
+    const validationErrorsList = computed(() => {
+      return Object.values(validationErrors.value);
+    });
+
+    // ==================== Validation Rules ====================
+    const validateProduct = (product, categories, subcategories) => {
+      const errors = {};
+
+      // Name validation
+      if (!product.name?.trim()) {
+        errors.name = 'Produktnavn er påkrævet';
+      } else if (product.name.trim().length < 2) {
+        errors.name = 'Produktnavn skal være mindst 2 tegn langt';
+      } else if (product.name.trim().length > 100) {
+        errors.name = 'Produktnavn må ikke overstige 100 tegn';
+      }
+
+      // Description validation
+      if (!product.description?.trim()) {
+        errors.description = 'Kort beskrivelse er påkrævet';
+      } else if (product.description.trim().length < 10) {
+        errors.description = 'Kort beskrivelse skal være mindst 10 tegn lang';
+      } else if (product.description.trim().length > 500) {
+        errors.description = 'Kort beskrivelse må ikke overstige 500 tegn';
+      }
+
+      // Price validation
+      if (product.price?.trim()) {
+        const priceStr = product.price.trim();
+        // Check if it's a valid price format (DKK followed by number) or "Kontakt for pris"
+        const priceRegex = /^(DKK\s*\d+([.,]\d{1,2})?|Kontakt for pris)$/i;
+        if (!priceRegex.test(priceStr)) {
+          errors.price = 'Pris skal være i format "DKK 250.00" eller "Kontakt for pris"';
+        }
+      }
+
+      // Elite discount validation
+      if (product.eliteDiscount !== null && product.eliteDiscount !== undefined && product.eliteDiscount !== '') {
+        const discount = Number(product.eliteDiscount);
+        if (isNaN(discount) || discount < 0 || discount > 100) {
+          errors.eliteDiscount = 'Elite discount skal være mellem 0 og 100';
+        }
+      }
+
+      // Image URL validation
+      if (product.image?.trim()) {
+        try {
+          new URL(product.image.trim());
+          // Check if it's a valid image URL format
+          const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
+          const hasImageExtension = imageExtensions.test(product.image.trim());
+          const isImageService = /\/(images|img|media|photo|picture)/i.test(product.image.trim());
+          
+          if (!hasImageExtension && !isImageService) {
+            errors.image = 'Billede URL skal pege på et gyldigt billede';
+          }
+        } catch {
+          errors.image = 'Billede URL skal være en gyldig URL';
+        }
+      }
+
+      // Categories validation
+      if (!categories || categories.length === 0) {
+        errors.categories = 'Mindst én kategori skal vælges';
+      }
+
+      // Full description validation (optional but if provided, should meet criteria)
+      if (product.fullDescription?.trim() && product.fullDescription.trim().length > 2000) {
+        errors.fullDescription = 'Fuldbeskrivelse må ikke overstige 2000 tegn';
+      }
+
+      return errors;
+    };
+
+    const clearFieldError = (fieldName) => {
+      if (validationErrors.value[fieldName]) {
+        const newErrors = { ...validationErrors.value };
+        delete newErrors[fieldName];
+        validationErrors.value = newErrors;
+      }
+    };
+
+    const clearAllErrors = () => {
+      validationErrors.value = {};
+    };
+
     // ==================== Admin Display ====================
     const showMessageModal = ref(false);
     const selectedAdmin = ref(null);
@@ -4708,7 +4840,7 @@ export default {
       name: '',
       description: '',
       fullDescription: '',
-      price: 'DKK 250.00',
+      price: '',
       image: '',
       categories: [],
       subcategories: [],
@@ -4719,12 +4851,13 @@ export default {
 
     const closeAddProductModal = () => {
       showAddProductModal.value = false;
+      clearAllErrors();
       // Reset form
       newProduct.value = {
         name: '',
         description: '',
         fullDescription: '',
-        price: 'DKK 250.00',
+        price: '',
         image: '',
         categories: [],
         subcategories: [],
@@ -4734,11 +4867,55 @@ export default {
       selectedSubcategories.value = [];
     };
 
-    const handleAddProduct = () => {
-      newProduct.value.categories = selectedCategories.value;
-      newProduct.value.subcategories = selectedSubcategories.value;
-      addProduct({ ...newProduct.value });
-      closeAddProductModal();
+    const handleAddProduct = async () => {
+      isSubmitting.value = true;
+      clearAllErrors();
+      
+      try {
+        // Validate the product
+        const errors = validateProduct(newProduct.value, selectedCategories.value, selectedSubcategories.value);
+        
+        if (Object.keys(errors).length > 0) {
+          validationErrors.value = errors;
+          return;
+        }
+
+        // Check for duplicate product names
+        const existingProduct = allProducts.value.find(
+          p => p.name.toLowerCase().trim() === newProduct.value.name.toLowerCase().trim()
+        );
+        
+        if (existingProduct) {
+          validationErrors.value = { name: 'Et produkt med dette navn eksisterer allerede' };
+          return;
+        }
+
+        // Prepare product data
+        const productData = {
+          ...newProduct.value,
+          name: newProduct.value.name.trim(),
+          description: newProduct.value.description.trim(),
+          fullDescription: newProduct.value.fullDescription?.trim() || '',
+          price: newProduct.value.price?.trim() || 'Kontakt for pris',
+          image: newProduct.value.image?.trim() || '',
+          categories: selectedCategories.value,
+          subcategories: selectedSubcategories.value,
+          eliteDiscount: Number(newProduct.value.eliteDiscount) || 0,
+        };
+
+        // Add the product
+        await addProduct(productData);
+        closeAddProductModal();
+        
+        // Show success message (you can implement a toast notification here)
+        console.log('Produkt tilføjet succesfuldt!');
+        
+      } catch (error) {
+        console.error('Error adding product:', error);
+        validationErrors.value = { general: 'Der opstod en fejl ved tilføjelse af produktet' };
+      } finally {
+        isSubmitting.value = false;
+      }
     };
 
     // Edit product modal
@@ -4834,6 +5011,13 @@ export default {
       activeTab,
       fallbackLogo,
 
+      // Validation
+      validationErrors,
+      hasValidationErrors,
+      validationErrorsList,
+      clearFieldError,
+      isSubmitting,
+
       // Admin display
       admins,
       showMessageModal,
@@ -4920,6 +5104,24 @@ thead.sticky {
   position: sticky;
   top: 0;
   z-index: 10;
+}
+
+/* Error input styling */
+.border-red-500 {
+  border-color: #ef4444;
+}
+
+.focus\:ring-red-500:focus {
+  ring-color: #ef4444;
+}
+
+/* Success styling for valid inputs */
+.border-green-500 {
+  border-color: #10b981;
+}
+
+.focus\:ring-green-500:focus {
+  ring-color: #10b981;
 }
 </style>
 </file>
@@ -5445,151 +5647,180 @@ export default {
 
 <file path="src/components/Navbar.vue">
 <template>
-  <nav class="flex justify-between items-center flex-nowrap bg-dark-brown p-4 sm:p-0 sm:px-5">
-
-    <div id="user-nav" class="flex w-full sm:w-auto items-center justify-center sm:justify-start sm:flex-row flex-row space-y-0 space-x-1 sm:space-x-2 p-1">
-      <template v-if="isAuthenticated">
-        <span class="text-base text-gray-300 font-light">Velkommen, {{ userEmail }}</span>
-        <span class="text-gray-500 hidden sm:inline">|</span>
-        <button @click="handleLogout" class="text-base text-gray-300 font-light hover:text-gray-400">
-          Log ud
+  <nav class="bg-dark-brown">
+    <!-- Mobile and Desktop Header -->
+    <div class="flex justify-between items-center p-4 sm:px-5">
+      
+      <!-- Left side: User info for desktop, hamburger for mobile -->
+      <div class="flex items-center space-x-4">
+        <!-- Mobile hamburger menu button -->
+        <button 
+          @click="toggleMobileMenu" 
+          class="sm:hidden text-white focus:outline-none"
+          aria-label="Toggle menu"
+        >
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path v-if="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
 
-        <!-- Add Admin Link for Authenticated Users -->
-        <span class="text-white hidden sm:inline">|</span>
+        <!-- Desktop user navigation -->
+        <div class="hidden sm:flex items-center space-x-2">
+          <template v-if="isAuthenticated">
+            <span class="text-base text-gray-300 font-light">Velkommen, {{ userEmail }}</span>
+            <span class="text-gray-500">|</span>
+            <button @click="handleLogout" class="text-base text-gray-300 font-light hover:text-gray-400">
+              Log ud
+            </button>
+            <span class="text-white">|</span>
+            <router-link to="/admin" class="text-base text-white font-light hover:text-light-brown">
+              Admin Panel
+            </router-link>
+            <span class="text-white">|</span>
+            <router-link to="/admin/orders" class="text-base text-white font-light hover:text-light-brown">
+              Ordreoversigt
+            </router-link>
+          </template>
+          <template v-else>
+            <router-link to="/login" class="text-base text-white font-extralight hover:text-light-brown">
+              Login
+            </router-link>
+            <span class="text-white">|</span>
+            <router-link to="/register" class="text-base text-white font-light hover:text-light-brown">
+              Registrere
+            </router-link>
+          </template>
+        </div>
+      </div>
 
-        <router-link id="admin-link"
-          to="/admin"
-          class="text-base text-white font-light hover:text-light-brown"
-        >
-          Admin Panelet
-        </router-link>
+      <!-- Right side: Social media icons -->
+      <div class="flex items-center space-x-2">
+        <a href="https://instagram.com" aria-label="Instagram" class="text-white hover:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 30 30">
+            <path d="M 9.9980469 3 C 6.1390469 3 3 6.1419531 3 10.001953 L 3 20.001953 C 3 23.860953 6.1419531 27 10.001953 27 L 20.001953 27 C 23.860953 27 27 23.858047 27 19.998047 L 27 9.9980469 C 27 6.1390469 23.858047 3 19.998047 3 L 9.9980469 3 z M 22 7 C 22.552 7 23 7.448 23 8 C 23 8.552 22.552 9 22 9 C 21.448 9 21 8.552 21 8 C 21 7.448 21.448 7 22 7 z M 15 9 C 18.309 9 21 11.691 21 15 C 21 18.309 18.309 21 15 21 C 11.691 21 9 18.309 9 15 C 9 11.691 11.691 9 15 9 z M 15 11 A 4 4 0 0 0 11 15 A 4 4 0 0 0 15 19 A 4 4 0 0 0 19 15 A 4 4 0 0 0 15 11 z"></path>
+          </svg>
+        </a>
+        <a href="https://facebook.com" aria-label="Facebook" class="text-white hover:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.04c-5.507 0-10 4.493-10 10.003 0 4.991 3.657 9.127 8.437 9.87v-6.987h-2.54v-2.883h2.54v-2.189c0-2.506 1.493-3.894 3.777-3.894 1.094 0 2.239.195 2.239.195v2.465h-1.261c-1.241 0-1.627.771-1.627 1.562v1.861h2.771l-.443 2.883h-2.328v6.987c4.781-.742 8.437-4.879 8.437-9.87 0-5.51-4.493-10.003-10-10.003z" />
+          </svg>
+        </a>
+        <a href="https://linkedin.com" aria-label="LinkedIn" class="text-white hover:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 50 50">
+            <path d="M25,2C12.318,2,2,12.317,2,25s10.318,23,23,23s23-10.317,23-23S37.682,2,25,2z M18,35h-4V20h4V35z M16,17 c-1.105,0-2-0.895-2-2c0-1.105,0.895-2,2-2s2,0.895,2,2C18,16.105,17.105,17,16,17z M37,35h-4v-5v-2.5c0-1.925-1.575-3.5-3.5-3.5 S26,25.575,26,27.5V35h-4V20h4v1.816C27.168,20.694,28.752,20,30.5,20c3.59,0,6.5,2.91,6.5,6.5V35z"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
 
-        <span class="text-white hidden sm:inline">|</span>
-        <router-link
-          to="/admin/orders"
-          class="text-base bg-dark-brown text-white rounded hover:bg-light-brown transition mb-6"
-        >
-          Ordreoversigt
-        </router-link>
-
+    <!-- Mobile menu dropdown -->
+    <div 
+      v-show="isMobileMenuOpen" 
+      class="sm:hidden bg-dark-brown border-t border-gray-600 px-4 py-2 space-y-3"
+    >
+      <template v-if="isAuthenticated">
+        <!-- Welcome message -->
+        <div class="text-sm text-gray-300 font-light border-b border-gray-600 pb-2">
+          Velkommen, {{ userEmail }}
+        </div>
+        
+        <!-- Navigation links -->
+        <div class="space-y-2">
+          <router-link 
+            to="/admin" 
+            @click="closeMobileMenu"
+            class="block text-base text-white font-light hover:text-light-brown py-1"
+          >
+            Admin Panel
+          </router-link>
+          <router-link 
+            to="/admin/orders" 
+            @click="closeMobileMenu"
+            class="block text-base text-white font-light hover:text-light-brown py-1"
+          >
+            Ordreoversigt
+          </router-link>
+        </div>
+        
+        <!-- Logout button -->
+        <div class="border-t border-gray-600 pt-2">
+          <button 
+            @click="handleLogoutAndCloseMenu" 
+            class="text-base text-gray-300 font-light hover:text-gray-400"
+          >
+            Log ud
+          </button>
+        </div>
       </template>
-
+      
       <template v-else>
-        <router-link id="login-link"
-          to="/login"
-          class="text-base text-white font-extralight hover:text-light-brown"
-        >
-          Login
-        </router-link>
-        <span class="text-white hidden sm:inline">|</span>
-        <router-link id="register-link"
-          to="/register"
-          class="text-base text-white font-light hover:text-light-brown"
-        >
-          Registrere
-        </router-link>
+        <div class="space-y-2">
+          <router-link 
+            to="/login" 
+            @click="closeMobileMenu"
+            class="block text-base text-white font-extralight hover:text-light-brown py-1"
+          >
+            Login
+          </router-link>
+          <router-link 
+            to="/register" 
+            @click="closeMobileMenu"
+            class="block text-base text-white font-light hover:text-light-brown py-1"
+          >
+            Registrere
+          </router-link>
+        </div>
       </template>
     </div>
-
-
-    <div id="some-links" class="flex justify-center sm:w-auto sm:justify-end space-x-1 sm:space-x-2 mt- sm:mt-0">
-      <a href="https://instagram.com" aria-label="Instagram" class="text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="white" x="0px" y="0px" width="100" height="100" viewBox="0 0 30 30">
-          <path d="M 9.9980469 3 C 6.1390469 3 3 6.1419531 3 10.001953 L 3 20.001953 C 3 23.860953 6.1419531 27 10.001953 27 L 20.001953 27 C 23.860953 27 27 23.858047 27 19.998047 L 27 9.9980469 C 27 6.1390469 23.858047 3 19.998047 3 L 9.9980469 3 z M 22 7 C 22.552 7 23 7.448 23 8 C 23 8.552 22.552 9 22 9 C 21.448 9 21 8.552 21 8 C 21 7.448 21.448 7 22 7 z M 15 9 C 18.309 9 21 11.691 21 15 C 21 18.309 18.309 21 15 21 C 11.691 21 9 18.309 9 15 C 9 11.691 11.691 9 15 9 z M 15 11 A 4 4 0 0 0 11 15 A 4 4 0 0 0 15 19 A 4 4 0 0 0 19 15 A 4 4 0 0 0 15 11 z"></path>
-        </svg>
-      </a>
-      <a href="https://facebook.com" aria-label="Facebook" class="text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="white" viewBox="0 0 24 24">
-          <path d="M12 2.04c-5.507 0-10 4.493-10 10.003 0 4.991 3.657 9.127 8.437 9.87v-6.987h-2.54v-2.883h2.54v-2.189c0-2.506 1.493-3.894 3.777-3.894 1.094 0 2.239.195 2.239.195v2.465h-1.261c-1.241 0-1.627.771-1.627 1.562v1.861h2.771l-.443 2.883h-2.328v6.987c4.781-.742 8.437-4.879 8.437-9.87 0-5.51-4.493-10.003-10-10.003z" />
-        </svg>
-      </a>
-      <a href="https://linkedin.com" aria-label="LinkedIn" class="text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="white" viewBox="0 0 50 50">
-        <path d="M25,2C12.318,2,2,12.317,2,25s10.318,23,23,23s23-10.317,23-23S37.682,2,25,2z M18,35h-4V20h4V35z M16,17 c-1.105,0-2-0.895-2-2c0-1.105,0.895-2,2-2s2,0.895,2,2C18,16.105,17.105,17,16,17z M37,35h-4v-5v-2.5c0-1.925-1.575-3.5-3.5-3.5 S26,25.575,26,27.5V35h-4V20h4v1.816C27.168,20.694,28.752,20,30.5,20c3.59,0,6.5,2.91,6.5,6.5V35z"></path>
-    </svg>
-      </a>
-    </div>
-    
   </nav>
 </template>
 
 <script>
 import { useAuthStore } from '../stores/authStore';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 export default {
   name: 'Navbar',
   setup() {
     const authStore = useAuthStore();
+    const isMobileMenuOpen = ref(false);
 
     const handleLogout = () => {
       authStore.logout();
     };
 
-    // Check if user is logged in (via computed property that depends on the authentication store's state)
+    const handleLogoutAndCloseMenu = () => {
+      handleLogout();
+      closeMobileMenu();
+    };
+
+    const toggleMobileMenu = () => {
+      isMobileMenuOpen.value = !isMobileMenuOpen.value;
+    };
+
+    const closeMobileMenu = () => {
+      isMobileMenuOpen.value = false;
+    };
+
+    // Check if user is logged in
     const isAuthenticated = computed(() => authStore.isAuthenticated());
 
-    // Get logged-in user's email (as a computed property)
+    // Get logged-in user's email
     const userEmail = computed(() => authStore.user?.email);
 
     return {
       isAuthenticated,
       userEmail,
+      isMobileMenuOpen,
       handleLogout,
+      handleLogoutAndCloseMenu,
+      toggleMobileMenu,
+      closeMobileMenu,
     };
   },
 };
 </script>
-
-<style scoped>
-/* Add any specific styles here if needed 
-
-@media (min-width: 1024px) { /* For large screens and up 
-  nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
-@media (max-width: 639px) { /* For extra small screens 
-  nav {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-    padding: 0px 10px;
-    padding-bottom: 5px;
-  }
-  #user-nav {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: baseline;
-    justify-content: flex-start;
-  }
-
-  #admin-link {
-    margin-left: 5px;
-  }
-
-  #login-link {
-    margin-right: 5px;
-  }
-
-  #register-link {
-    margin-left: 5px;
-  }
-
-  #some-links {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-end;
-    margin-bottom: 2px;
-  }
-} */
-</style>
 </file>
 
 <file path="src/components/ProductCard.vue">
@@ -5683,98 +5914,90 @@ export default {
 </file>
 
 <file path="src/components/ProductCategories.vue">
-19:45 02/01/2025 smaller cards
 <template>
-    <div class="container mt-5 mx-auto px-2">
-      <div class="md:flex justify-center">
-
-        <router-link to="/category/mennesker" class="category-card">
-          <div class="flex-1 text-gray-700 text-left bg-white px-5 py-5 m-2 rounded-lg">
-            <div class="lg:flex lg:items-center">
-              <div class="lg:flex-shrink-0">
-                <img class="rounded-lg w-24 md:w-32 lg:w-40" src="/img/Human-Lines-Shopping-LogoIcons-mobile.png" alt="" />
-              </div>
-              <div class="mt-4 lg:mt-0 lg:ml-6">
-                <div class="uppercase tracking-wide text-lg text-black font-bold hover:underline">Mennesker</div>
-                <a href="#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900">Opdag produkter, der styrker din sundhed og livskvalitet</a>
-              </div>
+  <div class="container mt-5 mx-auto px-2">
+    <div class="md:flex justify-center">
+      <router-link to="/category/mennesker" class="category-card">
+        <div class="flex-1 text-gray-700 text-center lg:text-left bg-white px-5 py-5 m-2 rounded-lg">
+          <div class="flex flex-col items-center lg:flex-row lg:items-center">
+            <div class="lg:flex-shrink-0">
+              <img class="rounded-lg w-24 md:w-32 lg:w-40" src="/img/Human-Lines-Shopping-LogoIcons-mobile.png" alt="" />
+            </div>
+            <div class="mt-4 lg:mt-0 lg:ml-6">
+              <div class="uppercase tracking-wide text-lg text-black font-bold hover:underline">Mennesker</div>
+              <a href="#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900">Opdag produkter, der styrker din sundhed og livskvalitet</a>
             </div>
           </div>
-        </router-link>
+        </div>
+      </router-link>
 
-        <router-link to="/category/heste" class="category-card">
-          <div class="flex-1 text-gray-700 text-left bg-white px-5 py-5 m-2 rounded-lg">
-            <div class="lg:flex lg:items-center">
-              <div class="lg:flex-shrink-0">
-                <img class="rounded-lg w-24 md:w-32 lg:w-40" src="/img/Horse-Lines-Shopping-LogoIcons-mobile.png" alt="" />
-              </div>
-              <div class="mt-4 lg:mt-0 lg:ml-6">
-                <div class="uppercase tracking-wide text-lg text-black font-bold hover:underline">Heste</div>
-                <a href="#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900">Støt din hests sundhed med de rette løsninger</a>
-              </div>
+      <router-link to="/category/heste" class="category-card">
+        <div class="flex-1 text-gray-700 text-center lg:text-left bg-white px-5 py-5 m-2 rounded-lg">
+          <div class="flex flex-col items-center lg:flex-row lg:items-center">
+            <div class="lg:flex-shrink-0">
+              <img class="rounded-lg w-24 md:w-32 lg:w-40" src="/img/Horse-Lines-Shopping-LogoIcons-mobile.png" alt="" />
+            </div>
+            <div class="mt-4 lg:mt-0 lg:ml-6">
+              <div class="uppercase tracking-wide text-lg text-black font-bold hover:underline">Heste</div>
+              <a href="#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900">Støt din hests sundhed med de rette løsninger</a>
             </div>
           </div>
-        </router-link>
-
-      </div>
-
-
-      <div class="md:flex mt-5 justify-center">
-        
-        <router-link to="/category/hunde" class="category-card">
-          <div class="flex-1 text-gray-700 text-left bg-white px-5 py-5 m-2 rounded-lg">
-            <div class="lg:flex lg:items-center">
-              <div class="lg:flex-shrink-0">
-                <img class="rounded-lg w-24 md:w-32 lg:w-40" src="/img/Dog-Lines-Shopping-LogoIcons-mobile.png" alt="" />
-              </div>
-              <div class="mt-4 lg:mt-0 lg:ml-6">
-                <div class="uppercase tracking-wide text-lg text-black font-bold hover:underline">Hunde</div>
-                <a href="#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900">Hold din hund sund med pålidelige produkter</a>
-              </div>
-            </div>
-          </div>
-        </router-link>
-
-        <router-link to="/category/katte" class="category-card">
-          <div class="flex-1 text-gray-700 text-left bg-white px-5 py-5 m-2 rounded-lg">
-            <div class="lg:flex lg:items-center">
-              <div class="lg:flex-shrink-0">
-                <img class="rounded-lg w-24 md:w-32 lg:w-40" src="/img/Cat-Lines-Shopping-LogoIcons-mobile.png" alt="" />
-              </div>
-              <div class="mt-4 lg:mt-0 lg:ml-6">
-                <div class="uppercase tracking-wide text-lg text-black font-bold hover:underline">Katte</div>
-                <a href="#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900">Sørg for din kats sundhed med kærlige løsninger</a>
-              </div>
-              
-            </div>
-          </div>
-        </router-link>
-
-      </div>
+        </div>
+      </router-link>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'ProductCategories',
-  };
-  </script>
-  
-  <style scoped>
-  .category-card {
-    display: flex;
-    flex: 1 1 280px; /* Each card takes up equal width with a minimum size of 280px */
-    max-width: 710px;
 
-    overflow: hidden;
-    text-decoration: none;
-    transition: transform 0.2s ease;
-  }
-  
-  .category-card:hover {
-    transform: translateY(-5px);
-  }
-  </style>
+    <div class="md:flex mt-5 justify-center">
+      <router-link to="/category/hunde" class="category-card">
+        <div class="flex-1 text-gray-700 text-center lg:text-left bg-white px-5 py-5 m-2 rounded-lg">
+          <div class="flex flex-col items-center lg:flex-row lg:items-center">
+            <div class="lg:flex-shrink-0">
+              <img class="rounded-lg w-24 md:w-32 lg:w-40" src="/img/Dog-Lines-Shopping-LogoIcons-mobile.png" alt="" />
+            </div>
+            <div class="mt-4 lg:mt-0 lg:ml-6">
+              <div class="uppercase tracking-wide text-lg text-black font-bold hover:underline">Hunde</div>
+              <a href="#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900">Hold din hund sund med pålidelige produkter</a>
+            </div>
+          </div>
+        </div>
+      </router-link>
+
+      <router-link to="/category/katte" class="category-card">
+        <div class="flex-1 text-gray-700 text-center lg:text-left bg-white px-5 py-5 m-2 rounded-lg">
+          <div class="flex flex-col items-center lg:flex-row lg:items-center">
+            <div class="lg:flex-shrink-0">
+              <img class="rounded-lg w-24 md:w-32 lg:w-40" src="/img/Cat-Lines-Shopping-LogoIcons-mobile.png" alt="" />
+            </div>
+            <div class="mt-4 lg:mt-0 lg:ml-6">
+              <div class="uppercase tracking-wide text-lg text-black font-bold hover:underline">Katte</div>
+              <a href="#" class="block mt-1 text-lg leading-tight font-semibold text-gray-900">Sørg for din kats sundhed med kærlige løsninger</a>
+            </div>
+          </div>
+        </div>
+      </router-link>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'ProductCategories',
+};
+</script>
+
+<style scoped>
+.category-card {
+  display: flex;
+  flex: 1 1 280px; /* Each card takes up equal width with a minimum size of 280px */
+  max-width: 710px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+}
+</style>
 </file>
 
 <file path="src/components/SubcategoryProducts.vue">
