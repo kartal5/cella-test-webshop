@@ -49,6 +49,8 @@
       <!-- Product List with Pagination -->
       <div class="bg-blog-post p-3 rounded-lg shadow-md">
         <h3 class="text-2xl font-semibold text-navbar-green mb-3">Produktliste</h3>
+        
+        <!-- Search Box -->
         <div class="mb-3 flex justify-center">
           <input
             v-model="adminSearch"
@@ -57,7 +59,9 @@
             class="border p-3 rounded-lg shadow-md w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
           />
         </div>
-        <div class="overflow-x-auto">
+
+        <!-- Desktop Table View (hidden on mobile) -->
+        <div class="hidden md:block overflow-x-auto">
           <table class="min-w-full table-auto text-sm bg-white border">
             <thead class="sticky top-0 bg-gray-50">
               <tr>
@@ -80,10 +84,11 @@
                     type="checkbox"
                     :checked="isFeatured(product.id)"
                     @change="toggleFeatured(product.id)"
+                    class="w-4 h-4 cursor-pointer"
                   />
                 </td>
                 <td class="px-2 py-2 border-b">
-                  <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
+                  <div class="flex space-x-2">
                     <button 
                       class="px-3 py-1 rounded border border-green-500 text-green-800 hover:bg-green-50 transition bg-green-200" 
                       @click="openEditModal(product)"
@@ -102,29 +107,121 @@
             </tbody>
           </table>
         </div>
-        <div class="mt-3 flex justify-between items-center text-sm">
-          <div class="text-gray-600">
-            Viser {{ (currentPage - 1) * itemsPerPage + 1 }} til 
-            {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} af 
-            {{ filteredProducts.length }} produkter
+
+        <!-- Mobile Card View (visible only on mobile) -->
+        <div class="md:hidden space-y-3">
+          <div 
+            v-for="product in paginatedProducts" 
+            :key="product.id" 
+            class="bg-white rounded-lg shadow-sm border border-gray-200 p-4"
+          >
+            <!-- Product Header -->
+            <div class="flex justify-between items-start mb-3">
+              <div class="flex-1">
+                <h4 class="font-semibold text-gray-900 text-lg">{{ product.name }}</h4>
+                <p class="text-sm text-gray-500 mt-1">ID: {{ product.id }}</p>
+              </div>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  :checked="isFeatured(product.id)"
+                  @change="toggleFeatured(product.id)"
+                  class="w-5 h-5 cursor-pointer mr-2"
+                />
+                <span class="text-sm text-gray-600">Udvalgt</span>
+              </label>
+            </div>
+
+            <!-- Product Details -->
+            <div class="space-y-2 mb-4">
+              <div class="flex items-center text-sm">
+                <span class="text-gray-600 font-medium mr-2">Kategorier:</span>
+                <span class="text-gray-800">{{ product.categories.join(', ') || 'Ingen' }}</span>
+              </div>
+              <div class="flex items-center text-sm">
+                <span class="text-gray-600 font-medium mr-2">Elite Discount:</span>
+                <span class="text-gray-800 font-semibold">{{ product.eliteDiscount ?? 0 }}%</span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-2">
+              <button 
+                class="flex-1 px-3 py-2 rounded border border-green-500 text-green-800 hover:bg-green-50 transition bg-green-100 font-medium text-sm" 
+                @click="openEditModal(product)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Rediger
+              </button>
+              <button 
+                class="flex-1 px-3 py-2 rounded border border-red-500 text-red-800 hover:bg-red-50 transition bg-red-100 font-medium text-sm" 
+                @click="handleDelete(product.id)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Slet
+              </button>
+            </div>
           </div>
-          <div class="flex space-x-2">
+        </div>
+
+        <!-- Pagination Controls (Responsive) -->
+        <div class="mt-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 text-sm">
+          <!-- Results Info -->
+          <div class="text-gray-600 text-center sm:text-left">
+            <span class="hidden sm:inline">
+              Viser {{ (currentPage - 1) * itemsPerPage + 1 }} til 
+              {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} af 
+              {{ filteredProducts.length }} produkter
+            </span>
+            <span class="sm:hidden">
+              {{ filteredProducts.length }} produkter (side {{ currentPage }}/{{ totalPages }})
+            </span>
+          </div>
+          
+          <!-- Pagination Buttons -->
+          <div class="flex justify-center items-center space-x-2">
+            <!-- Previous Button -->
             <button
               @click="currentPage--"
               :disabled="currentPage === 1"
-              class="px-3 py-1 rounded border bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              class="px-3 py-1.5 rounded border bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+              :class="currentPage === 1 ? 'border-gray-200' : 'border-gray-300'"
             >
-              Forrige
+              <span class="hidden sm:inline">Forrige</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
             </button>
-            <span class="px-3 py-1">
-              Side {{ currentPage }} af {{ totalPages }}
-            </span>
+            
+            <!-- Page Numbers (Desktop) -->
+            <div class="hidden sm:flex items-center space-x-1">
+              <span class="px-3 py-1">
+                Side {{ currentPage }} af {{ totalPages }}
+              </span>
+            </div>
+            
+            <!-- Page Indicator (Mobile) -->
+            <div class="sm:hidden flex items-center space-x-1">
+              <span class="px-2 py-1 text-sm font-medium">
+                {{ currentPage }}/{{ totalPages }}
+              </span>
+            </div>
+            
+            <!-- Next Button -->
             <button
               @click="currentPage++"
               :disabled="currentPage === totalPages"
-              class="px-3 py-1 rounded border bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              class="px-3 py-1.5 rounded border bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+              :class="currentPage === totalPages ? 'border-gray-200' : 'border-gray-300'"
             >
-              Næste
+              <span class="hidden sm:inline">Næste</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
         </div>
