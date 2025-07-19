@@ -82,20 +82,22 @@
                     @change="toggleFeatured(product.id)"
                   />
                 </td>
-              <td class="px-2 py-2 border-b">
-                <button 
-                  class="px-3 py-1 rounded border border-green-500 text-green-800 hover:bg-green-50 transition bg-green-200 mr-2" 
-                  @click="openEditModal(product)"
-                >
-                  Rediger
-                </button>
-                <button 
-                  class="px-3 py-1 rounded border border-red-500 text-red-800 hover:bg-red-50 transition bg-red-200" 
-                  @click="handleDelete(product.id)"
-                >
-                  Slet
-                </button>
-              </td>
+                <td class="px-2 py-2 border-b">
+                  <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
+                    <button 
+                      class="px-3 py-1 rounded border border-green-500 text-green-800 hover:bg-green-50 transition bg-green-200" 
+                      @click="openEditModal(product)"
+                    >
+                      Rediger
+                    </button>
+                    <button 
+                      class="px-3 py-1 rounded border border-red-500 text-red-800 hover:bg-red-50 transition bg-red-200" 
+                      @click="handleDelete(product.id)"
+                    >
+                      Slet
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
