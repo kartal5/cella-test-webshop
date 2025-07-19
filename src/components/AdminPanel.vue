@@ -256,27 +256,48 @@
     >
       <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Tilføj Ny Produkt</h3>
+        
+        <!-- Validation Summary -->
+        <div v-if="hasValidationErrors" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <h4 class="text-red-800 font-semibold mb-2">Venligst ret følgende fejl:</h4>
+          <ul class="text-red-700 text-sm space-y-1">
+            <li v-for="error in validationErrorsList" :key="error">• {{ error }}</li>
+          </ul>
+        </div>
+
         <form @submit.prevent="handleAddProduct" class="space-y-4">
           <!-- Name -->
           <div>
-            <label class="block text-gray-700 font-semibold mb-2">Navn</label>
+            <label class="block text-gray-700 font-semibold mb-2">
+              Navn <span class="text-red-500">*</span>
+            </label>
             <input
               v-model="newProduct.name"
               type="text"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
-              required
+              :class="[
+                'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                validationErrors.name ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+              ]"
+              @input="clearFieldError('name')"
             />
+            <p v-if="validationErrors.name" class="text-red-500 text-sm mt-1">{{ validationErrors.name }}</p>
           </div>
 
           <!-- Description -->
           <div>
-            <label class="block text-gray-700 font-semibold mb-2">Kort Beskrivelse</label>
+            <label class="block text-gray-700 font-semibold mb-2">
+              Kort Beskrivelse <span class="text-red-500">*</span>
+            </label>
             <textarea
               v-model="newProduct.description"
-              class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+              :class="[
+                'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                validationErrors.description ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+              ]"
               rows="2"
-              required
+              @input="clearFieldError('description')"
             ></textarea>
+            <p v-if="validationErrors.description" class="text-red-500 text-sm mt-1">{{ validationErrors.description }}</p>
           </div>
 
           <!-- Price and Elite Discount -->
@@ -287,8 +308,13 @@
                 v-model="newProduct.price"
                 type="text"
                 placeholder="DKK 250.00 eller 'Kontakt for pris'"
-                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                :class="[
+                  'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                  validationErrors.price ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+                ]"
+                @input="clearFieldError('price')"
               />
+              <p v-if="validationErrors.price" class="text-red-500 text-sm mt-1">{{ validationErrors.price }}</p>
             </div>
             <div>
               <label class="block text-gray-700 font-semibold mb-2">Elite Discount (%)</label>
@@ -297,23 +323,53 @@
                 type="number"
                 min="0"
                 max="100"
-                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                step="1"
+                :class="[
+                  'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                  validationErrors.eliteDiscount ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+                ]"
+                @input="clearFieldError('eliteDiscount')"
               />
+              <p v-if="validationErrors.eliteDiscount" class="text-red-500 text-sm mt-1">{{ validationErrors.eliteDiscount }}</p>
             </div>
+          </div>
+
+          <!-- Image URL -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Billede URL</label>
+            <input
+              v-model="newProduct.image"
+              type="url"
+              placeholder="https://example.com/image.jpg"
+              :class="[
+                'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                validationErrors.image ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+              ]"
+              @input="clearFieldError('image')"
+            />
+            <p v-if="validationErrors.image" class="text-red-500 text-sm mt-1">{{ validationErrors.image }}</p>
           </div>
 
           <!-- Categories and Subcategories -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-gray-700 font-semibold mb-2">Kategorier</label>
+              <label class="block text-gray-700 font-semibold mb-2">
+                Kategorier <span class="text-red-500">*</span>
+              </label>
               <select 
                 v-model="selectedCategories" 
                 multiple 
-                class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                :class="[
+                  'w-full p-2 border rounded-lg focus:outline-none focus:ring-2',
+                  validationErrors.categories ? 'border-red-500 focus:ring-red-500' : 'focus:ring-navbar-green'
+                ]"
                 size="4"
+                @change="clearFieldError('categories')"
               >
                 <option v-for="cat in availableCategories" :key="cat" :value="cat">{{ cat }}</option>
               </select>
+              <p class="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd for at vælge flere</p>
+              <p v-if="validationErrors.categories" class="text-red-500 text-sm mt-1">{{ validationErrors.categories }}</p>
             </div>
             <div>
               <label class="block text-gray-700 font-semibold mb-2">Underkategorier</label>
@@ -325,6 +381,7 @@
               >
                 <option v-for="sub in availableSubcategories" :key="sub" :value="sub">{{ sub }}</option>
               </select>
+              <p class="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd for at vælge flere</p>
             </div>
           </div>
 
@@ -337,6 +394,7 @@
               v-model="newProduct.fullDescription"
               class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-navbar-green mt-2"
               rows="4"
+              placeholder="Detaljeret beskrivelse af produktet..."
             ></textarea>
           </details>
 
@@ -351,9 +409,15 @@
             </button>
             <button
               type="submit"
-              class="bg-light-green text-white font-semibold py-2 px-4 rounded hover:bg-dark-green transition"
+              :disabled="isSubmitting"
+              :class="[
+                'font-semibold py-2 px-4 rounded transition',
+                isSubmitting 
+                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                  : 'bg-light-green text-white hover:bg-dark-green'
+              ]"
             >
-              Tilføj Produkt
+              {{ isSubmitting ? 'Tilføjer...' : 'Tilføj Produkt' }}
             </button>
           </div>
         </form>
@@ -540,6 +604,100 @@ export default {
     const usersCollection = collection(db, 'users');
     const messagesCollection = collection(db, 'messages');
 
+    // ==================== Validation State ====================
+    const validationErrors = ref({});
+    const isSubmitting = ref(false);
+
+    const hasValidationErrors = computed(() => {
+      return Object.keys(validationErrors.value).length > 0;
+    });
+
+    const validationErrorsList = computed(() => {
+      return Object.values(validationErrors.value);
+    });
+
+    // ==================== Validation Rules ====================
+    const validateProduct = (product, categories, subcategories) => {
+      const errors = {};
+
+      // Name validation
+      if (!product.name?.trim()) {
+        errors.name = 'Produktnavn er påkrævet';
+      } else if (product.name.trim().length < 2) {
+        errors.name = 'Produktnavn skal være mindst 2 tegn langt';
+      } else if (product.name.trim().length > 100) {
+        errors.name = 'Produktnavn må ikke overstige 100 tegn';
+      }
+
+      // Description validation
+      if (!product.description?.trim()) {
+        errors.description = 'Kort beskrivelse er påkrævet';
+      } else if (product.description.trim().length < 10) {
+        errors.description = 'Kort beskrivelse skal være mindst 10 tegn lang';
+      } else if (product.description.trim().length > 500) {
+        errors.description = 'Kort beskrivelse må ikke overstige 500 tegn';
+      }
+
+      // Price validation
+      if (product.price?.trim()) {
+        const priceStr = product.price.trim();
+        // Check if it's a valid price format (DKK followed by number) or "Kontakt for pris"
+        const priceRegex = /^(DKK\s*\d+([.,]\d{1,2})?|Kontakt for pris)$/i;
+        if (!priceRegex.test(priceStr)) {
+          errors.price = 'Pris skal være i format "DKK 250.00" eller "Kontakt for pris"';
+        }
+      }
+
+      // Elite discount validation
+      if (product.eliteDiscount !== null && product.eliteDiscount !== undefined && product.eliteDiscount !== '') {
+        const discount = Number(product.eliteDiscount);
+        if (isNaN(discount) || discount < 0 || discount > 100) {
+          errors.eliteDiscount = 'Elite discount skal være mellem 0 og 100';
+        }
+      }
+
+      // Image URL validation
+      if (product.image?.trim()) {
+        try {
+          new URL(product.image.trim());
+          // Check if it's a valid image URL format
+          const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
+          const hasImageExtension = imageExtensions.test(product.image.trim());
+          const isImageService = /\/(images|img|media|photo|picture)/i.test(product.image.trim());
+          
+          if (!hasImageExtension && !isImageService) {
+            errors.image = 'Billede URL skal pege på et gyldigt billede';
+          }
+        } catch {
+          errors.image = 'Billede URL skal være en gyldig URL';
+        }
+      }
+
+      // Categories validation
+      if (!categories || categories.length === 0) {
+        errors.categories = 'Mindst én kategori skal vælges';
+      }
+
+      // Full description validation (optional but if provided, should meet criteria)
+      if (product.fullDescription?.trim() && product.fullDescription.trim().length > 2000) {
+        errors.fullDescription = 'Fuldbeskrivelse må ikke overstige 2000 tegn';
+      }
+
+      return errors;
+    };
+
+    const clearFieldError = (fieldName) => {
+      if (validationErrors.value[fieldName]) {
+        const newErrors = { ...validationErrors.value };
+        delete newErrors[fieldName];
+        validationErrors.value = newErrors;
+      }
+    };
+
+    const clearAllErrors = () => {
+      validationErrors.value = {};
+    };
+
     // ==================== Admin Display ====================
     const showMessageModal = ref(false);
     const selectedAdmin = ref(null);
@@ -656,7 +814,7 @@ export default {
       name: '',
       description: '',
       fullDescription: '',
-      price: 'DKK 250.00',
+      price: '',
       image: '',
       categories: [],
       subcategories: [],
@@ -667,12 +825,13 @@ export default {
 
     const closeAddProductModal = () => {
       showAddProductModal.value = false;
+      clearAllErrors();
       // Reset form
       newProduct.value = {
         name: '',
         description: '',
         fullDescription: '',
-        price: 'DKK 250.00',
+        price: '',
         image: '',
         categories: [],
         subcategories: [],
@@ -682,11 +841,55 @@ export default {
       selectedSubcategories.value = [];
     };
 
-    const handleAddProduct = () => {
-      newProduct.value.categories = selectedCategories.value;
-      newProduct.value.subcategories = selectedSubcategories.value;
-      addProduct({ ...newProduct.value });
-      closeAddProductModal();
+    const handleAddProduct = async () => {
+      isSubmitting.value = true;
+      clearAllErrors();
+      
+      try {
+        // Validate the product
+        const errors = validateProduct(newProduct.value, selectedCategories.value, selectedSubcategories.value);
+        
+        if (Object.keys(errors).length > 0) {
+          validationErrors.value = errors;
+          return;
+        }
+
+        // Check for duplicate product names
+        const existingProduct = allProducts.value.find(
+          p => p.name.toLowerCase().trim() === newProduct.value.name.toLowerCase().trim()
+        );
+        
+        if (existingProduct) {
+          validationErrors.value = { name: 'Et produkt med dette navn eksisterer allerede' };
+          return;
+        }
+
+        // Prepare product data
+        const productData = {
+          ...newProduct.value,
+          name: newProduct.value.name.trim(),
+          description: newProduct.value.description.trim(),
+          fullDescription: newProduct.value.fullDescription?.trim() || '',
+          price: newProduct.value.price?.trim() || 'Kontakt for pris',
+          image: newProduct.value.image?.trim() || '',
+          categories: selectedCategories.value,
+          subcategories: selectedSubcategories.value,
+          eliteDiscount: Number(newProduct.value.eliteDiscount) || 0,
+        };
+
+        // Add the product
+        await addProduct(productData);
+        closeAddProductModal();
+        
+        // Show success message (you can implement a toast notification here)
+        console.log('Produkt tilføjet succesfuldt!');
+        
+      } catch (error) {
+        console.error('Error adding product:', error);
+        validationErrors.value = { general: 'Der opstod en fejl ved tilføjelse af produktet' };
+      } finally {
+        isSubmitting.value = false;
+      }
     };
 
     // Edit product modal
@@ -782,6 +985,13 @@ export default {
       activeTab,
       fallbackLogo,
 
+      // Validation
+      validationErrors,
+      hasValidationErrors,
+      validationErrorsList,
+      clearFieldError,
+      isSubmitting,
+
       // Admin display
       admins,
       showMessageModal,
@@ -868,5 +1078,23 @@ thead.sticky {
   position: sticky;
   top: 0;
   z-index: 10;
+}
+
+/* Error input styling */
+.border-red-500 {
+  border-color: #ef4444;
+}
+
+.focus\:ring-red-500:focus {
+  ring-color: #ef4444;
+}
+
+/* Success styling for valid inputs */
+.border-green-500 {
+  border-color: #10b981;
+}
+
+.focus\:ring-green-500:focus {
+  ring-color: #10b981;
 }
 </style>
