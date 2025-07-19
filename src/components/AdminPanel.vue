@@ -47,9 +47,9 @@
       </div>
 
       <!-- Product List with Pagination -->
-      <div class="bg-blog-post p-6 rounded-lg shadow-md">
-        <h3 class="text-2xl font-semibold text-navbar-green mb-4">Produktliste</h3>
-        <div class="mb-4 flex justify-center">
+      <div class="bg-blog-post p-3 rounded-lg shadow-md">
+        <h3 class="text-2xl font-semibold text-navbar-green mb-3">Produktliste</h3>
+        <div class="mb-3 flex justify-center">
           <input
             v-model="adminSearch"
             type="text"
@@ -58,32 +58,32 @@
           />
         </div>
         <div class="overflow-x-auto">
-          <table class="min-w-full bg-white border">
+          <table class="min-w-full table-auto text-sm bg-white border">
             <thead class="sticky top-0 bg-gray-50">
               <tr>
-                <th class="px-6 py-3 border-b text-left">#</th>
-                <th class="px-6 py-3 border-b text-left">Produktnavn</th>
-                <th class="px-6 py-3 border-b text-left">Elite Discount (%)</th>
-                <th class="px-6 py-3 border-b text-left">Kategori(er)</th>
-                <th class="px-6 py-3 border-b text-left">Udvalgt</th>
-                <th class="px-6 py-3 border-b text-left">Handlinger</th>
+                <th class="px-2 py-2 border-b text-left">#</th>
+                <th class="px-2 py-2 border-b text-left">Produktnavn</th>
+                <th class="px-2 py-2 border-b text-left">Elite Discount (%)</th>
+                <th class="px-2 py-2 border-b text-left">Kategori(er)</th>
+                <th class="px-2 py-2 border-b text-left">Udvalgt</th>
+                <th class="px-2 py-2 border-b text-left">Handlinger</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="product in paginatedProducts" :key="product.id" class="hover:bg-gray-50">
-                <td class="px-6 py-4 border-b">{{ product.id }}</td>
-                <td class="px-6 py-4 border-b">{{ product.name }}</td>
-                <td class="px-6 py-4 border-b">{{ product.eliteDiscount ?? 0 }}</td>
-                <td class="px-6 py-4 border-b">{{ product.categories.join(', ') }}</td>
-                <td class="px-6 py-4 border-b">
+                <td class="px-2 py-2 border-b">{{ product.id }}</td>
+                <td class="px-2 py-2 border-b">{{ product.name }}</td>
+                <td class="px-2 py-2 border-b">{{ product.eliteDiscount ?? 0 }}</td>
+                <td class="px-2 py-2 border-b">{{ product.categories.join(', ') }}</td>
+                <td class="px-2 py-2 border-b">
                   <input
                     type="checkbox"
                     :checked="isFeatured(product.id)"
                     @change="toggleFeatured(product.id)"
                   />
                 </td>
-                <td class="px-6 py-4 border-b">
-                  <button class="bg-blue-500 text-white font-semibold py-1 px-3 rounded hover:bg-blue-600 transition mr-2" @click="openEditModal(product)">
+                <td class="px-2 py-2 border-b">
+                  <button class="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition mr-1" @click="openEditModal(product)">
                     Rediger
                   </button>
                   <button class="bg-red-500 text-white font-semibold py-1 px-3 rounded hover:bg-red-600 transition" @click="handleDelete(product.id)">
@@ -94,8 +94,8 @@
             </tbody>
           </table>
         </div>
-        <div class="mt-4 flex justify-between items-center">
-          <div class="text-sm text-gray-600">
+        <div class="mt-3 flex justify-between items-center text-sm">
+          <div class="text-gray-600">
             Viser {{ (currentPage - 1) * itemsPerPage + 1 }} til 
             {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} af 
             {{ filteredProducts.length }} produkter
@@ -156,16 +156,16 @@
       </div>
 
       <!-- User Management Section with search -->
-      <div class="bg-blog-post p-6 rounded-lg shadow-md">
+      <div class="bg-blog-post p-3 rounded-lg shadow-md">
         <h3 class="text-2xl font-semibold text-navbar-green mb-4">Brugerstyring</h3>
         
         <!-- Search box for users -->
-        <div class="mb-4">
+        <div class="mb-3">
           <input
             v-model="userSearch"
             type="text"
             placeholder="🔍 Søg brugere..."
-            class="border p-2 rounded-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-navbar-green"
+            class="border p-1 rounded-lg w-full max-w-md focus:outline-none focus:ring-2 focus:ring-navbar-green text-sm"
           />
         </div>
 
@@ -174,27 +174,27 @@
           <table class="min-w-full table-auto bg-white border">
             <thead class="sticky top-0 bg-gray-50">
               <tr>
-                <th class="px-4 py-3 border-b text-left">Email</th>
-                <th class="px-4 py-3 border-b text-left hidden md:table-cell">Nuværende Rolle</th>
-                <th class="px-4 py-3 border-b text-left">Skift Rolle</th>
+                <th class="px-2 py-2 border-b text-left">Email</th>
+                <th class="px-2 py-2 border-b text-left hidden md:table-cell">Nuværende Rolle</th>
+                <th class="px-2 py-2 border-b text-left">Skift Rolle</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(user, index) in filteredUsers" :key="index" class="hover:bg-gray-50">
-                <td class="px-4 py-2 border-b">
+                <td class="px-2 py-2 border-b">
                   <span class="block font-medium text-gray-900">{{ user.email }}</span>
-                  <span class="block text-sm text-gray-500 md:hidden capitalize">
+                  <span class="block text-xs text-gray-500 md:hidden capitalize">
                     Rolle: {{ user.role }}
                   </span>
                 </td>
-                <td class="px-4 py-2 border-b capitalize hidden md:table-cell">
+                <td class="px-2 py-2 border-b capitalize hidden md:table-cell">
                   {{ user.role }}
                 </td>
-                <td class="px-4 py-2 border-b">
+                <td class="px-2 py-2 border-b">
                   <select 
                     v-model="user.role" 
                     @change="updateUserRole(user)" 
-                    class="border p-2 rounded w-full bg-white focus:outline-none focus:ring-2 focus:ring-navbar-green"
+                    class="border p-1 rounded w-full bg-white focus:outline-none focus:ring-2 focus:ring-navbar-green text-sm"
                   >
                     <option value="regular">Regular</option>
                     <option value="elite">Elite</option>
