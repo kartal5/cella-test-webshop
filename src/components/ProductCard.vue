@@ -27,7 +27,7 @@
 
 <script>
 import { useCartStore } from '../stores/cartStore';
-import { useToast } from 'vue-toastification'; // Using vue-toastification to create notification messages
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'ProductCard',
@@ -36,18 +36,16 @@ export default {
   },
   setup() {
     const cartStore = useCartStore();
-    const toast = useToast(); // hook to add notifications
+    const toast = useToast();
     
     const addToCart = (product) => {
       if (cartStore.cartItems.find(item => item.id === product.id)) {
-        // Notify that the product is already in the cart
         toast.warning('Produktet er allerede tilføjet i kurven!', {
           icon: '⚠️',
           toastClassName: 'bg-[#e6dfd4] text-[#5e4b3f] font-bold',
         });
       } else {
         cartStore.addToCart(product);
-        // Notify successful product addition
         toast.success('Produktet er tilføjet i kurven!', {
           icon: '✔️',
           toastClassName: 'bg-[#95ad81] text-white font-bold',
@@ -57,14 +55,13 @@ export default {
 
     // Function to determine if selection is required
     const requiresSelection = (product) => {
-      // Disable "Læg i kurv" for products with "Kontakt for pris" as price
       if (product.price === 'Kontakt for pris') {
         return true;
       }
 
-      // Disable and show dropdown for specific products requiring selection
       const productsRequiringSelection = [31, 36, 37, 38];
-      return productsRequiringSelection.includes(product.id);
+      // Convert product.id to a number for the check
+      return productsRequiringSelection.includes(parseInt(product.id, 10));
     };
 
     return { addToCart, requiresSelection };

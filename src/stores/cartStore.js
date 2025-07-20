@@ -6,7 +6,6 @@ export const useCartStore = defineStore('cart', () => {
   const authStore = useAuthStore();
   const cartItems = ref(loadCartFromStorage());
 
-  // Add to cart, remove from cart remain unchanged...
   const addToCart = (product) => {
     const existingItem = cartItems.value.find((item) => item.id === product.id && item.name === product.name);
     if (existingItem) {
@@ -24,24 +23,27 @@ export const useCartStore = defineStore('cart', () => {
   const cartSubtotal = computed(() => {
     return cartItems.value.reduce((sum, item) => {
       if (item.price.toLowerCase().includes('kontakt')) return sum;
+      
+      // Corrected price parsing
       const numericPrice = parseFloat(
-        item.price.toLowerCase().replace('dkk','').trim()
+        item.price.replace(/[^0-9.,]/g, '').replace(',', '').trim()
       ) || 0;
+      
       return sum + numericPrice * item.quantity;
     }, 0);
   });
 
   // 2) Compute discount if user is Elite
   const cartTotal = computed(() => {
-    // is user "elite"?
     const isElite = authStore.user?.role === 'elite';
     let total = 0;
 
     cartItems.value.forEach((item) => {
-      // Parse the base price:
       if (!item.price || item.price.toLowerCase().includes('kontakt')) return;
+      
+      // Corrected price parsing
       const numericPrice = parseFloat(
-        item.price.toLowerCase().replace('dkk','').trim()
+        item.price.replace(/[^0-9.,]/g, '').replace(',', '').trim()
       ) || 0;
 
       let itemTotal = numericPrice * item.quantity;
